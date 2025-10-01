@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.CadastroPage"
+             Title="CadastroPage">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+
+            <Label Text="Cadastro de Usuário"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <Entry x:Name="TxtNome" Placeholder="Nome completo" />
+            <Entry x:Name="TxtUsuario" Placeholder="Usuário (login)" />
+            <Entry x:Name="TxtSenha" Placeholder="Senha" IsPassword="True" />
+            <Entry x:Name="TxtCPF" Placeholder="CPF" Keyboard="Numeric" />
+            <Entry x:Name="TxtTelefone" Placeholder="Telefone" Keyboard="Telephone" />
+            <Entry x:Name="TxtIdade" Placeholder="Idade" Keyboard="Numeric" />
+            <Entry x:Name="TxtCidade" Placeholder="Cidade" />
+
+            <Button Text="Cadastrar"
+                    BackgroundColor="#3366FF"
+                    TextColor="White"
+                    Clicked="BtnCadastrar_Clicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

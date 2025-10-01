@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.LoginPage"
+             Title="LoginPage">
+    <Grid>
+        <Image Source="fundo5.png" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Opacity="0.8"/>
+        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="5">
+            <Label Text="(54) 99700-3844" FontAttributes="Bold" FontSize="30" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Start"/>
+            <HorizontalStackLayout  HorizontalOptions="Center" VerticalOptions="Start">
+                <Label x:Name="teste1"
+           Text="Clinica Vida e Saúde"
+           HorizontalOptions="Center"
+           FontSize="30"
+           TextColor="Blue"
+           VerticalTextAlignment="Center"
+           FontAttributes="Bold"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+        <Border
+    WidthRequest="320"
+    HeightRequest="420"
+    StrokeShape="RoundRectangle 16"
+    BackgroundColor="WhiteSmoke"
+    HorizontalOptions="Center"
+    VerticalOptions="Center"
+    Padding="32"
+    Opacity="0.9">
+            <VerticalStackLayout WidthRequest="256" VerticalOptions="Center" HorizontalOptions="Center">
+                <Image Source="https://img.icons8.com/fluent/96/000000/user-male-circle.png" WidthRequest="64" HeightRequest="64"/>
+                <Label Text="Bem-vindo" HorizontalOptions="Center" FontAttributes="Bold" FontSize="22" Margin="0,16,0,8"/>
+                <Label Text="Usuário"
+           FontAttributes="Bold"
+           Margin="0"
+           FontSize="16"/>
+                <Border StrokeShape="RoundRectangle 5" BackgroundColor="Transparent">
+                    <Entry
+                WidthRequest="224"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                Placeholder="Digite seu usuário"
+                BackgroundColor="Transparent"
+                TextColor="Black"
+                x:Name="TXTUsuario"/>
+                </Border>
+                <Label Text="Senha"
+            FontAttributes="Bold"
+            Margin="0"
+            FontSize="16"/>
+                <Border StrokeShape="RoundRectangle 5">
+                    <Entry
+                WidthRequest="224"
+                HeightRequest="40"
+                HorizontalOptions="Start"
+                Placeholder="Digite sua senha"
+                BackgroundColor="Transparent"
+                x:Name="TXTSenha"/>
+                </Border>
+                <Button WidthRequest="260" HeightRequest="40" Text="Entrar" HorizontalOptions="Center" Margin="0,8,0,8" x:Name="BTN_Entrar_Login" Clicked="BTN_Entrar_Login_Clicked"/>
+                <HorizontalStackLayout Margin="10">
+                    <Label Text="Não possui conta? " Padding="5"/>
+                    <Button Text="Cadastre-se" FontAttributes="Bold" TextColor="#3366FF" Padding="5" HeightRequest="30" BackgroundColor="Transparent" x:Name="BTN_ir_cadastro" Clicked="BTN_ir_cadastro_Clicked"/>
+                </HorizontalStackLayout>
+
+
+            </VerticalStackLayout>
+
+        </Border>
+        <HorizontalStackLayout VerticalOptions="End" Margin="70,0,0,130">
+            <Label Text="Esqueceu a senha?" Padding="5"/>
+            <Label Text="Recuperar senha." FontAttributes="Bold" TextColor="#3366FF" Padding="5"/>
+        </HorizontalStackLayout>
+        <Label Text="Rua Itaqui, 32" FontSize="18" HorizontalOptions="Center" VerticalOptions="End" Padding="80"/>
+        <Label Text="Não me Toque" FontSize="18" HorizontalOptions="Center" VerticalOptions="End" Padding="40"/>
+
+    </Grid>
+</ContentPage>

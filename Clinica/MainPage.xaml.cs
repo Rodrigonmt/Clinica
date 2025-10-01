@@ -1,4 +1,4 @@
-﻿namespace Clinica
+namespace Clinica
 {
     public partial class MainPage : ContentPage
     {
@@ -9,9 +9,8 @@
 
         private async void OnAgendarConsultaTapped(object sender, TappedEventArgs e)
         {
-            // Navega para a página AgendarConsultaPage
+            // Navega para a p�gina AgendarConsultaPage
             await Shell.Current.GoToAsync(nameof(View.AgendarConsultaPage));
         }
-
     }
 }
