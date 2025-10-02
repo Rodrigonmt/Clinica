@@ -20,6 +20,11 @@ namespace Clinica.Models
         [JsonPropertyName("hora")]
         public string Hora { get; set; }
 
+        //usuário logado
+        [JsonPropertyName("usuario")]
+        public string Usuario { get; set; }
+
+
         // Nome do médico
         [Required]
         [JsonPropertyName("medico")]

@@ -12,5 +12,11 @@ namespace Clinica
             // Navega para a página AgendarConsultaPage
             await Shell.Current.GoToAsync(nameof(View.AgendarConsultaPage));
         }
+
+        private async void OnConsultasAgendadasTapped(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new View.ConsultasAgendaPage());
+        }
+
     }
 }

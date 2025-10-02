@@ -48,7 +48,10 @@ public partial class LoginPage : ContentPage
                 {
                     await DisplayAlert("Sucesso", $"Bem-vindo {usuarioEncontrado.Nome}!", "OK");
 
-                    // 🔹 Abre MainPage (registrada no AppShell)
+                    // 🔹 Guardar o usuário na sessão
+                    SessaoUsuario.UsuarioLogado = usuarioEncontrado;
+
+                    // 🔹 Abre MainPage
                     await Shell.Current.GoToAsync(nameof(MainPage));
                 }
                 else

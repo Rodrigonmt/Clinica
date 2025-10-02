@@ -67,10 +67,11 @@ namespace Clinica.View
             // Cria o objeto consulta
             var consulta = new Consulta
             {
-                Data = datePicker.Date, // DatePicker retorna DateTime
+                Data = datePicker.Date,
                 Hora = timePicker.SelectedItem.ToString(),
                 Medico = _medicoNome,
-                CriadoEm = DateTime.UtcNow
+                CriadoEm = DateTime.UtcNow,
+                Usuario = SessaoUsuario.UsuarioLogado?.Nome // pega o nome do usuário logado
             };
 
             try
