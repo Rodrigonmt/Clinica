@@ -86,12 +86,11 @@ namespace Clinica.View
                 {
                     await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
 
-                    // Reset da tela
-                    timePicker.SelectedItem = null;
-                    _medicoSelecionado.Stroke = Colors.Transparent;
-                    _medicoSelecionado.BackgroundColor = Color.FromArgb("#D0E8FF");
-                    _medicoSelecionado = null;
-                    _medicoNome = null;
+                    // Voltar para MainPage
+                    await Shell.Current.GoToAsync(nameof(MainPage));
+                    // ou, se quiser garantir que sempre vai pra MainPage:
+                    // await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+
                 }
                 else
                 {
