@@ -71,7 +71,8 @@ namespace Clinica.View
                 Hora = timePicker.SelectedItem.ToString(),
                 Medico = _medicoNome,
                 CriadoEm = DateTime.UtcNow,
-                Usuario = SessaoUsuario.UsuarioLogado?.Nome // pega o nome do usuário logado
+                Usuario = SessaoUsuario.UsuarioLogado?.Nome,
+                Status = StatusConsulta.Agendada // 🔹 Status inicial
             };
 
             try
