@@ -134,13 +134,23 @@
         </ScrollView>
 
         <!-- Botão -->
-        <Button Text="Agendar Consulta"
+        <Border x:Name="btnAgendar"
         BackgroundColor="#007AFF"
-        TextColor="White"
-        FontAttributes="Bold"
-        CornerRadius="10"
+        StrokeThickness="0"
         HeightRequest="50"
+        Padding="10"
         HorizontalOptions="FillAndExpand"
-        Clicked="OnAgendarConsultaClicked"/>
+        StrokeShape="RoundRectangle 10">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnAgendarConsultaClicked"/>
+            </Border.GestureRecognizers>
+
+            <Label Text="Agendar Consulta"
+           TextColor="White"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           FontSize="18"
+           FontAttributes="Bold"/>
+        </Border>
     </VerticalStackLayout>
 </ContentPage>

@@ -15,7 +15,7 @@ namespace Clinica
 
         private async void OnConsultasAgendadasTapped(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new View.ConsultasAgendaPage());
+            await Shell.Current.GoToAsync(nameof(View.ConsultasAgendaPage));
         }
 
     }

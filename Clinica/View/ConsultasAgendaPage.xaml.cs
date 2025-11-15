@@ -39,7 +39,7 @@ namespace Clinica.View
                 // 🔹 Firebase retorna um dicionário (id gerado -> objeto consulta)
                 var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(json);
 
-                var usuarioLogado = SessaoUsuario.UsuarioLogado?.Nome;
+                var usuarioLogado = SessaoUsuario.UsuarioLogado?.UsuarioLogin;
 
                 if (string.IsNullOrEmpty(usuarioLogado))
                 {
@@ -68,14 +68,13 @@ namespace Clinica.View
 
         protected override bool OnBackButtonPressed()
         {
-            // Força voltar para a MainPage
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await Shell.Current.GoToAsync($"//{nameof(MainPage)}"); // volta uma página na pilha
-                                                                        // ou: await Shell.Current.GoToAsync($"//{nameof(MainPage)}");  // volta sempre para a MainPage
+                await Shell.Current.GoToAsync("/MainPage");
             });
 
-            return true; // impede comportamento padrão
+            return true;
         }
+
     }
 }

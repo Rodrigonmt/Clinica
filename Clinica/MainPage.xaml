@@ -1,94 +1,228 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Clinica.MainPage">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.MainPage"
+             BackgroundColor="White">
+
     <Grid>
         <!-- Imagem de fundo -->
-        <Image Source="fundo01.jpg" Aspect="AspectFill" Opacity="0.8" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
-        <ScrollView>
-            <VerticalStackLayout Padding="20" Spacing="25">
-                <!-- Título centralizado horizontal e verticalmente -->
-                <Grid HeightRequest="100" HorizontalOptions="FillAndExpand">
-                    <Label Text="Clinica Vida e Saúde" FontSize="36" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black"/>
+        <Image Source="fundo01.jpg"
+               Aspect="AspectFill"
+               Opacity="0.8"
+               VerticalOptions="FillAndExpand"
+               HorizontalOptions="FillAndExpand"/>
+
+        <!-- Layout principal dividido em seções -->
+        <Grid Padding="20" RowSpacing="15">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- título -->
+                <RowDefinition Height="2*"/>
+                <!-- botão principal -->
+                <RowDefinition Height="5*"/>
+                <!-- grid com ícones -->
+                <RowDefinition Height="2*"/>
+                <!-- botão final -->
+            </Grid.RowDefinitions>
+
+            <!-- Título -->
+            <Label Grid.Row="0"
+                   Text="Clínica Vida e Saúde"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   TextColor="Black"
+                   Margin="0,10,0,10"/>
+
+            <!-- Ícone principal -->
+            <Frame Grid.Row="1"
+                   CornerRadius="15"
+                   Padding="0"
+                   BackgroundColor="#80808080"
+                   HasShadow="True">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
+                </Frame.GestureRecognizers>
+                <Grid>
+                    <Image Source="icone_agendar.png"
+                           HeightRequest="100"
+                           WidthRequest="100"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                    <Label Text="Agendar Consulta"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
                 </Grid>
-                <!-- Ícone principal Agendar Consulta (maior, topo) -->
-                <Frame CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
+            </Frame>
+
+            <!-- Grid com ícones secundários -->
+            <Grid Grid.Row="2"
+                  ColumnSpacing="15"
+                  RowSpacing="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Consultas Agendadas -->
+                <Frame Grid.Row="0" Grid.Column="0"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAgendarConsultaTapped" />
+                        <TapGestureRecognizer Tapped="OnConsultasAgendadasTapped"/>
                     </Frame.GestureRecognizers>
                     <Grid>
-                        <Image Source="icone_agendar.png" HeightRequest="150" WidthRequest="150"
-               HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Label Text="Agendar Consulta" FontSize="24" FontAttributes="Bold" TextColor="Black"
-               HorizontalOptions="Center" VerticalOptions="Center"
-               HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Image Source="icone_agendadas.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Consultas"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
                     </Grid>
                 </Frame>
-                <!-- Grid com os outros ícones (2 colunas) -->
-                <Grid ColumnSpacing="20" RowSpacing="20">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <!-- Botão 1 -->
-                    <Frame Grid.Row="0" Grid.Column="0" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnConsultasAgendadasTapped" />
-                        </Frame.GestureRecognizers>
-                        <Grid>
-                            <Image Source="icone_agendadas.png" HeightRequest="120" WidthRequest="120" 
-               HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Consultas Agendadas" FontSize="24" FontAttributes="Bold" TextColor="Black"
-               HorizontalOptions="Center" VerticalOptions="Center"
-               HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                    <!-- Botão 2 -->
-                    <Frame Grid.Row="0" Grid.Column="1" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Grid>
-                            <Image Source="icone_historico.png" HeightRequest="120" WidthRequest="120" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Histórico Consultas" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                    <!-- Botão 3 -->
-                    <Frame Grid.Row="1" Grid.Column="0" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Grid>
-                            <Image Source="icone_exames.png" HeightRequest="120" WidthRequest="120" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Exames" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                    <!-- Botão 4 -->
-                    <Frame Grid.Row="1" Grid.Column="1" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Grid>
-                            <Image Source="icone_online.png" HeightRequest="120" WidthRequest="120" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Consulta Online" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                    <!-- Botão 5 -->
-                    <Frame Grid.Row="2" Grid.Column="0" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Grid>
-                            <Image Source="icone_mensagens.png" HeightRequest="120" WidthRequest="120" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Mensagens" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                    <!-- Botão 6 -->
-                    <Frame Grid.Row="2" Grid.Column="1" CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
-                        <Grid>
-                            <Image Source="icone_extras.png" HeightRequest="120" WidthRequest="120" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            <Label Text="Extras" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                        </Grid>
-                    </Frame>
-                </Grid>
-                <!-- Ícone final Receita -->
-                <Frame CornerRadius="15" Padding="0" BackgroundColor="#80808080" HasShadow="True">
+
+                <!-- Histórico -->
+                <Frame Grid.Row="0" Grid.Column="1"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
                     <Grid>
-                        <Image Source="icone_receitas.png" HeightRequest="150" WidthRequest="150" HorizontalOptions="Center" VerticalOptions="Center"/>
-                        <Label Text="Receitas" FontSize="24" FontAttributes="Bold" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        <Image Source="icone_historico.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Histórico"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
                     </Grid>
                 </Frame>
-            </VerticalStackLayout>
-        </ScrollView>
+
+                <!-- Exames -->
+                <Frame Grid.Row="1" Grid.Column="0"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
+                    <Grid>
+                        <Image Source="icone_exames.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Exames"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Consulta Online -->
+                <Frame Grid.Row="1" Grid.Column="1"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
+                    <Grid>
+                        <Image Source="icone_online.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Consulta Online"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Mensagens -->
+                <Frame Grid.Row="2" Grid.Column="0"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
+                    <Grid>
+                        <Image Source="icone_mensagens.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Mensagens"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Extras -->
+                <Frame Grid.Row="2" Grid.Column="1"
+                       CornerRadius="15"
+                       Padding="0"
+                       BackgroundColor="#80808080"
+                       HasShadow="True">
+                    <Grid>
+                        <Image Source="icone_extras.png"
+                               HeightRequest="70"
+                               WidthRequest="70"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <Label Text="Extras"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+            </Grid>
+
+            <!-- Ícone final -->
+            <Frame Grid.Row="3"
+                   CornerRadius="15"
+                   Padding="0"
+                   BackgroundColor="#80808080"
+                   HasShadow="True">
+                <Grid>
+                    <Image Source="icone_receitas.png"
+                           HeightRequest="100"
+                           WidthRequest="100"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                    <Label Text="Receitas"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+        </Grid>
     </Grid>
 </ContentPage>

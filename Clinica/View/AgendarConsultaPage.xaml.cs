@@ -52,6 +52,8 @@ namespace Clinica.View
         // 👉 Evento do botão "Agendar Consulta"
         private async void OnAgendarConsultaClicked(object sender, EventArgs e)
         {
+            await ClickEffect((VisualElement)sender);
+
             if (string.IsNullOrEmpty(_medicoNome))
             {
                 await DisplayAlert("Aviso", "Selecione um médico.", "OK");
@@ -71,7 +73,7 @@ namespace Clinica.View
                 Hora = timePicker.SelectedItem.ToString(),
                 Medico = _medicoNome,
                 CriadoEm = DateTime.UtcNow,
-                Usuario = SessaoUsuario.UsuarioLogado?.Nome,
+                Usuario = SessaoUsuario.UsuarioLogado?.UsuarioLogin,
                 Status = StatusConsulta.Agendada // 🔹 Status inicial
             };
 
@@ -89,7 +91,7 @@ namespace Clinica.View
                     await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
 
                     // Voltar para MainPage
-                    await Shell.Current.GoToAsync(nameof(MainPage));
+                    await Shell.Current.GoToAsync("/MainPage");
                     // ou, se quiser garantir que sempre vai pra MainPage:
                     // await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
 
@@ -103,6 +105,28 @@ namespace Clinica.View
             {
                 await DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
             }
+
+
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Shell.Current.GoToAsync("/MainPage"); // volta para a principal
+            });
+
+            return true;
+        }
+
+        private async Task ClickEffect(VisualElement element)
+        {
+            await element.ScaleTo(0.92, 80);
+            await element.FadeTo(0.7, 70);
+            await element.FadeTo(1, 70);
+            await element.ScaleTo(1, 80);
+        }
+
     }
+
 }
