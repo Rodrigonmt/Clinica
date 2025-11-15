@@ -17,6 +17,5 @@ namespace Clinica
         {
             await Shell.Current.GoToAsync(nameof(View.ConsultasAgendaPage));
         }
-
     }
 }
