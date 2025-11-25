@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.LoginPage"
-             Title="LoginPage">
+             Title="">
     <Grid>
         <Image Source="fundo5.png" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Opacity="0.8"/>
         <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Start" Spacing="5">

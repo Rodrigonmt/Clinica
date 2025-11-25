@@ -47,12 +47,22 @@ namespace Clinica.View
                     return;
                 }
 
+                var statusPermitidos = new[]
+                {
+                    StatusConsulta.Agendada,
+                    StatusConsulta.Confirmada,
+                    StatusConsulta.Reagendada
+                };
+
                 var minhasConsultas = consultasDict
-                    .Values
-                    .Where(c => c.Usuario == usuarioLogado)
-                    .OrderBy(c => c.Data)
-                    .ThenBy(c => c.Hora)
-                    .ToList();
+                .Values
+                .Where(c =>
+                    c.Usuario == usuarioLogado &&
+                    statusPermitidos.Contains(c.Status)
+                )
+                .OrderBy(c => c.Data)
+                .ThenBy(c => c.Hora)
+                .ToList();
 
                 Consultas.Clear();
                 foreach (var consulta in minhasConsultas)

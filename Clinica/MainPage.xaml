@@ -98,7 +98,7 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-                        <Label Text="Consultas"
+                        <Label Text="Consulta Agendada"
                                FontSize="18"
                                FontAttributes="Bold"
                                TextColor="Black"
