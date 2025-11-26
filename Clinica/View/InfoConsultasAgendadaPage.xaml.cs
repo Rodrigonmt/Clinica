@@ -48,8 +48,9 @@ namespace Clinica.View
             {
                 // Sua lógica para cancelar a consulta aqui
                 await DisplayAlert("Cancelada", "A consulta foi cancelada.", "OK");
-                await Shell.Current.GoToAsync("..");
+                await Shell.Current.GoToAsync("/ConsultasAgendaPage");
             }
+            
         }
 
         private async void OnReagendarClicked(object sender, EventArgs e)
@@ -57,5 +58,16 @@ namespace Clinica.View
             // Aqui você navega para sua tela de reagendamento
             await Shell.Current.GoToAsync(nameof(AgendarConsultaPage));
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Shell.Current.GoToAsync("/ConsultasAgendaPage");
+            });
+
+            return true;
+        }
+
     }
 }
