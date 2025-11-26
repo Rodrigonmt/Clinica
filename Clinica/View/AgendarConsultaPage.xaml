@@ -153,5 +153,18 @@
            FontSize="18"
            FontAttributes="Bold"/>
         </Border>
+
+        <!-- Observações -->
+        <Label Text="Observações (opcional):" 
+       FontSize="18" 
+       FontAttributes="Bold" 
+       TextColor="Black"/>
+
+        <Editor x:Name="txtObservacoes"
+        Placeholder="Digite alguma observação..."
+        TextColor="Black"
+        BackgroundColor="#D0E8FF"
+        AutoSize="TextChanges"
+        HeightRequest="120"/>
     </VerticalStackLayout>
 </ContentPage>

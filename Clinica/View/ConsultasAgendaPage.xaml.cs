@@ -86,5 +86,19 @@ namespace Clinica.View
             return true;
         }
 
+        private async void OnConsultaTapped(object sender, TappedEventArgs e)
+        {
+            if (sender is Frame frame && frame.BindingContext is Consulta consulta)
+            {
+                var parametros = new Dictionary<string, object>
+        {
+            { "Consulta", consulta }
+        };
+
+                await Shell.Current.GoToAsync(nameof(InfoConsultasAgendadaPage), parametros);
+            }
+        }
+
+
     }
 }

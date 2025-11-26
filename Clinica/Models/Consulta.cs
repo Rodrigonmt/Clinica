@@ -31,6 +31,10 @@ namespace Clinica.Models
         [JsonPropertyName("status")]
         public StatusConsulta Status { get; set; } = StatusConsulta.Agendada;
 
+        //Observações
+        [JsonPropertyName("observacoes")]
+        public string Observacoes { get; set; }
+
         public override string ToString() =>
             $"{Data:yyyy-MM-dd} {Hora} - {Medico} ({Status})";
     }

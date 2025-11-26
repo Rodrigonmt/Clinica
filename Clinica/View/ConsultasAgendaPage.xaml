@@ -19,26 +19,26 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="#007AFF" CornerRadius="12" Padding="10" Margin="5">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnConsultaTapped" />
+                        </Frame.GestureRecognizers>
+
                         <VerticalStackLayout>
                             <Label Text="{Binding Data, StringFormat='{0:dd/MM/yyyy}'}"
-                       FontSize="18"
-                       TextColor="Black"/>
+                               FontSize="18" TextColor="Black"/>
 
-                            <Label Text="{Binding Hora}" 
-                       FontSize="16" 
-                       TextColor="Gray"/>
+                                            <Label Text="{Binding Hora}" 
+                               FontSize="16" TextColor="Gray"/>
 
-                            <Label Text="{Binding Medico}" 
-                       FontSize="16" 
-                       TextColor="#007AFF"/>
+                                            <Label Text="{Binding Medico}" 
+                               FontSize="16" TextColor="#007AFF"/>
 
-                            <!-- 🔹 Novo campo Status -->
-                            <Label Text="{Binding Status}" 
-                       FontSize="14" 
-                       FontAttributes="Italic"
-                       TextColor="DarkGreen"/>
+                                            <Label Text="{Binding Status}" 
+                               FontSize="14" FontAttributes="Italic"
+                               TextColor="DarkGreen"/>
                         </VerticalStackLayout>
                     </Frame>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

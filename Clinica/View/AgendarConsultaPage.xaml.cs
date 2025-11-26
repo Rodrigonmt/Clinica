@@ -95,7 +95,8 @@ namespace Clinica.View
                 Medico = _medicoNome,
                 CriadoEm = DateTime.UtcNow,
                 Usuario = SessaoUsuario.UsuarioLogado?.UsuarioLogin,
-                Status = StatusConsulta.Agendada // 🔹 Status inicial
+                Status = StatusConsulta.Agendada, // 🔹 Status inicial
+                Observacoes = txtObservacoes.Text
             };
 
             try
