@@ -76,16 +76,6 @@ namespace Clinica.View
             }
         }
 
-        protected override bool OnBackButtonPressed()
-        {
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await Shell.Current.GoToAsync("/MainPage");
-            });
-
-            return true;
-        }
-
         private async void OnConsultaTapped(object sender, TappedEventArgs e)
         {
             if (sender is Frame frame && frame.BindingContext is Consulta consulta)
@@ -96,6 +86,7 @@ namespace Clinica.View
         };
 
                 await Shell.Current.GoToAsync(nameof(InfoConsultasAgendadaPage), parametros);
+
             }
         }
 

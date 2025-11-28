@@ -52,6 +52,7 @@ public partial class LoginPage : ContentPage
                     SessaoUsuario.UsuarioLogado = usuarioEncontrado;
 
                     // 🔹 Abre MainPage
+                    //await Shell.Current.GoToAsync(nameof(MainPage));
                     await Shell.Current.GoToAsync(nameof(MainPage));
                 }
                 else
