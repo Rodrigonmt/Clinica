@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.HistoricoConsultasAgendadasPage"
+             Title="Histórico de Consultas"
+             BackgroundColor="White">
+
+    <Grid RowDefinitions="Auto, * , Auto" Padding="20">
+
+        <!-- Título -->
+        <Label Grid.Row="0"
+               Text="Histórico de Consultas"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="Black"
+               HorizontalOptions="Center"/>
+
+        <!-- LISTA COM ROLAGEM FUNCIONANDO -->
+        <CollectionView Grid.Row="1"
+                        x:Name="consultasCollection"
+                        ItemsSource="{Binding Consultas}"
+                        SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="#007AFF" CornerRadius="12" Padding="10" Margin="5">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnConsultaTapped" />
+                        </Frame.GestureRecognizers>
+
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Data, StringFormat='{0:dd/MM/yyyy}'}"
+                                   FontSize="18" TextColor="Black"/>
+
+                            <Label Text="{Binding Hora}" 
+                                   FontSize="16" TextColor="Gray"/>
+
+                            <Label Text="{Binding Medico}" 
+                                   FontSize="16" TextColor="#007AFF"/>
+
+                            <Label Text="{Binding Status}" 
+                                   FontSize="14" FontAttributes="Italic"
+                                   TextColor="DarkGreen"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Mensagem "sem consultas" -->
+        <Label Grid.Row="2"
+               x:Name="lblSemConsultas"
+               Text="Nenhuma consulta encontrada."
+               FontSize="16"
+               TextColor="Gray"
+               HorizontalOptions="Center"
+               IsVisible="False"/>
+    </Grid>
+
+</ContentPage>

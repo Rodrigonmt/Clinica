@@ -4,13 +4,13 @@ using System.Text.Json;
 
 namespace Clinica.View
 {
-    public partial class ConsultasAgendaPage : ContentPage
+    public partial class HistoricoConsultasAgendadasPage : ContentPage
     {
         private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/consultas.json";
 
         public ObservableCollection<Consulta> Consultas { get; set; } = new();
 
-        public ConsultasAgendaPage()
+        public HistoricoConsultasAgendadasPage()
         {
             InitializeComponent();
             BindingContext = this;
@@ -31,12 +31,10 @@ namespace Clinica.View
 
                 if (string.IsNullOrWhiteSpace(json) || json == "null")
                 {
-                    //lblSemConsultas.IsVisible = true;
                     lblSemConsultas.IsVisible = true;
                     return;
                 }
 
-                // 🔹 Firebase retorna um dicionário (id gerado -> objeto consulta)
                 var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(json);
 
                 var usuarioLogado = SessaoUsuario.UsuarioLogado?.UsuarioLogin;
@@ -47,32 +45,23 @@ namespace Clinica.View
                     return;
                 }
 
-                var statusPermitidos = new[]
-                {
-                    StatusConsulta.Agendada,
-                    StatusConsulta.Confirmada,
-                    StatusConsulta.Reagendada
-                };
-
-                var minhasConsultas = consultasDict
-                .Values
-                .Where(c =>
-                    c.Usuario == usuarioLogado &&
-                    statusPermitidos.Contains(c.Status)
-                )
-                .OrderBy(c => c.Data)
-                .ThenBy(c => c.Hora)
-                .ToList();
+                // 🔹 Carrega TODAS as consultas do usuário logado
+                var historico = consultasDict
+                    .Values
+                    .Where(c => c.Usuario == usuarioLogado)
+                    .OrderByDescending(c => c.Data)
+                    .ThenByDescending(c => c.Hora)
+                    .ToList();
 
                 Consultas.Clear();
-                foreach (var consulta in minhasConsultas)
+                foreach (var consulta in historico)
                     Consultas.Add(consulta);
 
                 lblSemConsultas.IsVisible = !Consultas.Any();
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", $"Falha ao carregar consultas: {ex.Message}", "OK");
+                await DisplayAlert("Erro", $"Falha ao carregar histórico: {ex.Message}", "OK");
             }
         }
 
@@ -81,23 +70,22 @@ namespace Clinica.View
             if (sender is Frame frame && frame.BindingContext is Consulta consulta)
             {
                 var parametros = new Dictionary<string, object>
-        {
-            { "Consulta", consulta }
-        };
+                {
+                    { "Consulta", consulta }
+                };
 
                 await Shell.Current.GoToAsync(nameof(InfoConsultasAgendadaPage), parametros);
-
             }
         }
+
         protected override bool OnBackButtonPressed()
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await Shell.Current.GoToAsync("/MainPage"); // volta para a principal
+                await Shell.Current.GoToAsync("/MainPage");
             });
 
             return true;
         }
-
     }
 }

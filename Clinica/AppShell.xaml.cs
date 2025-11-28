@@ -13,6 +13,7 @@ namespace Clinica
             Routing.RegisterRoute(nameof(View.AgendarConsultaPage), typeof(View.AgendarConsultaPage));
             Routing.RegisterRoute(nameof(View.ConsultasAgendaPage), typeof(View.ConsultasAgendaPage));
             Routing.RegisterRoute(nameof(View.InfoConsultasAgendadaPage), typeof(View.InfoConsultasAgendadaPage));
+            Routing.RegisterRoute(nameof(View.HistoricoConsultasAgendadasPage), typeof(View.HistoricoConsultasAgendadasPage));
             Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         }
     }

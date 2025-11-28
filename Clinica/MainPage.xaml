@@ -115,6 +115,10 @@
                        BackgroundColor="#80808080"
                        HasShadow="True">
 
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHistoricoConsultasAgendadasPage"/>
+                    </Frame.GestureRecognizers>
+
                     <Grid>
                         <Image Source="icone_historico.png"
                                HeightRequest="70"

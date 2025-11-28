@@ -85,6 +85,9 @@
 	  <MauiXaml Update="View\ConsultasAgendaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\HistoricoConsultasAgendadas.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\InfoConsultasAgendadaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

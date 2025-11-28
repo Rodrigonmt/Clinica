@@ -17,5 +17,10 @@ namespace Clinica
         {
             await Shell.Current.GoToAsync(nameof(View.ConsultasAgendaPage));
         }
+
+        private async void OnHistoricoConsultasAgendadasPage(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(View.HistoricoConsultasAgendadasPage));
+        }
     }
 }
