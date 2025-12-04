@@ -55,7 +55,7 @@
                            VerticalOptions="Center"/>
 
                     <Label Text="Agendar Consulta"
-                           FontSize="22"
+                           FontSize="20"
                            FontAttributes="Bold"
                            TextColor="Black"
                            HorizontalOptions="Center"
@@ -135,126 +135,10 @@
                     </Grid>
                 </Frame>
 
-                <!-- Exames -->
-                <Frame Grid.Row="1"
-                       Grid.Column="0"
-                       CornerRadius="15"
-                       Padding="0"
-                       BackgroundColor="#80808080"
-                       HasShadow="True">
 
-                    <Grid>
-                        <Image Source="icone_exames.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="Exames"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
-
-                <!-- Consulta Online -->
-                <Frame Grid.Row="1"
-                       Grid.Column="1"
-                       CornerRadius="15"
-                       Padding="0"
-                       BackgroundColor="#80808080"
-                       HasShadow="True">
-
-                    <Grid>
-                        <Image Source="icone_online.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="Consulta Online"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
-
-                <!-- Mensagens -->
-                <Frame Grid.Row="2"
-                       Grid.Column="0"
-                       CornerRadius="15"
-                       Padding="0"
-                       BackgroundColor="#80808080"
-                       HasShadow="True">
-
-                    <Grid>
-                        <Image Source="icone_mensagens.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="Mensagens"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
-
-                <!-- Extras -->
-                <Frame Grid.Row="2"
-                       Grid.Column="1"
-                       CornerRadius="15"
-                       Padding="0"
-                       BackgroundColor="#80808080"
-                       HasShadow="True">
-
-                    <Grid>
-                        <Image Source="icone_extras.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="Extras"
-                               FontSize="18"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
 
             </Grid>
 
-            <!-- Ícone final -->
-            <Frame Grid.Row="3"
-                   CornerRadius="15"
-                   Padding="0"
-                   BackgroundColor="#80808080"
-                   HasShadow="True">
-
-                <Grid>
-                    <Image Source="icone_receitas.png"
-                           HeightRequest="100"
-                           WidthRequest="100"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-
-                    <Label Text="Receitas"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-                </Grid>
-            </Frame>
 
         </Grid>
 
