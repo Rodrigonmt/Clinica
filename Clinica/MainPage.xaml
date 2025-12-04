@@ -6,9 +6,9 @@
     <Grid>
 
         <!-- Imagem de fundo -->
-        <Image Source="fundo01.jpg"
+        <Image Source="fundo02.jpg"
                Aspect="AspectFill"
-               Opacity="0.8"
+               Opacity="1"
                VerticalOptions="FillAndExpand"
                HorizontalOptions="FillAndExpand" />
 
@@ -28,63 +28,66 @@
 
             <!-- Título -->
             <Label Grid.Row="0"
-                   Text="Clínica Vida e Saúde"
+                   Text="Barbearia Progresso"
                    FontSize="32"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
-                   TextColor="Black"
+                   TextColor="White"
                    Margin="0,10,0,10" />
-
-            <!-- Ícone principal -->
-            <Frame Grid.Row="1"
-                   CornerRadius="15"
-                   Padding="0"
-                   BackgroundColor="#80808080"
-                   HasShadow="True">
-
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
-                </Frame.GestureRecognizers>
-
-                <Grid>
-                    <Image Source="icone_agendar.png"
-                           HeightRequest="100"
-                           WidthRequest="100"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-
-                    <Label Text="Agendar Consulta"
-                           FontSize="20"
-                           FontAttributes="Bold"
-                           TextColor="Black"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
-                </Grid>
-            </Frame>
 
             <!-- Grid com ícones secundários -->
             <Grid Grid.Row="2"
-                  ColumnSpacing="15"
-                  RowSpacing="15">
+                  VerticalOptions="End"
+                  HorizontalOptions="Center"
+                  RowSpacing="15"
+                  ColumnSpacing="0">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Consultas Agendadas -->
+                <!-- Ícone principal -->
                 <Frame Grid.Row="0"
+                       CornerRadius="15"
+                       Padding="0"
+                       Opacity="0.7"
+                       BackgroundColor="WhiteSmoke"
+                       HasShadow="True">
+
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
+                    </Frame.GestureRecognizers>
+
+                    <Grid>
+                        <Image Source="icone_agendar.png"
+                               HeightRequest="80"
+                               WidthRequest="80"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+
+                        <Label Text="MARCAR HORÁRIO"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="Black"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- Consultas Agendadas -->
+                <Frame Grid.Row="1"
                        Grid.Column="0"
                        CornerRadius="15"
                        Padding="0"
-                       BackgroundColor="#80808080"
+                       Opacity="0.7"
+                       BackgroundColor="WhiteSmoke"
                        HasShadow="True">
 
                     <Frame.GestureRecognizers>
@@ -93,13 +96,13 @@
 
                     <Grid>
                         <Image Source="icone_agendadas.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
+                               HeightRequest="80"
+                               WidthRequest="80"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-                        <Label Text="Consulta Agendada"
-                               FontSize="18"
+                        <Label Text="HORÁRIOS AGENDADOS"
+                               FontSize="20"
                                FontAttributes="Bold"
                                TextColor="Black"
                                HorizontalOptions="Center"
@@ -108,11 +111,12 @@
                 </Frame>
 
                 <!-- Histórico -->
-                <Frame Grid.Row="0"
+                <Frame Grid.Row="2"
                        Grid.Column="1"
                        CornerRadius="15"
                        Padding="0"
-                       BackgroundColor="#80808080"
+                       Opacity="0.7"
+                       BackgroundColor="WhiteSmoke"
                        HasShadow="True">
 
                     <Frame.GestureRecognizers>
@@ -121,13 +125,13 @@
 
                     <Grid>
                         <Image Source="icone_historico.png"
-                               HeightRequest="70"
-                               WidthRequest="70"
+                               HeightRequest="80"
+                               WidthRequest="80"
                                HorizontalOptions="Center"
                                VerticalOptions="Center"/>
 
-                        <Label Text="Histórico"
-                               FontSize="18"
+                        <Label Text="HISTÓRICO"
+                               FontSize="20"
                                FontAttributes="Bold"
                                TextColor="Black"
                                HorizontalOptions="Center"
@@ -135,10 +139,7 @@
                     </Grid>
                 </Frame>
 
-
-
             </Grid>
-
 
         </Grid>
 
