@@ -3,144 +3,160 @@
              x:Class="Clinica.MainPage"
              BackgroundColor="White">
 
-    <Grid>
+    <!-- GRID EXTERNO COM 3 LINHAS -->
+    <Grid RowDefinitions="*,Auto,Auto">
 
-        <!-- Imagem de fundo -->
-        <Image Source="fundo02.jpg"
+        <!-- IMAGEM DE FUNDO COBRINDO TODA A TELA -->
+        <Image Source="fundo04.jpg"
                Aspect="AspectFill"
                Opacity="1"
+               Grid.RowSpan="3"
                VerticalOptions="FillAndExpand"
                HorizontalOptions="FillAndExpand" />
 
-        <!-- Layout principal dividido em seções -->
-        <Grid Padding="20" RowSpacing="15">
+        <!-- (1) CONTEÚDO PRINCIPAL -->
+        <Grid Grid.Row="0">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <!-- título -->
-                <RowDefinition Height="2*"/>
-                <!-- botão principal -->
-                <RowDefinition Height="5*"/>
-                <!-- grid com ícones -->
-                <RowDefinition Height="2*"/>
-                <!-- botão final -->
-            </Grid.RowDefinitions>
-
-            <!-- Título -->
-            <Label Grid.Row="0"
-                   Text="Barbearia Progresso"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   TextColor="White"
-                   Margin="0,10,0,10" />
-
-            <!-- Grid com ícones secundários -->
-            <Grid Grid.Row="2"
-                  VerticalOptions="End"
-                  HorizontalOptions="Center"
-                  RowSpacing="15"
-                  ColumnSpacing="0">
+            <Grid Padding="20" RowSpacing="15">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
+                    <!-- Título -->
+                    <RowDefinition Height="*"/>
+                    <!-- Espaço -->
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <!-- Ícone principal -->
-                <Frame Grid.Row="0"
-                       CornerRadius="15"
-                       Padding="0"
-                       Opacity="0.7"
-                       BackgroundColor="WhiteSmoke"
-                       HasShadow="True">
-
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
-                    </Frame.GestureRecognizers>
-
-                    <Grid>
-                        <Image Source="icone_agendar.png"
-                               HeightRequest="80"
-                               WidthRequest="80"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="MARCAR HORÁRIO"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
-
-                <!-- Consultas Agendadas -->
-                <Frame Grid.Row="1"
-                       Grid.Column="0"
-                       CornerRadius="15"
-                       Padding="0"
-                       Opacity="0.7"
-                       BackgroundColor="WhiteSmoke"
-                       HasShadow="True">
-
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnConsultasAgendadasTapped"/>
-                    </Frame.GestureRecognizers>
-
-                    <Grid>
-                        <Image Source="icone_agendadas.png"
-                               HeightRequest="80"
-                               WidthRequest="80"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="HORÁRIOS AGENDADOS"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
-
-                <!-- Histórico -->
-                <Frame Grid.Row="2"
-                       Grid.Column="1"
-                       CornerRadius="15"
-                       Padding="0"
-                       Opacity="0.7"
-                       BackgroundColor="WhiteSmoke"
-                       HasShadow="True">
-
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnHistoricoConsultasAgendadasPage"/>
-                    </Frame.GestureRecognizers>
-
-                    <Grid>
-                        <Image Source="icone_historico.png"
-                               HeightRequest="80"
-                               WidthRequest="80"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-
-                        <Label Text="HISTÓRICO"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="Black"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                    </Grid>
-                </Frame>
+                <Label Grid.Row="0"
+                       Text="Barbearia Progresso"
+                       FontSize="40"
+                       FontFamily="PoppinsSemiBold"
+                       FontAttributes="Bold,Italic"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="White"
+                       Margin="0,250,0,10" />
 
             </Grid>
 
+        </Grid>
+
+        <!-- (2) FRAMES ACIMA DO ENDEREÇO -->
+        <Grid Grid.Row="1"
+              Padding="20"
+              RowSpacing="15">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- MARCAR HORÁRIO -->
+            <Frame Grid.Row="0"
+                   CornerRadius="15"
+                   Padding="0"
+                   Opacity="0.75"
+                   BackgroundColor="White"
+                   HasShadow="True">
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
+                </Frame.GestureRecognizers>
+
+                <Grid>
+                    <Image Source="icone_agendar.png"
+                           HeightRequest="60"
+                           WidthRequest="60"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+                    <Label Text="MARCAR HORÁRIO"
+                           FontSize="18"
+                           FontFamily="PoppinsMedium"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+            <!-- HORÁRIOS AGENDADOS -->
+            <Frame Grid.Row="1"
+                   CornerRadius="15"
+                   Padding="0"
+                   Opacity="0.75"
+                   BackgroundColor="White"
+                   HasShadow="True">
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnConsultasAgendadasTapped"/>
+                </Frame.GestureRecognizers>
+
+                <Grid>
+                    <Image Source="icone_agendadas.png"
+                           HeightRequest="60"
+                           WidthRequest="60"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+                    <Label Text="HORÁRIOS AGENDADOS"
+                           FontSize="18"
+                           FontFamily="PoppinsMedium"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+            <!-- HISTÓRICO -->
+            <Frame Grid.Row="2"
+                   CornerRadius="15"
+                   Padding="0"
+                   Opacity="0.75"
+                   BackgroundColor="White"
+                   HasShadow="True">
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHistoricoConsultasAgendadasPage"/>
+                </Frame.GestureRecognizers>
+
+                <Grid>
+                    <Image Source="icone_historico.png"
+                           HeightRequest="60"
+                           WidthRequest="60"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+                    <Label Text="HISTÓRICO"
+                           FontSize="18"
+                           FontFamily="PoppinsMedium"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Grid>
+            </Frame>
+
+        </Grid>
+
+        <!-- (3) BARRA DE ENDEREÇO NO RODAPÉ -->
+        <Grid Grid.Row="2"
+              BackgroundColor="#80000000"
+              Padding="15"
+              HeightRequest="55"
+              VerticalOptions="End">
+
+            <Label Text="Cidade de Não-Me-Toque • Rua Itaqui, nº 32 • Bairro Simon"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontSize="14"
+                   FontFamily="PoppinsMedium" />
         </Grid>
 
     </Grid>

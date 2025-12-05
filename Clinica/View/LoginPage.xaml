@@ -9,7 +9,7 @@
             <Label Text="(54) 99700-3844" FontAttributes="Bold" FontSize="30" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Start"/>
             <HorizontalStackLayout  HorizontalOptions="Center" VerticalOptions="Start">
                 <Label x:Name="teste1"
-           Text="Clinica Vida e Saúde"
+           Text="Barbearia Progresso"
            HorizontalOptions="Center"
            FontSize="30"
            TextColor="Blue"

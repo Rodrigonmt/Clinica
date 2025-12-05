@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.AgendarConsultaPage"
              BackgroundColor="White"
-             Title="Agendar Consulta">
+             Title="Agendar Horário">
 
     <VerticalStackLayout Padding="20" Spacing="20">
 
         <!-- Título -->
-        <Label Text="Agendar Consulta"
+        <Label Text="Agendar Horário"
                FontSize="28"
                FontAttributes="Bold"
                TextColor="Black"
@@ -23,7 +23,7 @@
                     BackgroundColor="#D0E8FF"/>
 
         <!-- Médicos -->
-        <Label Text="Escolha o médico:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+        <Label Text="Escolha o Profissional:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
         <ScrollView Orientation="Horizontal" HeightRequest="120">
             <HorizontalStackLayout Spacing="15" x:Name="medicosStack">
 
@@ -44,7 +44,7 @@
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill"/>
                     </Border>
-                    <Label Text="Dr. Rodrigo" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
+                    <Label Text="Rodrigo" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
                 <!-- Médico 2 -->
@@ -64,7 +64,7 @@
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill"/>
                     </Border>
-                    <Label Text="Dra. Dienifer" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
+                    <Label Text="Dienifer" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
                 <!-- Médico 3 -->
@@ -84,7 +84,7 @@
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill"/>
                     </Border>
-                    <Label Text="Dra. Fernanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
+                    <Label Text="Fernanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
                 <!-- Médico 4 -->
@@ -104,7 +104,7 @@
                        HorizontalOptions="Fill"
                        VerticalOptions="Fill"/>
                     </Border>
-                    <Label Text="Dra. Amanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
+                    <Label Text="Amanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
             </HorizontalStackLayout>
@@ -146,7 +146,7 @@
                 <TapGestureRecognizer Tapped="OnAgendarConsultaClicked"/>
             </Border.GestureRecognizers>
 
-            <Label Text="Agendar Consulta"
+            <Label Text="Confirmar Agendamento"
            TextColor="White"
            HorizontalOptions="Center"
            VerticalOptions="Center"

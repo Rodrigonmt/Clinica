@@ -2,12 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.ConsultasAgendaPage"
-             Title="Minhas Consultas"
+             Title="Meus Horários Agendados"
              BackgroundColor="White">
 
     <VerticalStackLayout Padding="20" Spacing="15">
 
-        <Label Text="Consultas Agendadas"
+        <Label Text="Horários Agendados"
                FontSize="24"
                FontAttributes="Bold"
                TextColor="Black"
@@ -44,7 +44,7 @@
         </CollectionView>
 
         <Label x:Name="lblSemConsultas"
-               Text="Nenhuma consulta encontrada."
+               Text="Nenhum Horário Agendado."
                FontSize="16"
                TextColor="Gray"
                HorizontalOptions="Center"
