@@ -5,14 +5,8 @@
              BackgroundColor="White"
              Title="Agendar Horário">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
+    <VerticalStackLayout Padding="15" Spacing="10">
 
-        <!-- Título -->
-        <Label Text="Agendar Horário"
-               FontSize="28"
-               FontAttributes="Bold"
-               TextColor="Black"
-               HorizontalOptions="Center"/>
 
         <!-- Data -->
         <Label Text="Escolha a data:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
@@ -21,6 +15,41 @@
                     HorizontalOptions="FillAndExpand"
                     TextColor="Black"
                     BackgroundColor="#D0E8FF"/>
+
+        <!-- Serviços -->
+        <Label Text="Selecione os serviços desejados:" 
+       FontSize="18" 
+       FontAttributes="Bold"
+       TextColor="Black"/>
+
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="20" RowSpacing="15" Padding="5">
+
+            <!-- Cabelo -->
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                <CheckBox x:Name="chkCabelo"/>
+                <Label Text="Cabelo" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
+            </HorizontalStackLayout>
+
+            <!-- Barba -->
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                <CheckBox x:Name="chkBarba"/>
+                <Label Text="Barba" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
+            </HorizontalStackLayout>
+
+            <!-- Sobrancelha -->
+            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                <CheckBox x:Name="chkSobrancelha"/>
+                <Label Text="Sobrancelha" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
+            </HorizontalStackLayout>
+
+            <!-- Coloração -->
+            <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
+                <CheckBox x:Name="chkColoracao"/>
+                <Label Text="Coloração" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
+            </HorizontalStackLayout>
+
+        </Grid>
+
 
         <!-- Médicos -->
         <Label Text="Escolha o Profissional:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>

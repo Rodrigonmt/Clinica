@@ -28,21 +28,42 @@
                             <TapGestureRecognizer Tapped="OnConsultaTapped" />
                         </Frame.GestureRecognizers>
 
-                        <VerticalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="10">
+
+                            <!-- TÍTULOS -->
+                            <Label Text="Data:" Grid.Row="0" Grid.Column="0"
+               FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+
+                            <Label Text="Hora:" Grid.Row="1" Grid.Column="0"
+               FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+
+                            <Label Text="Profissional:" Grid.Row="2" Grid.Column="0"
+               FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+
+                            <Label Text="Status:" Grid.Row="3" Grid.Column="0"
+               FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+
+
+                            <!-- VALORES -->
                             <Label Text="{Binding Data, StringFormat='{0:dd/MM/yyyy}'}"
-                                   FontSize="18" TextColor="Black"/>
+               Grid.Row="0" Grid.Column="1"
+               FontSize="16" TextColor="Black"/>
 
-                            <Label Text="{Binding Hora}" 
-                                   FontSize="16" TextColor="Gray"/>
+                            <Label Text="{Binding Hora}"
+               Grid.Row="1" Grid.Column="1"
+               FontSize="16" TextColor="Gray"/>
 
-                            <Label Text="{Binding Medico}" 
-                                   FontSize="16" TextColor="#007AFF"/>
+                            <Label Text="{Binding Medico}"
+               Grid.Row="2" Grid.Column="1"
+               FontSize="16" TextColor="#007AFF"/>
 
-                            <Label Text="{Binding Status}" 
-                                   FontSize="14" FontAttributes="Italic"
-                                   TextColor="DarkGreen"/>
-                        </VerticalStackLayout>
+                            <Label Text="{Binding Status}"
+               Grid.Row="3" Grid.Column="1"
+               FontSize="14" FontAttributes="Italic" TextColor="DarkGreen"/>
+
+                        </Grid>
                     </Frame>
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

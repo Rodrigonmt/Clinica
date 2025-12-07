@@ -81,6 +81,21 @@
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
+                    <!-- Serviço -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Serviço"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="servico_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblServico"
+                           FontSize="18"
+                           TextColor="Black"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+
                 </VerticalStackLayout>
             </Frame>
 

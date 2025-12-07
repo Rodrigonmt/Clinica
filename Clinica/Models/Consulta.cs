@@ -37,6 +37,9 @@ namespace Clinica.Models
 
         public override string ToString() =>
             $"{Data:yyyy-MM-dd} {Hora} - {Medico} ({Status})";
+
+        [JsonPropertyName("servico")]
+        public string Servico { get; set; }
     }
 
     public enum StatusConsulta

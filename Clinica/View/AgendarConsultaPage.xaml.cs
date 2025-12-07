@@ -81,21 +81,32 @@ namespace Clinica.View
                 return;
             }
 
+            // 👉 Primeiro capturamos os serviços selecionados
+            var servicos = ObterServicosSelecionados();
+
+            // 👉 Depois validamos
+            if (string.IsNullOrWhiteSpace(servicos))
+            {
+                await DisplayAlert("Aviso", "Selecione pelo menos um serviço.", "OK");
+                return;
+            }
+
             if (timePicker.SelectedItem == null)
             {
                 await DisplayAlert("Aviso", "Selecione um horário.", "OK");
                 return;
             }
 
-            // Cria o objeto consulta
+            // 👉 Criar consulta com serviços incluídos
             var consulta = new Consulta
             {
                 Data = datePicker.Date,
                 Hora = timePicker.SelectedItem.ToString(),
                 Medico = _medicoNome,
+                Servico = servicos,    // <-- aqui vai o serviço!
                 CriadoEm = DateTime.UtcNow,
                 Usuario = SessaoUsuario.UsuarioLogado?.UsuarioLogin,
-                Status = StatusConsulta.Agendada, // 🔹 Status inicial
+                Status = StatusConsulta.Agendada,
                 Observacoes = txtObservacoes.Text
             };
 
@@ -105,31 +116,26 @@ namespace Clinica.View
                 var json = JsonSerializer.Serialize(consulta);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Envia para o Firebase
+                // Envia para o Firebase (POST → cria ID automático)
                 var response = await _httpClient.PostAsync(FirebaseUrl, content);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
-
-                    // Voltar para MainPage
-                    await Shell.Current.GoToAsync("/MainPage");
-                    // ou, se quiser garantir que sempre vai pra MainPage:
-                    // await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-
+                    await DisplayAlert("Erro", "Não foi possível salvar a consulta.", "OK");
+                    return;
                 }
-                else
-                {
-                    await DisplayAlert("Erro", $"Falha ao agendar: {response.StatusCode}", "OK");
-                }
+
+                await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
+
+                // Voltar para a página principal
+                await Shell.Current.GoToAsync("/MainPage");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
+                await DisplayAlert("Erro", "Falha ao salvar: " + ex.Message, "OK");
             }
-
-
         }
+
 
         protected override bool OnBackButtonPressed()
         {
@@ -234,6 +240,19 @@ namespace Clinica.View
                 await DisplayAlert("Aviso", "Selecione um médico antes de escolher o horário.", "OK");
             }
         }
+
+        private string ObterServicosSelecionados()
+        {
+            var lista = new List<string>();
+
+            if (chkCabelo.IsChecked) lista.Add("Cabelo");
+            if (chkBarba.IsChecked) lista.Add("Barba");
+            if (chkSobrancelha.IsChecked) lista.Add("Sobrancelha");
+            if (chkColoracao.IsChecked) lista.Add("Coloração de Cabelo");
+
+            return string.Join(" + ", lista);
+        }
+
 
     }
 

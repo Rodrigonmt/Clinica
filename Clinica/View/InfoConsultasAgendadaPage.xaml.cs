@@ -31,11 +31,13 @@ namespace Clinica.View
             lblHora.Text = Consulta.Hora;
             lblMedico.Text = Consulta.Medico;
             lblStatus.Text = Consulta.Status.ToString();
+            lblServico.Text = Consulta.Servico; // <-- ADICIONADO
 
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."
                 : Consulta.Observacoes;
         }
+
 
 
         private async void OnCancelarClicked(object sender, EventArgs e)
