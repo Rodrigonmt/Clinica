@@ -58,7 +58,7 @@
                 HorizontalOptions="FillAndExpand"
                 StrokeShape="RoundRectangle 10">
             <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnSalvarReagendamentoClicked"/>
+                <TapGestureRecognizer Tapped="OnReagendarClicked" />
             </Border.GestureRecognizers>
 
             <Label Text="Salvar Reagendamento"

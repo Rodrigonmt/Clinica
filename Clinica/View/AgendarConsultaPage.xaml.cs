@@ -36,42 +36,42 @@
                 datePicker.MinimumDate = DateTime.Today; // opcional
             }
 
-            // 👉 Evento ao clicar em um médico
-            private void OnMedicoTapped(object sender, EventArgs e)
+        // 👉 Evento ao clicar em um médico
+        private void OnMedicoTapped(object sender, EventArgs e)
+        {
+            var borderClicado = sender as Border ?? ((sender as TapGestureRecognizer)?.Parent as Border);
+            if (borderClicado == null) return;
+
+            // Reset do médico anterior
+            if (_medicoSelecionado != null)
             {
-                var borderClicado = sender as Border ?? ((sender as TapGestureRecognizer)?.Parent as Border);
-                if (borderClicado == null) return;
-
-                // Reset do médico anterior
-                if (_medicoSelecionado != null)
-                {
-                    _medicoSelecionado.Stroke = Colors.Transparent;
-                    _medicoSelecionado.BackgroundColor = Color.FromArgb("#D0E8FF");
-                }
-
-                // Destacar médico selecionado
-                borderClicado.Stroke = Colors.Blue;
-                borderClicado.BackgroundColor = Color.FromArgb("#ADD8FF");
-                _medicoSelecionado = borderClicado;
-
-                // Captura o nome do médico pelo CommandParameter
-                if (borderClicado.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tapGesture)
-                {
-                    _medicoNome = tapGesture.CommandParameter?.ToString();
-                }
-
-                // 🔥 Sempre limpar horário escolhido ao trocar de médico
-                timePicker.SelectedItem = null;
-
-                // Ativa o horário após medico selecionado
-                timePicker.IsEnabled = true;
-
-                // Atualizar horários disponíveis
-                AtualizarHorariosDisponiveis();
+                _medicoSelecionado.Stroke = Colors.Transparent;
+                _medicoSelecionado.BackgroundColor = Color.FromArgb("#D0E8FF");
             }
 
-            // 👉 Evento do botão "Agendar Consulta"
-            private async void OnAgendarConsultaClicked(object sender, EventArgs e)
+            // Destacar médico selecionado
+            borderClicado.Stroke = Colors.Blue;
+            borderClicado.BackgroundColor = Color.FromArgb("#ADD8FF");
+            _medicoSelecionado = borderClicado;
+
+            // Captura o nome do médico pelo CommandParameter
+            if (borderClicado.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tapGesture)
+            {
+                _medicoNome = tapGesture.CommandParameter?.ToString();
+            }
+
+            // 🔥 Sempre limpar horário escolhido ao trocar de médico
+            timePicker.SelectedItem = null;
+
+            // Ativa o horário após medico selecionado
+            timePicker.IsEnabled = true;
+
+            // Atualizar horários disponíveis
+            AtualizarHorariosDisponiveis();
+        }
+
+        // 👉 Evento do botão "Agendar Consulta"
+        private async void OnAgendarConsultaClicked(object sender, EventArgs e)
             {
                 await ClickEffect((VisualElement)sender);
 
