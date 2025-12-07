@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<!--<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.CadastroPage"
@@ -26,4 +26,91 @@
 
         </VerticalStackLayout>
     </ScrollView>
+</ContentPage>-->
+    
+
+    
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Clinica.View.CadastroPage"
+    BackgroundColor="#F4F7FB"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#8BA2FF" Offset="0.0"/>
+                <GradientStop Color="#5A7DFE" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollView>
+            <VerticalStackLayout Padding="30" Spacing="25">
+
+                <Label Text="Criar Conta"
+                       FontSize="34"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+
+                <Frame BackgroundColor="White"
+                       CornerRadius="25"
+                       Padding="25"
+                       HasShadow="True">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <!-- Email -->
+                        <Border StrokeThickness="0"
+                                BackgroundColor="#F0F2F5"
+                                Padding="12"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 12">
+
+                            <Entry x:Name="EmailEntry"
+                                   Placeholder="Email"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <!-- Senha -->
+                        <Border StrokeThickness="0"
+                                BackgroundColor="#F0F2F5"
+                                Padding="12"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 12">
+
+                            <Entry x:Name="SenhaEntry"
+                                   Placeholder="Senha"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <!-- Repetir Senha -->
+                        <Border StrokeThickness="0"
+                                BackgroundColor="#F0F2F5"
+                                Padding="12"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 12">
+
+                            <Entry x:Name="RepetirEntry"
+                                   Placeholder="Repetir senha"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <Button Text="Criar conta"
+                                Clicked="OnCriarClicked"
+                                HeightRequest="55"
+                                CornerRadius="15"
+                                BackgroundColor="#5A7DFE"
+                                TextColor="White"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

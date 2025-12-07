@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<!--<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.LoginPage"
@@ -74,4 +74,98 @@
         <Label Text="Não me Toque" FontSize="18" HorizontalOptions="Center" VerticalOptions="End" Padding="40"/>
 
     </Grid>
+</ContentPage>-->
+
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Clinica.View.LoginPage"
+    BackgroundColor="#F4F7FB"
+    Shell.NavBarIsVisible="False">
+
+    <Grid>
+        <!-- Fundo gradiente -->
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#5A7DFE" Offset="0.0"/>
+                <GradientStop Color="#8BA2FF" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollView>
+            <VerticalStackLayout Padding="30" Spacing="25">
+
+                <Label Text="Bem-vindo"
+                       FontSize="34"
+                       TextColor="White"
+                       FontAttributes="Bold"/>
+
+                <Label Text="Faça login para continuar"
+                       FontSize="18"
+                       TextColor="White"
+                       Opacity="0.8"/>
+
+                <!-- Container branco -->
+                <Frame BackgroundColor="White"
+                       CornerRadius="25"
+                       Padding="25"
+                       HasShadow="True">
+
+                    <VerticalStackLayout Spacing="20">
+
+                        <!-- Campo Email -->
+                        <Border StrokeThickness="0"
+                                BackgroundColor="#F0F2F5"
+                                Padding="12"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 12">
+
+                            <Entry x:Name="EmailEntry"
+                                   Placeholder="Email"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <!-- Campo Senha -->
+                        <Border StrokeThickness="0"
+                                BackgroundColor="#F0F2F5"
+                                Padding="12"
+                                HeightRequest="50"
+                                StrokeShape="RoundRectangle 12">
+
+                            <Entry x:Name="SenhaEntry"
+                                   Placeholder="Senha"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent"/>
+                        </Border>
+
+                        <!-- Botão -->
+                        <Button Text="Entrar"
+                                Clicked="OnLoginClicked"
+                                HeightRequest="55"
+                                CornerRadius="15"
+                                BackgroundColor="#5A7DFE"
+                                TextColor="White"
+                                FontSize="20"
+                                FontAttributes="Bold"/>
+
+                        <!-- Link Criar Conta -->
+                        <HorizontalStackLayout HorizontalOptions="Center">
+                            <Label Text="Não tem conta?" TextColor="#666"/>
+                            <Label Text=" Cadastre-se"
+                                   TextColor="#5A7DFE"
+                                   FontAttributes="Bold">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnCadastrarClicked"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
+
