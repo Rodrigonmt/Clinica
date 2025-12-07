@@ -1,4 +1,9 @@
 using Clinica.Models;
+using System.Text.Json;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text;
+
 
 namespace Clinica.View
 {
@@ -6,6 +11,9 @@ namespace Clinica.View
     public partial class InfoConsultasAgendadaPage : ContentPage
     {
         private Consulta _consulta;
+        private readonly HttpClient _httpClient = new HttpClient();
+        private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com";
+
 
         public Consulta Consulta
         {
@@ -49,17 +57,37 @@ namespace Clinica.View
             if (confirm)
             {
                 // Sua lógica para cancelar a consulta aqui
-                await DisplayAlert("Cancelada", "A consulta foi cancelada.", "OK");
-                await Shell.Current.GoToAsync("/ConsultasAgendaPage");
+                bool sucesso = await CancelarConsultaAsync();
+
+                if (sucesso)
+                {
+                    await DisplayAlert("Cancelada", "A consulta foi cancelada.", "OK");
+                    await Shell.Current.GoToAsync("/ConsultasAgendaPage");
+                }
+                else
+                {
+                    await DisplayAlert("Erro", "Não foi possível cancelar a consulta.", "OK");
+                }
+
             }
-            
+
         }
 
         private async void OnReagendarClicked(object sender, EventArgs e)
         {
-            // Aqui você navega para sua tela de reagendamento
-            await Shell.Current.GoToAsync(nameof(AgendarConsultaPage));
+            if (Consulta == null)
+            {
+                await DisplayAlert("Erro", "Consulta inválida.", "OK");
+                return;
+            }
+
+            // Envia o objeto completo para a tela de reagendamento
+            await Shell.Current.GoToAsync($"{nameof(InfoReagendamentoConsultaPage)}", true, new Dictionary<string, object>
+        {
+        { "Consulta", Consulta }
+            });
         }
+
 
         protected override bool OnBackButtonPressed()
         {
@@ -69,6 +97,40 @@ namespace Clinica.View
             });
 
             return true;
+        }
+
+        private async Task<bool> CancelarConsultaAsync()
+        {
+            try
+            {
+                if (Consulta == null || string.IsNullOrEmpty(Consulta.Id))
+                {
+                    await DisplayAlert("Erro", "Consulta inválida.", "OK");
+                    return false;
+                }
+
+                string url = $"{FirebaseUrl}/consultas/{Consulta.Id}.json";
+
+                var update = new
+                {
+                    status = (int)StatusConsulta.CanceladaCliente
+                };
+
+                var json = JsonSerializer.Serialize(update);
+
+                var content = new StringContent(json, Encoding.UTF8);
+                content.Headers.ContentType =
+                    new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                var response = await _httpClient.PatchAsync(url, content);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao cancelar: {ex.Message}", "OK");
+                return false;
+            }
         }
 
     }

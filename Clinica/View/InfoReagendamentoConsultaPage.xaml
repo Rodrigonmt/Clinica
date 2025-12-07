@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.InfoReagendamentoConsultaPage"
+             BackgroundColor="White"
+             Title="Reagendar Consulta">
+
+    <VerticalStackLayout Padding="15" Spacing="10">
+
+        <Label Text="Escolha a nova data:"
+               FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+        <DatePicker x:Name="datePicker"
+                    Format="dd/MM/yyyy"
+                    BackgroundColor="#D0E8FF"
+                    TextColor="Black"/>
+
+        <Label Text="Serviços:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="20" RowSpacing="15">
+
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="0">
+                <CheckBox x:Name="chkCabelo"/>
+                <Label Text="Cabelo"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Grid.Row="0" Grid.Column="1">
+                <CheckBox x:Name="chkBarba"/>
+                <Label Text="Barba"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Grid.Row="1" Grid.Column="0">
+                <CheckBox x:Name="chkSobrancelha"/>
+                <Label Text="Sobrancelha"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout Grid.Row="1" Grid.Column="1">
+                <CheckBox x:Name="chkColoracao"/>
+                <Label Text="Coloração"/>
+            </HorizontalStackLayout>
+
+        </Grid>
+
+        <Label Text="Profissional:" FontSize="18" FontAttributes="Bold"/>
+
+        <ScrollView Orientation="Horizontal" HeightRequest="140">
+            <HorizontalStackLayout x:Name="medicosStack" Spacing="15"/>
+        </ScrollView>
+
+        <Label Text="Horário disponível:" FontSize="18" FontAttributes="Bold"/>
+        <Picker x:Name="timePicker"
+                Title="Escolha um horário"
+                BackgroundColor="#D0E8FF"
+                TextColor="Black"/>
+
+        <Border BackgroundColor="#007AFF"
+                StrokeThickness="0"
+                HeightRequest="50"
+                Padding="10"
+                HorizontalOptions="FillAndExpand"
+                StrokeShape="RoundRectangle 10">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnSalvarReagendamentoClicked"/>
+            </Border.GestureRecognizers>
+
+            <Label Text="Salvar Reagendamento"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   FontSize="18"
+                   FontAttributes="Bold"/>
+        </Border>
+
+        <Label Text="Observações (opcional):"
+               FontSize="18" FontAttributes="Bold"/>
+
+        <Editor x:Name="txtObservacoes"
+                BackgroundColor="#D0E8FF"
+                HeightRequest="120"/>
+
+    </VerticalStackLayout>
+
+</ContentPage>

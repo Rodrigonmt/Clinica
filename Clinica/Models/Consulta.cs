@@ -48,8 +48,8 @@ namespace Clinica.Models
         Confirmada,
         EmAndamento,
         Concluida,
-        CanceladaPaciente,
-        CanceladaClinica,
+        CanceladaCliente,
+        CanceladaEmpresa,
         NaoCompareceu,
         Reagendada
     }

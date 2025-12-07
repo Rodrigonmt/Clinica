@@ -54,19 +54,28 @@ namespace Clinica.View
                     StatusConsulta.Reagendada
                 };
 
-                var minhasConsultas = consultasDict
-                .Values
-                .Where(c =>
-                    c.Usuario == usuarioLogado &&
-                    statusPermitidos.Contains(c.Status)
-                )
-                .OrderBy(c => c.Data)
-                .ThenBy(c => c.Hora)
-                .ToList();
-
                 Consultas.Clear();
-                foreach (var consulta in minhasConsultas)
-                    Consultas.Add(consulta);
+
+                foreach (var item in consultasDict)
+                {
+                    var id = item.Key;
+                    var consulta = item.Value;
+
+                    // 🔹 Inserimos o ID no objeto recebido
+                    consulta.Id = id;
+
+                    // 🔹 Filtro de usuário e status
+                    if (consulta.Usuario == usuarioLogado &&
+                        statusPermitidos.Contains(consulta.Status))
+                    {
+                        Consultas.Add(consulta);
+                    }
+                }
+
+                Consultas = new ObservableCollection<Consulta>(
+                    Consultas.OrderBy(c => c.Data).ThenBy(c => c.Hora)
+                );
+
 
                 lblSemConsultas.IsVisible = !Consultas.Any();
             }
