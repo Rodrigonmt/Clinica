@@ -39,34 +39,33 @@
         // 👉 Evento ao clicar em um médico
         private void OnMedicoTapped(object sender, EventArgs e)
         {
-            var borderClicado = sender as Border ?? ((sender as TapGestureRecognizer)?.Parent as Border);
+            var borderClicado = sender as Border ??
+                                ((sender as TapGestureRecognizer)?.Parent as Border);
             if (borderClicado == null) return;
 
-            // Reset do médico anterior
             if (_medicoSelecionado != null)
             {
                 _medicoSelecionado.Stroke = Colors.Transparent;
                 _medicoSelecionado.BackgroundColor = Color.FromArgb("#D0E8FF");
             }
 
-            // Destacar médico selecionado
             borderClicado.Stroke = Colors.Blue;
             borderClicado.BackgroundColor = Color.FromArgb("#ADD8FF");
             _medicoSelecionado = borderClicado;
 
-            // Captura o nome do médico pelo CommandParameter
             if (borderClicado.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tapGesture)
             {
                 _medicoNome = tapGesture.CommandParameter?.ToString();
             }
 
-            // 🔥 Sempre limpar horário escolhido ao trocar de médico
+            // 🔥 Limpa o horário SEMPRE que trocar o médico
             timePicker.SelectedItem = null;
+            timePicker.ItemsSource = null;
+            timePicker.Title = "Escolha um horário";
 
-            // Ativa o horário após medico selecionado
+            // Ativa o picker
             timePicker.IsEnabled = true;
 
-            // Atualizar horários disponíveis
             AtualizarHorariosDisponiveis();
         }
 
@@ -161,77 +160,74 @@
                 "11:00","11:30","14:00","14:30","15:00","15:30","16:00"
             };
 
-            private async void AtualizarHorariosDisponiveis()
+        private async void AtualizarHorariosDisponiveis()
+        {
+            if (string.IsNullOrEmpty(_medicoNome))
+                return;
+
+            try
             {
-                if (string.IsNullOrEmpty(_medicoNome))
-                    return; // precisa escolher médico primeiro
+                var response = await _httpClient.GetStringAsync(FirebaseUrl);
 
-                try
+                if (string.IsNullOrWhiteSpace(response) || response == "null")
                 {
-                    // Buscar todas as consultas do Firebase
-                    var response = await _httpClient.GetStringAsync(FirebaseUrl);
-
-                    if (string.IsNullOrWhiteSpace(response) || response == "null")
-                    {
-                        // Nenhuma consulta cadastrada → todos horários livres
-                        timePicker.ItemsSource = _horariosBase;
-                        return;
-                    }
-
-                    var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(response);
-
-                    var dataSelecionada = datePicker.Date.Date;
-
-                    // Filtrar consultas desse médico e deste dia
-                    var horariosOcupados = consultasDict
-                        .Where(c => c.Value.Medico == _medicoNome &&
-                                    c.Value.Data.Date == dataSelecionada &&
-                                    c.Value.Status != StatusConsulta.CanceladaEmpresa &&
-                                    c.Value.Status != StatusConsulta.CanceladaCliente)
-                        .Select(c => c.Value.Hora)
-                        .ToList();
-
-                    // Remover horários já ocupados
-                    var horariosDisponiveis = _horariosBase
-                        .Where(h => !horariosOcupados.Contains(h))
-                        .ToList();
-
-                    // Atualiza a lista no Picker
-                    timePicker.ItemsSource = horariosDisponiveis;
-
-                    // Limpa horário selecionado se ele não existe mais
-                    if (timePicker.SelectedItem != null &&
-                        !horariosDisponiveis.Contains(timePicker.SelectedItem.ToString()))
-                    {
-                        timePicker.SelectedItem = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    await DisplayAlert("Erro", "Não foi possível carregar horários: " + ex.Message, "OK");
-                }
-            }
-
-            private async void OnDataSelecionada(object sender, DateChangedEventArgs e)
-            {
-                if (e.NewDate.DayOfWeek == DayOfWeek.Saturday ||
-                    e.NewDate.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    await DisplayAlert("Data inválida",
-                        "A clínica não realiza atendimentos aos finais de semana.",
-                        "OK");
-
-                    // Volta a data para a última válida
-                    datePicker.Date = e.OldDate;
-
+                    timePicker.ItemsSource = _horariosBase;
+                    timePicker.SelectedItem = null;
+                    timePicker.Title = "Escolha um horário";
                     return;
                 }
 
-                // Atualizar horários disponíveis normalmente
-                AtualizarHorariosDisponiveis();
+                var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(response);
+                var dataSelecionada = datePicker.Date.Date;
+
+                var horariosOcupados = consultasDict
+                    .Where(c => c.Value.Medico == _medicoNome &&
+                                c.Value.Data.Date == dataSelecionada &&
+                                c.Value.Status != StatusConsulta.CanceladaEmpresa &&
+                                c.Value.Status != StatusConsulta.CanceladaCliente)
+                    .Select(c => c.Value.Hora)
+                    .ToList();
+
+                var horariosDisponiveis = _horariosBase
+                    .Where(h => !horariosOcupados.Contains(h))
+                    .ToList();
+
+                timePicker.ItemsSource = horariosDisponiveis;
+
+                // ❌ NÃO SELECIONAR AUTOMATICAMENTE MESMO QUE EXISTA
+                timePicker.SelectedItem = null;
+                timePicker.Title = "Escolha um horário";
+
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", "Não foi possível carregar horários: " + ex.Message, "OK");
+            }
+        }
+
+        private async void OnDataSelecionada(object sender, DateChangedEventArgs e)
+        {
+            if (e.NewDate.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
+            {
+                await DisplayAlert("Data inválida",
+                    "A clínica não realiza atendimentos aos finais de semana.",
+                    "OK");
+
+                datePicker.Date = e.OldDate;
+                return;
             }
 
-            private async void OnTimePickerFocused(object sender, FocusEventArgs e)
+            // 🔥 Sempre limpar o horário ao trocar a data
+            timePicker.SelectedItem = null;
+            timePicker.ItemsSource = null;
+            timePicker.Title = "Escolha um horário";
+
+            await Task.Delay(100);
+            AtualizarHorariosDisponiveis();
+        }
+
+
+        private async void OnTimePickerFocused(object sender, FocusEventArgs e)
             {
                 // Se não existe médico selecionado → bloqueia
                 if (string.IsNullOrEmpty(_medicoNome))
