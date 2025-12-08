@@ -1,12 +1,20 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.MainPage"
-             BackgroundColor="White">
+             BackgroundColor="White"
+             Shell.NavBarIsVisible="True"
+             Title="Barbearia Progresso">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="settings_white.png"
+                     Order="Primary"
+                     Priority="0"
+                     Clicked="OnConfigTapped"/>
+    </ContentPage.ToolbarItems>
 
     <!-- GRID EXTERNO COM 3 LINHAS -->
     <Grid RowDefinitions="*,Auto,Auto">
 
-        <!-- IMAGEM DE FUNDO COBRINDO TODA A TELA -->
+        <!-- IMAGEM DE FUNDO -->
         <Image Source="fundo04.jpg"
                Aspect="AspectFill"
                Opacity="1"
@@ -14,16 +22,13 @@
                VerticalOptions="FillAndExpand"
                HorizontalOptions="FillAndExpand" />
 
-        <!-- (1) CONTEÚDO PRINCIPAL -->
+        <!-- (1) TÍTULO -->
         <Grid Grid.Row="0">
-
             <Grid Padding="20" RowSpacing="15">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <!-- Título -->
                     <RowDefinition Height="*"/>
-                    <!-- Espaço -->
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0"
@@ -35,12 +40,10 @@
                        VerticalOptions="Center"
                        TextColor="White"
                        Margin="0,250,0,10" />
-
             </Grid>
-
         </Grid>
 
-        <!-- (2) FRAMES ACIMA DO ENDEREÇO -->
+        <!-- (2) CARDS PRINCIPAIS -->
         <Grid Grid.Row="1"
               Padding="20"
               RowSpacing="15">
@@ -51,10 +54,6 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
             <!-- MARCAR HORÁRIO -->
             <Frame Grid.Row="0"
                    CornerRadius="15"
@@ -62,7 +61,6 @@
                    Opacity="0.75"
                    BackgroundColor="White"
                    HasShadow="True">
-
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnAgendarConsultaTapped"/>
                 </Frame.GestureRecognizers>
@@ -72,7 +70,7 @@
                            HeightRequest="60"
                            WidthRequest="60"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
 
                     <Label Text="MARCAR HORÁRIO"
                            FontSize="18"
@@ -80,7 +78,7 @@
                            FontAttributes="Bold"
                            TextColor="Black"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
                 </Grid>
             </Frame>
 
@@ -91,7 +89,6 @@
                    Opacity="0.75"
                    BackgroundColor="White"
                    HasShadow="True">
-
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnConsultasAgendadasTapped"/>
                 </Frame.GestureRecognizers>
@@ -101,7 +98,7 @@
                            HeightRequest="60"
                            WidthRequest="60"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
 
                     <Label Text="HORÁRIOS AGENDADOS"
                            FontSize="18"
@@ -109,7 +106,7 @@
                            FontAttributes="Bold"
                            TextColor="Black"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
                 </Grid>
             </Frame>
 
@@ -120,7 +117,6 @@
                    Opacity="0.75"
                    BackgroundColor="White"
                    HasShadow="True">
-
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnHistoricoConsultasAgendadasPage"/>
                 </Frame.GestureRecognizers>
@@ -130,7 +126,7 @@
                            HeightRequest="60"
                            WidthRequest="60"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
 
                     <Label Text="HISTÓRICO"
                            FontSize="18"
@@ -138,13 +134,12 @@
                            FontAttributes="Bold"
                            TextColor="Black"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+                           VerticalOptions="Center"/>
                 </Grid>
             </Frame>
-
         </Grid>
 
-        <!-- (3) BARRA DE ENDEREÇO NO RODAPÉ -->
+        <!-- (3) RODAPÉ -->
         <Grid Grid.Row="2"
               BackgroundColor="#80000000"
               Padding="15"

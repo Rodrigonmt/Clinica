@@ -164,6 +164,12 @@
 
                     </VerticalStackLayout>
                 </Frame>
+
+                <Button Text="Esqueci minha senha"
+                    Clicked="OnRecuperarClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="Blue"/>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

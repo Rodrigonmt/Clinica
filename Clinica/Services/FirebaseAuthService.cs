@@ -57,6 +57,32 @@ namespace Clinica.Services
 
             return obj.idToken;
         }
+
+        public async Task<bool> EnviarEmailRecuperacao(string email)
+        {
+            string url = $"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={ApiKey}";
+
+            var dados = new
+            {
+                requestType = "PASSWORD_RESET",
+                email = email
+            };
+
+            var json = JsonSerializer.Serialize(dados);
+            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var http = new HttpClient();
+            var response = await http.PostAsync(url, conteudo);
+
+            return response.IsSuccessStatusCode;
+        }
+
+    }
+
+    public class AuthResult
+    {
+        public string Token { get; set; } // O idToken do Firebase
+        public string LocalId { get; set; } // O ID do usuário no Firebase
     }
 
     public class AuthResponse

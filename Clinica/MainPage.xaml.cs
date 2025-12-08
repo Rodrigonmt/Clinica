@@ -1,3 +1,5 @@
+using Clinica.View;
+
 namespace Clinica
 {
     public partial class MainPage : ContentPage
@@ -21,6 +23,11 @@ namespace Clinica
         private async void OnHistoricoConsultasAgendadasPage(object sender, EventArgs e)
         {
             await Shell.Current.GoToAsync(nameof(View.HistoricoConsultasAgendadasPage));
+        }
+
+        private async void OnConfigTapped(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(PerfilPage));
         }
     }
 }

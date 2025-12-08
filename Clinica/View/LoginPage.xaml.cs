@@ -115,4 +115,8 @@ public partial class LoginPage : ContentPage
     {
         await Shell.Current.GoToAsync(nameof(CadastroPage));
     }
+    private async void OnRecuperarClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(RecuperarSenhaPage));
+    }
 }

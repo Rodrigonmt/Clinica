@@ -99,4 +99,14 @@ public partial class CadastroPage : ContentPage
         await DisplayAlert("Sucesso", "Conta criada com sucesso!", "OK");
         await Shell.Current.GoToAsync("//LoginPage");
     }
+
+    protected override bool OnBackButtonPressed()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Shell.Current.GoToAsync("//LoginPage");
+        });
+
+        return true;
+    }
 }
