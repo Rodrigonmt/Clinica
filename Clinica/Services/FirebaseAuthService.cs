@@ -32,7 +32,7 @@ namespace Clinica.Services
             return "OK";
         }
 
-        public async Task<string?> Login(string email, string senha)
+        public async Task<AuthResponse?> Login(string email, string senha)
         {
             string url = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={ApiKey}";
 
@@ -53,10 +53,9 @@ namespace Clinica.Services
                 return null;
 
             var respostaString = await response.Content.ReadAsStringAsync();
-            var obj = JsonSerializer.Deserialize<AuthResponse>(respostaString);
-
-            return obj.idToken;
+            return JsonSerializer.Deserialize<AuthResponse>(respostaString);
         }
+
 
         public async Task<bool> EnviarEmailRecuperacao(string email)
         {

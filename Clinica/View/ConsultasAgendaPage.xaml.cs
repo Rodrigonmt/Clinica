@@ -39,7 +39,7 @@ namespace Clinica.View
                 // 🔹 Firebase retorna um dicionário (id gerado -> objeto consulta)
                 var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(json);
 
-                var usuarioLogado = SessaoUsuario.UsuarioLogado?.UsuarioLogin;
+                var usuarioLogado = SessaoUsuario.UsuarioLogado?.UserId;
 
                 if (string.IsNullOrEmpty(usuarioLogado))
                 {

@@ -104,7 +104,7 @@
                     Medico = _medicoNome,
                     Servico = servicos,    // <-- aqui vai o serviço!
                     CriadoEm = DateTime.UtcNow,
-                    Usuario = SessaoUsuario.UsuarioLogado?.UsuarioLogin,
+                    Usuario = SessaoUsuario.UsuarioLogado?.UserId,
                     Status = StatusConsulta.Agendada,
                     Observacoes = txtObservacoes.Text
                 };

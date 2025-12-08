@@ -74,6 +74,7 @@
 //}
 
 
+using Clinica.Models;
 using Clinica.Services;
 
 namespace Clinica.View;
@@ -92,22 +93,24 @@ public partial class LoginPage : ContentPage
         string email = EmailEntry.Text;
         string senha = SenhaEntry.Text;
 
-        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(senha))
-        {
-            await DisplayAlert("Erro", "Preencha email e senha.", "OK");
-            return;
-        }
+        var auth = await _authService.Login(email, senha);
 
-        var token = await _authService.Login(email, senha);
-
-        if (token == null)
+        if (auth == null)
         {
             await DisplayAlert("Erro", "Email ou senha inválidos.", "OK");
             return;
         }
 
-        await SecureStorage.SetAsync("auth_token", token);
-        //await Shell.Current.GoToAsync("//MainPage");
+        // Salvar token
+        await SecureStorage.SetAsync("auth_token", auth.idToken);
+
+        // 👉 Salvar usuário logado na sessão
+        SessaoUsuario.UsuarioLogado = new Usuario
+        {
+            UserId = auth.localId,
+            Email = auth.email
+        };
+
         await Shell.Current.GoToAsync(nameof(MainPage));
     }
 
