@@ -123,7 +123,16 @@
                             </Label.GestureRecognizers>
                         </Label>
 
+                        
+
                     </Grid>
+
+                    <HorizontalStackLayout Spacing="8" VerticalOptions="Center">
+                        <CheckBox x:Name="chkLembrar" Color="{DynamicResource PrimaryColor}" />
+                        <Label Text="Lembrar-me"
+                           TextColor="{DynamicResource TextColorPrimary}"
+                           VerticalOptions="Center" />
+                    </HorizontalStackLayout>
 
                     <!-- Botão Login -->
                     <Button x:Name="btnEntrar"

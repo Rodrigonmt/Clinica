@@ -14,7 +14,6 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        // Animação
         await btnEntrar.ScaleTo(0.92, 80);
         await btnEntrar.ScaleTo(1, 120);
 
@@ -29,7 +28,13 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        await SecureStorage.SetAsync("auth_token", auth.idToken);
+        // 🔐 SALVAR LOGIN SEGURO
+        await SecureStorage.SetAsync("email", auth.email);
+        await SecureStorage.SetAsync("user_id", auth.localId);
+        await SecureStorage.SetAsync("refresh_token", auth.refreshToken);
+
+        // token expira rápido, não é obrigatório guardar
+        await SecureStorage.SetAsync("id_token", auth.idToken);
 
         SessaoUsuario.UsuarioLogado = new Usuario
         {
@@ -37,8 +42,21 @@ public partial class LoginPage : ContentPage
             Email = auth.email
         };
 
+        if (chkLembrar.IsChecked)
+        {
+            await SecureStorage.SetAsync("lembrar", "true");
+        }
+        else
+        {
+            SecureStorage.Remove("lembrar");
+        }
+
         await Shell.Current.GoToAsync(nameof(MainPage));
+
+        
+
     }
+
 
     private async void OnCadastrarClicked(object sender, EventArgs e)
     {
