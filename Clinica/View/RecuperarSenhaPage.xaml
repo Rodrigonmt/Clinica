@@ -1,22 +1,86 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Clinica.View.RecuperarSenhaPage"
-             Title="RecuperarSenhaPage">
-    <VerticalStackLayout Padding="20" Spacing="15">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Clinica.View.RecuperarSenhaPage"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{DynamicResource PageBackgroundColor}">
 
-        <Label Text="Digite seu e-mail para recuperar a senha"
-               FontSize="18"
-               HorizontalOptions="Center"/>
+    <!-- Recursos de Tema -->
+    <ContentPage.Resources>
 
-        <Entry x:Name="EmailEntry"
-               Placeholder="Seu e-mail"
-               Keyboard="Email"/>
+        <Color x:Key="LightBackground">#F4F7FB</Color>
+        <Color x:Key="LightCard">#FFFFFF</Color>
+        <Color x:Key="LightText">#222222</Color>
+        <Color x:Key="LightPlaceholder">#777</Color>
+        <Color x:Key="LightPrimary">#5A7DFE</Color>
 
-        <Button Text="Enviar"
-                Clicked="OnEnviarClicked"
-                BackgroundColor="#4CAF50"
-                TextColor="White"/>
+        <Color x:Key="DarkBackground">#1E1E1E</Color>
+        <Color x:Key="DarkCard">#2B2B2B</Color>
+        <Color x:Key="DarkText">#FFFFFF</Color>
+        <Color x:Key="DarkPlaceholder">#BBBBBB</Color>
+        <Color x:Key="DarkPrimary">#8BA2FF</Color>
 
-    </VerticalStackLayout>
+        <AppThemeBinding x:Key="PageBackgroundColor" Light="{StaticResource LightBackground}" Dark="{StaticResource DarkBackground}" />
+        <AppThemeBinding x:Key="CardColor" Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
+        <AppThemeBinding x:Key="TextColorPrimary" Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
+        <AppThemeBinding x:Key="PlaceholderColor" Light="{StaticResource LightPlaceholder}" Dark="{StaticResource DarkPlaceholder}" />
+        <AppThemeBinding x:Key="PrimaryColor" Light="{StaticResource LightPrimary}" Dark="{StaticResource DarkPrimary}" />
+
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="25">
+
+            <Label Text="Recuperar Senha"
+                   FontSize="36"
+                   TextColor="{DynamicResource TextColorPrimary}"
+                   FontAttributes="Bold" />
+
+            <Label Text="Digite seu e-mail para redefinir sua senha"
+                   FontSize="18"
+                   TextColor="{DynamicResource TextColorPrimary}" />
+
+            <!-- Card -->
+            <Frame BackgroundColor="{DynamicResource CardColor}"
+                   CornerRadius="25"
+                   Padding="25"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="22">
+
+                    <Label Text="Email"
+                           FontSize="16"
+                           TextColor="{DynamicResource TextColorPrimary}" />
+
+                    <Grid ColumnDefinitions="40,*"
+                          BackgroundColor="#F0F2F5"
+                          HeightRequest="55"
+                          Padding="5"
+                          ColumnSpacing="10">
+
+                        <Label Text="email" FontFamily="MaterialIcons" FontSize="24" VerticalOptions="Center" />
+
+                        <Entry x:Name="EmailEntry"
+                               Grid.Column="1"
+                               Placeholder="Digite seu email"
+                               Keyboard="Email"
+                               TextColor="{DynamicResource TextColorPrimary}"
+                               PlaceholderColor="{DynamicResource PlaceholderColor}"
+                               BackgroundColor="Transparent" />
+                    </Grid>
+
+                    <Button Text="Enviar"
+                            HeightRequest="55"
+                            CornerRadius="15"
+                            BackgroundColor="{DynamicResource PrimaryColor}"
+                            TextColor="White"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            Clicked="OnEnviarClicked" />
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
