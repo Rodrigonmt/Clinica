@@ -23,17 +23,33 @@ public partial class CadastroPage : ContentPage
             return;
         }
 
-        var result = await _authService.CriarUsuario(email, senha);
+        var auth = await _authService.CriarUsuario(email, senha);
 
-        if (result != "OK")
+
+        if (!auth.sucesso)
         {
-            await DisplayAlert("Erro", $"Falha ao criar conta: {result}", "OK");
+            await DisplayAlert("Erro ao criar conta", TraduzErroFirebase(auth.mensagem), "OK");
             return;
         }
+
 
         await DisplayAlert("Sucesso", "Conta criada com sucesso!", "OK");
         await Shell.Current.GoToAsync("//LoginPage");
     }
+
+    private string TraduzErroFirebase(string codigo)
+    {
+        return codigo switch
+        {
+            "EMAIL_EXISTS" => "Este e-mail já está cadastrado.",
+            "INVALID_EMAIL" => "O e-mail informado é inválido.",
+            "OPERATION_NOT_ALLOWED" => "Cadastro por email/senha está desativado no Firebase.",
+            "WEAK_PASSWORD" => "A senha deve ter no mínimo 6 caracteres.",
+            "TOO_MANY_ATTEMPTS_TRY_LATER" => "Muitas tentativas. Tente novamente mais tarde.",
+            _ => "Não foi possível criar sua conta. Tente novamente."
+        };
+    }
+
 
     protected override bool OnBackButtonPressed()
     {

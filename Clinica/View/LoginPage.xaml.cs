@@ -28,6 +28,17 @@ public partial class LoginPage : ContentPage
             return;
         }
 
+        // verifica se email foi confirmado
+        bool verificado = await _authService.EmailVerificado(auth.idToken);
+
+        if (!verificado)
+        {
+            await DisplayAlert("Atenção",
+                "Você ainda não confirmou seu email. Verifique sua caixa de entrada e a pasta de Spam.",
+                "OK");
+            return;
+        }
+
         // 🔐 SALVAR LOGIN SEGURO
         await SecureStorage.SetAsync("email", auth.email);
         await SecureStorage.SetAsync("user_id", auth.localId);

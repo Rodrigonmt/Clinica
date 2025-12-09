@@ -31,7 +31,7 @@ namespace Clinica.Services
             return JsonSerializer.Deserialize<AuthResponse>(respostaString);
         }
 
-        public async Task<string?> CriarUsuario(string email, string senha)
+        public async Task<(bool sucesso, string mensagem, AuthResponse? dados)> CriarUsuario(string email, string senha)
         {
             string url = $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={ApiKey}";
 
@@ -48,13 +48,33 @@ namespace Clinica.Services
             var http = new HttpClient();
             var response = await http.PostAsync(url, conteudo);
 
-            var resposta = await response.Content.ReadAsStringAsync();
+            string resposta = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
-                return resposta;
+            {
+                try
+                {
+                    var erro = JsonDocument.Parse(resposta);
+                    string mensagem = erro.RootElement
+                        .GetProperty("error")
+                        .GetProperty("message")
+                        .GetString();
 
-            return "OK";
+                    return (false, mensagem, null);
+                }
+                catch
+                {
+                    return (false, "ERRO_DESCONHECIDO", null);
+                }
+            }
+
+            var user = JsonSerializer.Deserialize<AuthResponse>(resposta);
+
+            await EnviarEmailVerificacao(user.idToken);
+
+            return (true, "OK", user);
         }
+
 
         public async Task<bool> EnviarEmailRecuperacao(string email)
         {
@@ -97,6 +117,68 @@ namespace Clinica.Services
             var resposta = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<AuthResponse>(resposta);
         }
+
+        public async Task<bool> EnviarEmailVerificacao(string idToken)
+        {
+            string url = $"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={ApiKey}";
+
+            var dados = new
+            {
+                requestType = "VERIFY_EMAIL",
+                idToken = idToken
+            };
+
+            var json = JsonSerializer.Serialize(dados);
+            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var http = new HttpClient();
+            var response = await http.PostAsync(url, conteudo);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> ConfirmarEmail(string codigo)
+        {
+            string url = $"https://identitytoolkit.googleapis.com/v1/accounts:update?key={ApiKey}";
+
+            var dados = new
+            {
+                oobCode = codigo
+            };
+
+            var json = JsonSerializer.Serialize(dados);
+            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var http = new HttpClient();
+            var response = await http.PostAsync(url, conteudo);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<bool> EmailVerificado(string idToken)
+        {
+            string url = $"https://identitytoolkit.googleapis.com/v1/accounts:lookup?key={ApiKey}";
+
+            var dados = new { idToken = idToken };
+
+            var json = JsonSerializer.Serialize(dados);
+            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var http = new HttpClient();
+            var response = await http.PostAsync(url, conteudo);
+
+            if (!response.IsSuccessStatusCode)
+                return false;
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+            var obj = JsonDocument.Parse(jsonResult);
+
+            return obj.RootElement
+                      .GetProperty("users")[0]
+                      .GetProperty("emailVerified")
+                      .GetBoolean();
+        }
+
     }
 
     public class AuthResponse
@@ -106,4 +188,6 @@ namespace Clinica.Services
         public string localId { get; set; }
         public string refreshToken { get; set; }
     }
+
+
 }
