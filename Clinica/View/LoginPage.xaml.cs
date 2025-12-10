@@ -22,11 +22,15 @@ public partial class LoginPage : ContentPage
 
         var auth = await _authService.Login(email, senha);
 
+
         if (auth == null)
         {
             await DisplayAlert("Erro", "Email ou senha inválidos.", "OK");
             return;
         }
+
+        // Salvar idToken temporariamente
+        await SecureStorage.SetAsync("auth_token", auth.idToken);
 
         // verifica se email foi confirmado
         bool verificado = await _authService.EmailVerificado(auth.idToken);
@@ -62,9 +66,23 @@ public partial class LoginPage : ContentPage
             SecureStorage.Remove("lembrar");
         }
 
-        await Shell.Current.GoToAsync(nameof(MainPage));
+        // Salvar refreshToken + userId SE o usuário marcou "lembrar-me"
+        // Salvar refreshToken + userId SOMENTE se marcou "lembrar-me"
+        if (chkLembrar.IsChecked)
+        {
+            await SecureStorage.SetAsync("lembrar", "true");
+            await SecureStorage.SetAsync("refresh_token", auth.refreshToken);
+            await SecureStorage.SetAsync("user_id", auth.localId);
+        }
+        else
+        {
+            SecureStorage.Remove("lembrar");
+            SecureStorage.Remove("refresh_token");
+            SecureStorage.Remove("user_id");
+        }
 
-        
+
+        await Shell.Current.GoToAsync(nameof(MainPage));
 
     }
 

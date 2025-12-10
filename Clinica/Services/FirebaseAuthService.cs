@@ -21,7 +21,7 @@ namespace Clinica.Services
             var json = JsonSerializer.Serialize(dados);
             var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var http = new HttpClient();
+            using var http = new HttpClient();
             var response = await http.PostAsync(url, conteudo);
 
             if (!response.IsSuccessStatusCode)
@@ -179,6 +179,40 @@ namespace Clinica.Services
                       .GetBoolean();
         }
 
+
+        public class RefreshResponse
+        {
+            public string id_token { get; set; }        // novo idToken (nome com underscore vindo do endpoint)
+            public string refresh_token { get; set; }   // novo refreshToken
+            public string expires_in { get; set; }
+            public string user_id { get; set; }
+        }
+
+        public async Task<RefreshResponse?> RefreshTokenAsync(string refreshToken)
+        {
+            // Endpoint para trocar refresh token
+            string url = $"https://securetoken.googleapis.com/v1/token?key={ApiKey}";
+
+            var dados = new Dictionary<string, string>
+    {
+        { "grant_type", "refresh_token" },
+        { "refresh_token", refreshToken }
+    };
+
+            using var http = new HttpClient();
+            var content = new FormUrlEncodedContent(dados);
+            var response = await http.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var respostaString = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<RefreshResponse>(respostaString);
+        }
+
+        
+
+
     }
 
     public class AuthResponse
@@ -187,7 +221,7 @@ namespace Clinica.Services
         public string email { get; set; }
         public string localId { get; set; }
         public string refreshToken { get; set; }
+        public string expiresIn { get; set; }
     }
-
 
 }

@@ -1,5 +1,6 @@
 namespace Clinica.View;
 using Clinica.Services;
+using Clinica.Models;
 public partial class PerfilPage : ContentPage
 {
     private readonly FirebaseStorageService _storage = new();
@@ -55,4 +56,26 @@ public partial class PerfilPage : ContentPage
 
         return true;
     }
+
+    private async Task Logout()
+    {
+        SessaoUsuario.UsuarioLogado = null;
+
+        SecureStorage.Remove("auth_token");
+        SecureStorage.Remove("refresh_token");
+        SecureStorage.Remove("user_id");
+        SecureStorage.Remove("foto_url");
+        SecureStorage.Remove("lembrar");
+
+        await Shell.Current.GoToAsync("//LoginPage");
+    }
+
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+        bool confirm = await DisplayAlert("Sair", "Deseja realmente sair?", "Sim", "Não");
+
+        if (confirm)
+            await Logout();
+    }
+
 }

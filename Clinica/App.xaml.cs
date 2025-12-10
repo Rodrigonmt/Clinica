@@ -9,16 +9,75 @@ namespace Clinica
         public App()
         {
             InitializeComponent();
+            // Sempre inicia no AppShell
+            MainPage = new AppShell();
         }
 
-        protected override Window CreateWindow(IActivationState activationState)
+        protected override async void OnStart()
         {
-            var window = new Window(new LoadingPage()); // <-- SEMPRE DEFINE UMA PAGE
-
-            _ = InitializeApp(window); // roda async depois
-
-            return window;
+            await TryAutoLogin();
         }
+
+        private async Task TryAutoLogin()
+        {
+            try
+            {
+                // Lê "lembrar senha"
+                var lembrar = await SecureStorage.GetAsync("lembrar");
+
+                //        // Se não lembrar → vai para login
+                if (lembrar != "true")
+                {
+                    await Shell.Current.GoToAsync(nameof(LoginPage));
+                    return;
+                }
+
+                var refreshToken = await SecureStorage.GetAsync("refresh_token");
+                if (string.IsNullOrEmpty(refreshToken))
+                    return; // nada a fazer
+
+                var authService = new FirebaseAuthService();
+                var refreshResp = await authService.RefreshTokenAsync(refreshToken);
+
+                if (refreshResp == null)
+                {
+                    // refresh falhou → limpar storage e pedir login
+                    SecureStorage.Remove("refresh_token");
+                    SecureStorage.Remove("auth_token");
+                    SecureStorage.Remove("user_id");
+                    return;
+                }
+
+                // Salvar novo idToken e refreshToken
+                await SecureStorage.SetAsync("auth_token", refreshResp.id_token);
+                await SecureStorage.SetAsync("refresh_token", refreshResp.refresh_token);
+                await SecureStorage.SetAsync("user_id", refreshResp.user_id ?? "");
+
+                // Popular sessao em memória
+                SessaoUsuario.UsuarioLogado = new Usuario
+                {
+                    UserId = refreshResp.user_id,
+                    Email = null // email não vem aqui; se precisar, carregue do Realtime/Firestore
+                };
+
+                // Navegar diretamente para MainPage ou atualizar UI
+                await Shell.Current.GoToAsync(nameof(MainPage));
+            }
+            catch
+            {
+                // falha silenciosa — não travar app
+            }
+        }
+
+
+        //protected override Window CreateWindow(IActivationState activationState)
+        //{
+        //    var window = new Window(new LoadingPage()); // <-- SEMPRE DEFINE UMA PAGE
+
+        //    _ = InitializeApp(window); // roda async depois
+
+        //    return window;
+        //}
 
         private async Task InitializeApp(Window window)
         {
