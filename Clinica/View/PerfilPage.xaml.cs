@@ -196,48 +196,59 @@ public partial class PerfilPage : ContentPage
         if (_telefoneCts != null)
             _telefoneCts.Cancel();
 
+        bool inserindo = e.NewTextValue?.Length > e.OldTextValue?.Length;
+
         int oldCursor = TelefoneEntry.CursorPosition;
 
         _telefoneCts = new CancellationTokenSource();
         var token = _telefoneCts.Token;
 
-        Task.Delay(40).ContinueWith(_ =>
+        Task.Delay(30).ContinueWith(_ =>
         {
             if (token.IsCancellationRequested) return;
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
                 string digits = new string(TelefoneEntry.Text.Where(char.IsDigit).ToArray());
-                if (digits.Length > 11) digits = digits[..11];
+                if (digits.Length > 11)
+                    digits = digits[..11];
 
                 string formatted;
 
                 if (digits.Length <= 10)
-                    formatted = $"({digits.PadRight(10, '_')[..2]}) {digits.PadRight(10, '_').Substring(2, 4)}-{digits.PadRight(10, '_')[6..10]}";
+                    formatted = $"({digits[..Math.Min(2, digits.Length)]}{(digits.Length >= 2 ? ") " : "")}" +
+                                $"{(digits.Length > 2 ? digits.Substring(2, Math.Min(4, digits.Length - 2)) : "")}" +
+                                $"{(digits.Length > 6 ? "-" : "")}" +
+                                $"{(digits.Length > 6 ? digits[6..] : "")}";
                 else
                     formatted = $"({digits[..2]}) {digits.Substring(2, 5)}-{digits[7..]}";
-
-                // remove underscores criados para completar
-                formatted = formatted.Replace("_", "");
 
                 if (TelefoneEntry.Text != formatted)
                 {
                     TelefoneEntry.Text = formatted;
 
-                    // Ajuste preciso da posição do cursor
                     int newCursor = oldCursor;
 
-                    // move cursor 1 a mais quando a máscara insere parenteses, espaço ou hífen
-                    if (oldCursor == 1 || oldCursor == 3) newCursor++; // '(' e ') '
-                    if (oldCursor == 9) newCursor++; // hífen
+                    if (inserindo)
+                    {
+                        // Avança cursor ao inserir mascara automaticamente
+                        if (newCursor == 1) newCursor = 2;                // "("
+                        else if (newCursor == 3) newCursor = 4;           // ") "
+                        else if (newCursor == 9) newCursor = 10;          // "-"
+                        else newCursor++;
+                    }
+                    else
+                    {
+                        // Ao apagar, não deixa cursor saltar errado
+                        if (newCursor > formatted.Length)
+                            newCursor = formatted.Length;
+                    }
 
                     TelefoneEntry.CursorPosition = Math.Min(newCursor, formatted.Length);
                 }
             });
         }, token);
     }
-
-
 
 
 
