@@ -2,50 +2,115 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.PerfilPage"
+             BackgroundColor="#F4F7FB"
              Title="Meu Perfil">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="15" Padding="20">
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Image x:Name="FotoPerfil"
-               WidthRequest="150"
-               HeightRequest="150"
-               Aspect="AspectFill"
-               Source="perfil_inicial.jpg"
-               HorizontalOptions="Center">
-
-                <Image.Clip>
-                    <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75" />
-                </Image.Clip>
-            </Image>
-
+            <!-- FOTO DO USUÁRIO -->
+            <Grid HorizontalOptions="Center">
+                <Image x:Name="FotoPerfil"
+                       WidthRequest="150"
+                       HeightRequest="150"
+                       Aspect="AspectFill"
+                       Source="perfil_inicial.jpg">
+                    <Image.Clip>
+                        <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75"/>
+                    </Image.Clip>
+                </Image>
+            </Grid>
 
             <Button Text="Alterar Foto"
-                    Clicked="OnAlterarFotoClicked"/>
+                    Clicked="OnAlterarFotoClicked"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    CornerRadius="12"/>
 
-            <Entry x:Name="NomeEntry"
-                   Placeholder="Nome completo"/>
 
-            <Entry x:Name="TelefoneEntry"
-                   Placeholder="Telefone"
-                   Keyboard="Telephone"/>
+            <!-- NOME -->
+            <VerticalStackLayout>
+                <Label Text="Nome Completo" FontAttributes="Bold"/>
+                <Entry x:Name="NomeEntry"
+                       Placeholder="Digite seu nome"/>
+            </VerticalStackLayout>
 
-            <Entry x:Name="DataNascEntry"
-                   Placeholder="Data de nascimento (opcional)"/>
 
-            <Entry x:Name="EnderecoEntry"
-                   Placeholder="Endereço (opcional)"/>
+            <!-- TELEFONE COM MÁSCARA -->
+            <VerticalStackLayout>
+                <Label Text="Telefone" FontAttributes="Bold"/>
+                <Entry x:Name="TelefoneEntry"
+                       Placeholder="(00) 00000-0000"
+                       Keyboard="Telephone"
+                       TextChanged="TelefoneEntry_TextChanged"/>
+            </VerticalStackLayout>
 
+
+            <!-- DATA NASCIMENTO -->
+            <VerticalStackLayout>
+                <Label Text="Data de Nascimento" FontAttributes="Bold"/>
+                <Entry x:Name="DataNascEntry"
+                       Placeholder="DD/MM/AAAA"
+                       Keyboard="Numeric"
+                       TextChanged="DataNascEntry_TextChanged"/>
+            </VerticalStackLayout>
+
+
+            <!-- ENDEREÇO -->
+            <Frame BackgroundColor="White"
+                   Padding="15"
+                   CornerRadius="15"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <Label Text="Endereço" FontAttributes="Bold" FontSize="Medium"/>
+
+                    <Picker x:Name="EstadoPicker"
+                            Title="Estado (UF)"
+                            ItemsSource="{Binding Estados}"/>
+
+                    <Picker x:Name="CidadePicker"
+                            Title="Cidade"/>
+
+                    <Entry x:Name="RuaEntry"
+                           Placeholder="Rua"/>
+
+                    <Entry x:Name="NumeroEntry"
+                           Placeholder="Número"
+                           Keyboard="Numeric"/>
+
+                    <Picker x:Name="TipoResidenciaPicker"
+                            Title="Casa ou Apartamento"
+                            SelectedIndexChanged="TipoResidenciaPicker_SelectedIndexChanged">
+                        <Picker.Items>
+                            <x:String>Casa</x:String>
+                            <x:String>Apartamento</x:String>
+                        </Picker.Items>
+                    </Picker>
+
+                    <Entry x:Name="NomeApartamentoEntry"
+                           Placeholder="Nome do Condomínio / Bloco"
+                           IsVisible="False"/>
+
+                </VerticalStackLayout>
+            </Frame>
+
+
+            <!-- BOTÕES -->
             <Button Text="Salvar Alterações"
                     BackgroundColor="#4CAF50"
                     TextColor="White"
+                    CornerRadius="12"
                     Clicked="OnSalvarClicked"/>
 
             <Button Text="Sair"
                     BackgroundColor="Red"
                     TextColor="White"
+                    CornerRadius="12"
                     Clicked="OnLogoutClicked"/>
 
         </VerticalStackLayout>
     </ScrollView>
+
 </ContentPage>

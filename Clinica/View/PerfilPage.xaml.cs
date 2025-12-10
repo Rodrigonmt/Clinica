@@ -18,7 +18,17 @@ public partial class PerfilPage : ContentPage
     public PerfilPage()
     {
         InitializeComponent();
+        BindingContext = this; // Necessário para carregar lista de estados
     }
+
+    public List<string> Estados { get; set; } = new()
+    {
+        "RS", "SC", "PR", "SP", "RJ", "MG", "ES", "BA",
+        "GO", "MT", "MS", "DF", "RO", "RR", "AM", "AC",
+        "PA", "AP", "MA", "PI", "CE", "RN", "PB", "PE",
+        "AL", "SE", "TO"
+    };
+
 
     private async Task CarregarDadosUsuario()
     {
@@ -28,7 +38,6 @@ public partial class PerfilPage : ContentPage
                 return;
 
             var response = await _http.GetAsync($"{FirebaseUserUrl}/{_localId}.json");
-
             if (!response.IsSuccessStatusCode) return;
 
             var json = await response.Content.ReadAsStringAsync();
@@ -39,31 +48,48 @@ public partial class PerfilPage : ContentPage
             NomeEntry.Text = dados?.Nome;
             TelefoneEntry.Text = dados?.Telefone;
             DataNascEntry.Text = dados?.DataNascimento;
-            EnderecoEntry.Text = dados?.Endereco;
 
+            // Endereço (novo modelo)
+            if (!string.IsNullOrEmpty(dados?.Endereco))
+            {
+                var partes = dados.Endereco.Split('|');
+                if (partes.Length >= 4)
+                {
+                    EstadoPicker.SelectedItem = partes[0];
+                    CidadePicker.SelectedItem = partes[1];
+                    RuaEntry.Text = partes[2];
+                    NumeroEntry.Text = partes[3];
+                }
+
+                if (partes.Length == 6)
+                {
+                    TipoResidenciaPicker.SelectedItem = partes[4];
+                    NomeApartamentoEntry.Text = partes[5];
+                    NomeApartamentoEntry.IsVisible = partes[4] == "Apartamento";
+                }
+            }
+
+            // FOTO
             if (!string.IsNullOrWhiteSpace(dados?.FotoPerfil) && dados.FotoPerfil != "null")
             {
                 _fotoPerfilBase64 = dados.FotoPerfil;
 
-                if (dados.FotoPerfil.StartsWith("data:image"))
-                {
-                    var base64Data = dados.FotoPerfil[(dados.FotoPerfil.IndexOf(',') + 1)..];
-                    var bytes = Convert.FromBase64String(base64Data);
+                var base64Data = dados.FotoPerfil[(dados.FotoPerfil.IndexOf(',') + 1)..];
+                var bytes = Convert.FromBase64String(base64Data);
 
-                    FotoPerfil.Source = ImageSource.FromStream(() => new MemoryStream(bytes));
-                }
+                FotoPerfil.Source = ImageSource.FromStream(() => new MemoryStream(bytes));
             }
             else
             {
                 FotoPerfil.Source = "perfil_inicial.jpg";
             }
-
         }
         catch (Exception ex)
         {
             await DisplayAlert("Erro", ex.Message, "OK");
         }
     }
+
 
 
     private async void OnAlterarFotoClicked(object sender, EventArgs e)
@@ -103,10 +129,8 @@ public partial class PerfilPage : ContentPage
         _localId = await SecureStorage.GetAsync("local_id");
         await CarregarDadosUsuario();
 
-        // Se não tiver foto, usar imagem padrão
         if (FotoPerfil.Source == null)
             FotoPerfil.Source = "perfil_inicial.jpg";
-
     }
 
 
@@ -115,14 +139,18 @@ public partial class PerfilPage : ContentPage
     {
         try
         {
+            // Salvar endereço no novo formato
+            string enderecoFormatado =
+                $"{EstadoPicker.SelectedItem}|{CidadePicker.SelectedItem}|{RuaEntry.Text}|{NumeroEntry.Text}|{TipoResidenciaPicker.SelectedItem}|{NomeApartamentoEntry.Text}";
+
             var dados = new Usuario
             {
                 UserId = _localId,
                 Nome = NomeEntry.Text,
                 Telefone = TelefoneEntry.Text,
                 DataNascimento = DataNascEntry.Text,
-                Endereco = EnderecoEntry.Text,
-                FotoPerfil = _fotoPerfilBase64, // Agora correto!
+                Endereco = enderecoFormatado,
+                FotoPerfil = _fotoPerfilBase64,
                 Email = await SecureStorage.GetAsync("email")
             };
 
@@ -149,6 +177,7 @@ public partial class PerfilPage : ContentPage
 
 
 
+
     private async Task SalvarCampo(string campo, string valor)
     {
         var json = JsonSerializer.Serialize(valor);
@@ -158,15 +187,108 @@ public partial class PerfilPage : ContentPage
         );
     }
 
-    protected override bool OnBackButtonPressed()
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            await Shell.Current.GoToAsync("/MainPage");
-        });
 
-        return true;
+
+    private CancellationTokenSource _telefoneCts;
+
+    private void TelefoneEntry_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_telefoneCts != null)
+            _telefoneCts.Cancel();
+
+        int oldCursor = TelefoneEntry.CursorPosition;
+
+        _telefoneCts = new CancellationTokenSource();
+        var token = _telefoneCts.Token;
+
+        Task.Delay(40).ContinueWith(_ =>
+        {
+            if (token.IsCancellationRequested) return;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                string digits = new string(TelefoneEntry.Text.Where(char.IsDigit).ToArray());
+                if (digits.Length > 11) digits = digits[..11];
+
+                string formatted;
+
+                if (digits.Length <= 10)
+                    formatted = $"({digits.PadRight(10, '_')[..2]}) {digits.PadRight(10, '_').Substring(2, 4)}-{digits.PadRight(10, '_')[6..10]}";
+                else
+                    formatted = $"({digits[..2]}) {digits.Substring(2, 5)}-{digits[7..]}";
+
+                // remove underscores criados para completar
+                formatted = formatted.Replace("_", "");
+
+                if (TelefoneEntry.Text != formatted)
+                {
+                    TelefoneEntry.Text = formatted;
+
+                    // Ajuste preciso da posição do cursor
+                    int newCursor = oldCursor;
+
+                    // move cursor 1 a mais quando a máscara insere parenteses, espaço ou hífen
+                    if (oldCursor == 1 || oldCursor == 3) newCursor++; // '(' e ') '
+                    if (oldCursor == 9) newCursor++; // hífen
+
+                    TelefoneEntry.CursorPosition = Math.Min(newCursor, formatted.Length);
+                }
+            });
+        }, token);
     }
+
+
+
+
+
+    private CancellationTokenSource _dataCts;
+
+    private void DataNascEntry_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_dataCts != null)
+            _dataCts.Cancel();
+
+        _dataCts = new CancellationTokenSource();
+        var token = _dataCts.Token;
+
+        Task.Delay(50).ContinueWith(_ =>
+        {
+            if (token.IsCancellationRequested) return;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                string digits = new string(DataNascEntry.Text.Where(char.IsDigit).ToArray());
+
+                if (digits.Length > 8)
+                    digits = digits[..8];
+
+                string formatted = digits.Length switch
+                {
+                    >= 5 => $"{digits[..2]}/{digits.Substring(2, 2)}/{digits[4..]}",
+                    >= 3 => $"{digits[..2]}/{digits[2..]}",
+                    _ => digits
+                };
+
+                if (DataNascEntry.Text != formatted)
+                {
+                    DataNascEntry.Text = formatted;
+                    DataNascEntry.CursorPosition = formatted.Length;
+                }
+            });
+
+        }, token);
+    }
+
+
+
+
+    private void TipoResidenciaPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        NomeApartamentoEntry.IsVisible =
+            TipoResidenciaPicker.SelectedItem?.ToString() == "Apartamento";
+    }
+
+
 
     private async Task Logout()
     {
@@ -181,6 +303,7 @@ public partial class PerfilPage : ContentPage
         await Shell.Current.GoToAsync("//LoginPage");
     }
 
+
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
         bool confirm = await DisplayAlert("Sair", "Deseja realmente sair?", "Sim", "Não");
@@ -188,5 +311,4 @@ public partial class PerfilPage : ContentPage
         if (confirm)
             await Logout();
     }
-
 }
