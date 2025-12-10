@@ -2,31 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.PerfilPage"
-             Title="PerfilPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+             Title="Meu Perfil">
 
-        <Image x:Name="FotoPerfil"
-       WidthRequest="150"
-       HeightRequest="150"
-       Aspect="AspectFill"
-       VerticalOptions="Center"
-       HorizontalOptions="Center"
-       Margin="20"
-       Clip="150" />
+    <ScrollView>
+        <VerticalStackLayout Spacing="15" Padding="20">
 
-        <Button Text="Alterar Foto"
-        Clicked="OnAlterarFotoClicked" />
+            <Image x:Name="FotoPerfil"
+               WidthRequest="150"
+               HeightRequest="150"
+               Aspect="AspectFill"
+               Source="perfil_inicial.jpg"
+               HorizontalOptions="Center">
 
-        <Button Text="Sair"
-        BackgroundColor="Red"
-        TextColor="White"
-        Margin="20"
-        Clicked="OnLogoutClicked"/>
+                <Image.Clip>
+                    <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75" />
+                </Image.Clip>
+            </Image>
 
 
-    </VerticalStackLayout>
+            <Button Text="Alterar Foto"
+                    Clicked="OnAlterarFotoClicked"/>
+
+            <Entry x:Name="NomeEntry"
+                   Placeholder="Nome completo"/>
+
+            <Entry x:Name="TelefoneEntry"
+                   Placeholder="Telefone"
+                   Keyboard="Telephone"/>
+
+            <Entry x:Name="DataNascEntry"
+                   Placeholder="Data de nascimento (opcional)"/>
+
+            <Entry x:Name="EnderecoEntry"
+                   Placeholder="Endereço (opcional)"/>
+
+            <Button Text="Salvar Alterações"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    Clicked="OnSalvarClicked"/>
+
+            <Button Text="Sair"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    Clicked="OnLogoutClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
