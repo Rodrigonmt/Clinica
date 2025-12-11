@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.InfoHistoricoConsultaAgendadaPage"
+             Title="InfoHistoricoConsultaAgendadaPage">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Título -->
+            <Label Text="Informações da Consulta"
+               FontSize="26"
+               FontAttributes="Bold"
+               TextColor="#007AFF"
+               HorizontalOptions="Center"/>
+
+            <!-- Card principal -->
+            <Frame CornerRadius="20"
+               BackgroundColor="White"
+               HasShadow="True"
+               Padding="20">
+
+                <VerticalStackLayout Spacing="15">
+
+                    <!-- Data -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Data"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="calendar_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblData"
+                               FontSize="18"
+                               TextColor="Black"
+                               FontAttributes="Bold"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Hora -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Hora"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="clock_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblHora"
+                               FontSize="18"
+                               TextColor="Black"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Médico -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Médico"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="doctor_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblMedico"
+                               FontSize="18"
+                               TextColor="#007AFF"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Status -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Status"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="status_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblStatus"
+                               FontSize="18"
+                               FontAttributes="Italic"
+                               TextColor="DarkGreen"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Serviço -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Serviço"
+                       FontSize="14"
+                       TextColor="#888"
+                       FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="servico_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblServico"
+                       FontSize="18"
+                       TextColor="Black"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Observações -->
+            <Label Text="Observações"
+               FontSize="20"
+               TextColor="Black"
+               FontAttributes="Bold"
+               Margin="0,10,0,0"/>
+
+            <Frame CornerRadius="20"
+               BackgroundColor="White"
+               HasShadow="True"
+               Padding="15">
+
+                <Label x:Name="lblObservacoes"
+                   FontSize="16"
+                   TextColor="Gray"
+                   LineBreakMode="WordWrap"/>
+            </Frame>
+
+            <!-- Botão Cancelar -->
+            <Button x:Name="BtnCancelar"
+                Text="Cancelar"
+                BackgroundColor="#D32F2F"
+                TextColor="White"
+                CornerRadius="12"
+                HeightRequest="50"
+                Clicked="OnCancelarClicked" />
+
+            <!-- Botão Reagendar -->
+            <Button x:Name="BtnReagendar"
+                Text="Reagendar"
+                BackgroundColor="#1976D2"
+                TextColor="White"
+                CornerRadius="12"
+                HeightRequest="50"
+                Clicked="OnReagendarClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -75,7 +75,7 @@ namespace Clinica.View
                     { "Consulta", consulta }
                 };
 
-                await Shell.Current.GoToAsync(nameof(InfoConsultasAgendadaPage), parametros);
+                await Shell.Current.GoToAsync(nameof(InfoHistoricoConsultaAgendadaPage), parametros);
             }
         }
 
