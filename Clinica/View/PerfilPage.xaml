@@ -6,10 +6,10 @@
              Title="Meu Perfil">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="20" Spacing="25">
 
             <!-- FOTO DO USUÁRIO -->
-            <Grid HorizontalOptions="Center">
+            <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
                 <Image x:Name="FotoPerfil"
                        WidthRequest="150"
                        HeightRequest="150"
@@ -19,41 +19,41 @@
                         <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75"/>
                     </Image.Clip>
                 </Image>
-            </Grid>
 
-            <Button Text="Alterar Foto"
-                    Clicked="OnAlterarFotoClicked"
-                    BackgroundColor="#2196F3"
-                    TextColor="White"
-                    CornerRadius="12"/>
-
-
-            <!-- NOME -->
-            <VerticalStackLayout>
-                <Label Text="Nome Completo" FontAttributes="Bold"/>
-                <Entry x:Name="NomeEntry"
-                       Placeholder="Digite seu nome"/>
+                <Button Text="Alterar Foto"
+                        Clicked="OnAlterarFotoClicked"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"
+                        WidthRequest="150"
+                        CornerRadius="12"/>
             </VerticalStackLayout>
 
 
-            <!-- TELEFONE COM MÁSCARA -->
-            <VerticalStackLayout>
-                <Label Text="Telefone" FontAttributes="Bold"/>
-                <Entry x:Name="TelefoneEntry"
-                       Placeholder="(00) 00000-0000"
-                       Keyboard="Telephone"
-                       TextChanged="TelefoneEntry_TextChanged"/>
-            </VerticalStackLayout>
+            <!-- DADOS PESSOAIS -->
+            <Frame BackgroundColor="White"
+                   Padding="15"
+                   CornerRadius="15"
+                   HasShadow="True">
 
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Dados Pessoais"
+                           FontAttributes="Bold"
+                           FontSize="Medium"/>
 
-            <!-- DATA NASCIMENTO -->
-            <VerticalStackLayout>
-                <Label Text="Data de Nascimento" FontAttributes="Bold"/>
-                <Entry x:Name="DataNascEntry"
-                       Placeholder="DD/MM/AAAA"
-                       Keyboard="Numeric"
-                       TextChanged="DataNascEntry_TextChanged"/>
-            </VerticalStackLayout>
+                    <Entry x:Name="NomeEntry"
+                           Placeholder="Nome Completo"/>
+
+                    <Entry x:Name="TelefoneEntry"
+                           Placeholder="(00) 00000-0000"
+                           Keyboard="Telephone"
+                           TextChanged="TelefoneEntry_TextChanged"/>
+
+                    <Entry x:Name="DataNascEntry"
+                           Placeholder="Data de Nascimento (DD/MM/AAAA)"
+                           Keyboard="Numeric"
+                           TextChanged="DataNascEntry_TextChanged"/>
+                </VerticalStackLayout>
+            </Frame>
 
 
             <!-- ENDEREÇO -->
@@ -64,13 +64,14 @@
 
                 <VerticalStackLayout Spacing="15">
 
-                    <Label Text="Endereço" FontAttributes="Bold" FontSize="Medium"/>
+                    <Label Text="Endereço"
+                           FontAttributes="Bold"
+                           FontSize="Medium"/>
 
                     <Picker x:Name="EstadoPicker"
                             Title="Estado (UF)"
                             ItemsSource="{Binding Estados}"
                             SelectedIndexChanged="EstadoPicker_SelectedIndexChanged"/>
-
 
                     <Picker x:Name="CidadePicker"
                             Title="Cidade"/>
@@ -83,7 +84,7 @@
                            Keyboard="Numeric"/>
 
                     <Picker x:Name="TipoResidenciaPicker"
-                            Title="Casa ou Apartamento"
+                            Title="Tipo de Residência"
                             SelectedIndexChanged="TipoResidenciaPicker_SelectedIndexChanged">
                         <Picker.Items>
                             <x:String>Casa</x:String>
@@ -100,17 +101,21 @@
 
 
             <!-- BOTÕES -->
-            <Button Text="Salvar Alterações"
-                    BackgroundColor="#4CAF50"
-                    TextColor="White"
-                    CornerRadius="12"
-                    Clicked="OnSalvarClicked"/>
+            <VerticalStackLayout Spacing="15">
+                <Button Text="Salvar Alterações"
+                        BackgroundColor="#4CAF50"
+                        TextColor="White"
+                        CornerRadius="12"
+                        HeightRequest="50"
+                        Clicked="OnSalvarClicked"/>
 
-            <Button Text="Executar Logoff"
-                    BackgroundColor="Red"
-                    TextColor="White"
-                    CornerRadius="12"
-                    Clicked="OnLogoutClicked"/>
+                <Button Text="Executar Logoff"
+                        BackgroundColor="Red"
+                        TextColor="White"
+                        CornerRadius="12"
+                        HeightRequest="50"
+                        Clicked="OnLogoutClicked"/>
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>
