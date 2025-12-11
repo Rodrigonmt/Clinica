@@ -68,7 +68,9 @@
 
                     <Picker x:Name="EstadoPicker"
                             Title="Estado (UF)"
-                            ItemsSource="{Binding Estados}"/>
+                            ItemsSource="{Binding Estados}"
+                            SelectedIndexChanged="EstadoPicker_SelectedIndexChanged"/>
+
 
                     <Picker x:Name="CidadePicker"
                             Title="Cidade"/>
@@ -104,7 +106,7 @@
                     CornerRadius="12"
                     Clicked="OnSalvarClicked"/>
 
-            <Button Text="Sair"
+            <Button Text="Executar Logoff"
                     BackgroundColor="Red"
                     TextColor="White"
                     CornerRadius="12"

@@ -55,8 +55,16 @@ public partial class PerfilPage : ContentPage
                 var partes = dados.Endereco.Split('|');
                 if (partes.Length >= 4)
                 {
-                    EstadoPicker.SelectedItem = partes[0];
-                    CidadePicker.SelectedItem = partes[1];
+                    if (!string.IsNullOrEmpty(partes[0]))
+                    {
+                        EstadoPicker.SelectedItem = partes[0];
+
+                        // primeiro carrega cidades
+                        await CarregarCidadesPorEstado(partes[0]);
+
+                        // depois seleciona a cidade salva
+                        CidadePicker.SelectedItem = partes[1];
+                    }
                     RuaEntry.Text = partes[2];
                     NumeroEntry.Text = partes[3];
                 }
@@ -322,4 +330,64 @@ public partial class PerfilPage : ContentPage
         if (confirm)
             await Logout();
     }
+
+
+    private async Task CarregarCidadesPorEstado(string uf)
+    {
+        try
+        {
+            string url = $"https://servicodados.ibge.gov.br/api/v1/localidades/estados/{uf}/municipios";
+
+            using var http = new HttpClient();
+            var response = await http.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await DisplayAlert("Erro", "Falha ao carregar cidades.", "OK");
+                return;
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var cidades = JsonSerializer.Deserialize<List<IBGECidade>>(json);
+
+            CidadePicker.ItemsSource = cidades.Select(c => c.nome).ToList();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erro", ex.Message, "OK");
+        }
+    }
+
+    public class IBGECidade
+    {
+        public string nome { get; set; }
+    }
+
+
+    private async void EstadoPicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (EstadoPicker.SelectedItem == null)
+            return;
+
+        string uf = EstadoPicker.SelectedItem.ToString();
+
+        CidadePicker.ItemsSource = null;
+        CidadePicker.SelectedItem = null;
+
+        await CarregarCidadesPorEstado(uf);
+    }
+
+
+    protected override bool OnBackButtonPressed()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Shell.Current.GoToAsync("/MainPage");
+        });
+
+        return true;
+    }
+
+
 }
