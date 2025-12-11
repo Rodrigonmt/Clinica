@@ -95,6 +95,21 @@
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
+                    <!-- 💰 VALOR DO SERVIÇO -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Valor do Serviço"
+                               FontSize="14"
+                               TextColor="#888"
+                               FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="money_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblValorTotal"
+                                   FontSize="18"
+                                   TextColor="#007AFF"
+                                   FontAttributes="Bold"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
 
                 </VerticalStackLayout>
             </Frame>

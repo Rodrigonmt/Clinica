@@ -44,6 +44,8 @@ namespace Clinica.View
             lblMedico.Text = Consulta.Medico;
             lblStatus.Text = Consulta.Status.ToString();
             lblServico.Text = Consulta.Servico; // <-- ADICIONADO
+            lblValorTotal.Text = $"R$ {Consulta.ValorTotal:0.00}";
+
 
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."

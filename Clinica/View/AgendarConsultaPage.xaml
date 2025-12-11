@@ -8,8 +8,23 @@
     <VerticalStackLayout Padding="15" Spacing="10">
 
 
+        <!-- Valor -->
+        <HorizontalStackLayout Spacing="10"
+                       Margin="0,10,0,0"
+                       HorizontalOptions="Center">
+            <Label Text="Valor Total:"
+           FontAttributes="Bold"
+           FontSize="18"/>
+
+            <Label x:Name="lblValorTotal"
+           Text="R$ 0,00"
+           TextColor="#007AFF"
+           FontAttributes="Bold"
+           FontSize="18"/>
+        </HorizontalStackLayout>
+
         <!-- Data -->
-        <Label Text="Escolha a data:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+        <Label Text="Escolha a data:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>        
         <DatePicker x:Name="datePicker"
                     Format="dd/MM/yyyy"
                     HorizontalOptions="FillAndExpand"
@@ -26,25 +41,29 @@
 
             <!-- Cabelo -->
             <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkCabelo"/>
+                <CheckBox x:Name="chkCabelo"
+                          CheckedChanged="OnServicoChanged"/>
                 <Label Text="Cabelo" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
             </HorizontalStackLayout>
 
             <!-- Barba -->
             <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkBarba"/>
+                <CheckBox x:Name="chkBarba"
+                          CheckedChanged="OnServicoChanged"/>
                 <Label Text="Barba" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
             </HorizontalStackLayout>
 
             <!-- Sobrancelha -->
             <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkSobrancelha"/>
+                <CheckBox x:Name="chkSobrancelha"
+                          CheckedChanged="OnServicoChanged"/>
                 <Label Text="Sobrancelha" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
             </HorizontalStackLayout>
 
             <!-- Coloração -->
             <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkColoracao"/>
+                <CheckBox x:Name="chkColoracao"
+                          CheckedChanged="OnServicoChanged"/>
                 <Label Text="Coloração" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
             </HorizontalStackLayout>
 

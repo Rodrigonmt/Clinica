@@ -51,6 +51,31 @@ namespace Clinica.View
             MontarMedicos();
         }
 
+
+        private decimal CalcularValorServicos()
+        {
+            decimal total = 0;
+
+            if (chkCabelo.IsChecked) total += 40;
+            if (chkBarba.IsChecked) total += 40;
+            if (chkSobrancelha.IsChecked) total += 30;
+            if (chkColoracao.IsChecked) total += 80;
+
+            return total;
+        }
+
+        private void AtualizarValorTotal()
+        {
+            decimal total = CalcularValorServicos();
+            lblValorTotal.Text = $"R$ {total:0.00}";
+        }
+
+        private void OnServicoChanged(object sender, CheckedChangedEventArgs e)
+        {
+            AtualizarValorTotal();
+        }
+
+
         // -------------------------------------------------------------
         // CARREGAR DADOS INICIAIS
         // -------------------------------------------------------------
@@ -320,8 +345,10 @@ namespace Clinica.View
                 medico = _medicoNome,
                 servico = servicos,
                 observacoes = txtObservacoes.Text,
-                status = (int)StatusConsulta.Reagendada
+                status = (int)StatusConsulta.Reagendada,
+                valorTotal = CalcularValorServicos()   // ? ADICIONADO
             };
+
 
             string url = $"{FirebaseUrl}/{_consulta.Id}.json";
 

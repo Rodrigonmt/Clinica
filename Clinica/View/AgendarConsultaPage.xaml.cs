@@ -36,6 +36,29 @@
                 datePicker.MinimumDate = DateTime.Today; // opcional
             }
 
+        private decimal CalcularValorServicos()
+        {
+            decimal total = 0;
+
+            if (chkCabelo.IsChecked) total += 40;
+            if (chkBarba.IsChecked) total += 40;
+            if (chkSobrancelha.IsChecked) total += 30;
+            if (chkColoracao.IsChecked) total += 80;
+
+            return total;
+        }
+
+        private void AtualizarValorTotal()
+        {
+            decimal total = CalcularValorServicos();
+            lblValorTotal.Text = $"R$ {total:0.00}";
+        }
+
+        private void OnServicoChanged(object sender, CheckedChangedEventArgs e)
+        {
+            AtualizarValorTotal();
+        }
+
         // 👉 Evento ao clicar em um médico
         private void OnMedicoTapped(object sender, EventArgs e)
         {
@@ -96,21 +119,23 @@
                     return;
                 }
 
-                // 👉 Criar consulta com serviços incluídos
-                var consulta = new Consulta
-                {
-                    Data = datePicker.Date,
-                    Hora = timePicker.SelectedItem.ToString(),
-                    Medico = _medicoNome,
-                    Servico = servicos,    // <-- aqui vai o serviço!
-                    CriadoEm = DateTime.UtcNow,
-                    Usuario = SessaoUsuario.UsuarioLogado?.UserId,
-                    Status = StatusConsulta.Agendada,
-                    Observacoes = txtObservacoes.Text
-                };
+            // 👉 Criar consulta com serviços incluídos
+            var consulta = new Consulta
+            {
+                Data = datePicker.Date,
+                Hora = timePicker.SelectedItem.ToString(),
+                Medico = _medicoNome,
+                Servico = servicos,
+                CriadoEm = DateTime.UtcNow,
+                Usuario = SessaoUsuario.UsuarioLogado?.UserId,
+                Status = StatusConsulta.Agendada,
+                Observacoes = txtObservacoes.Text,
+                ValorTotal = CalcularValorServicos()   // ✔ ADICIONADO
+            };
 
-                try
-                {
+
+            try
+            {
                     // Serializa para JSON
                     var json = JsonSerializer.Serialize(consulta);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");

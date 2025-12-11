@@ -40,6 +40,10 @@ namespace Clinica.Models
 
         [JsonPropertyName("servico")]
         public string Servico { get; set; }
+
+        [JsonPropertyName("valorTotal")]
+        public decimal ValorTotal { get; set; }
+
     }
 
     public enum StatusConsulta
