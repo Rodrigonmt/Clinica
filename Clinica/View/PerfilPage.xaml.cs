@@ -9,7 +9,7 @@ public partial class PerfilPage : ContentPage
     private readonly FirebaseStorageService _storage = new();
     private readonly FirebaseAuthService _auth = new();
     private readonly HttpClient _http = new();
-    private string _localId;
+    private string _userId;
     private string _fotoPerfilBase64;
 
     private const string FirebaseUserUrl =
@@ -34,10 +34,10 @@ public partial class PerfilPage : ContentPage
     {
         try
         {
-            if (string.IsNullOrEmpty(_localId))
+            if (string.IsNullOrEmpty(_userId))
                 return;
 
-            var response = await _http.GetAsync($"{FirebaseUserUrl}/{_localId}.json");
+            var response = await _http.GetAsync($"{FirebaseUserUrl}/{_userId}.json");
             if (!response.IsSuccessStatusCode) return;
 
             var json = await response.Content.ReadAsStringAsync();
@@ -134,7 +134,7 @@ public partial class PerfilPage : ContentPage
     {
         base.OnAppearing();
 
-        _localId = await SecureStorage.GetAsync("local_id");
+        _userId = await SecureStorage.GetAsync("user_id");
         await CarregarDadosUsuario();
 
         if (FotoPerfil.Source == null)
@@ -153,7 +153,7 @@ public partial class PerfilPage : ContentPage
 
             var dados = new Usuario
             {
-                UserId = _localId,
+                UserId = _userId,
                 Nome = NomeEntry.Text,
                 Telefone = TelefoneEntry.Text,
                 DataNascimento = DataNascEntry.Text,
@@ -165,7 +165,7 @@ public partial class PerfilPage : ContentPage
             string json = JsonSerializer.Serialize(dados);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _http.PutAsync($"{FirebaseUserUrl}/{_localId}.json", content);
+            var response = await _http.PutAsync($"{FirebaseUserUrl}/{_userId}.json", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -190,7 +190,7 @@ public partial class PerfilPage : ContentPage
     {
         var json = JsonSerializer.Serialize(valor);
         await _http.PatchAsync(
-            $"{FirebaseUserUrl}/{_localId}/{campo}.json",
+            $"{FirebaseUserUrl}/{_userId}/{campo}.json",
             new StringContent(json, Encoding.UTF8, "application/json")
         );
     }
@@ -201,63 +201,75 @@ public partial class PerfilPage : ContentPage
 
     private void TelefoneEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
+        // Cancela qualquer formatação pendente
         if (_telefoneCts != null)
             _telefoneCts.Cancel();
 
+        // Verifica se está digitando ou apagando
         bool inserindo = e.NewTextValue?.Length > e.OldTextValue?.Length;
 
+        // Guarda posição atual do cursor
         int oldCursor = TelefoneEntry.CursorPosition;
 
+        // Novo token de cancelamento
         _telefoneCts = new CancellationTokenSource();
         var token = _telefoneCts.Token;
 
+        // Aguarda 30ms antes de formatar
         Task.Delay(30).ContinueWith(_ =>
         {
             if (token.IsCancellationRequested) return;
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
+                // Mantém somente dígitos
                 string digits = new string(TelefoneEntry.Text.Where(char.IsDigit).ToArray());
+
+                // Limita para 11 dígitos (celular)
                 if (digits.Length > 11)
                     digits = digits[..11];
 
-                string formatted;
+                // Monta a máscara de celular
+                string formatted = digits.Length switch
+                {
+                    <= 2 => $"({digits}",                                                                             // (99
+                    <= 7 => $"({digits[..2]}) {digits.Substring(2)}",                                                  // (99) 9999
+                    <= 11 => $"({digits[..2]}) {digits.Substring(2, 5)}-{digits.Substring(7)}",                       // (99) 99999-9999
+                    _ => TelefoneEntry.Text
+                };
 
-                if (digits.Length <= 10)
-                    formatted = $"({digits[..Math.Min(2, digits.Length)]}{(digits.Length >= 2 ? ") " : "")}" +
-                                $"{(digits.Length > 2 ? digits.Substring(2, Math.Min(4, digits.Length - 2)) : "")}" +
-                                $"{(digits.Length > 6 ? "-" : "")}" +
-                                $"{(digits.Length > 6 ? digits[6..] : "")}";
-                else
-                    formatted = $"({digits[..2]}) {digits.Substring(2, 5)}-{digits[7..]}";
-
+                // Evita loop
                 if (TelefoneEntry.Text != formatted)
                 {
                     TelefoneEntry.Text = formatted;
 
-                    int newCursor = oldCursor;
+                    // CORREÇÃO DO PROBLEMA DO DDD
+                    // Durante a digitação dos dois primeiros dígitos, sempre coloca o cursor no final
+                    if (digits.Length <= 2)
+                    {
+                        TelefoneEntry.CursorPosition = formatted.Length;
+                        return;
+                    }
+
+                    int newCursor;
 
                     if (inserindo)
                     {
-                        // Avança cursor ao inserir mascara automaticamente
-                        if (newCursor == 1) newCursor = 2;                // "("
-                        else if (newCursor == 3) newCursor = 4;           // ") "
-                        else if (newCursor == 9) newCursor = 10;          // "-"
-                        else newCursor++;
+                        // Inserindo ? cursor sempre vai para o final
+                        newCursor = formatted.Length;
                     }
                     else
                     {
-                        // Ao apagar, não deixa cursor saltar errado
-                        if (newCursor > formatted.Length)
-                            newCursor = formatted.Length;
+                        // Apagando ? mantém cursor consistente
+                        newCursor = Math.Min(oldCursor, formatted.Length);
                     }
 
-                    TelefoneEntry.CursorPosition = Math.Min(newCursor, formatted.Length);
+                    TelefoneEntry.CursorPosition = newCursor;
                 }
             });
+
         }, token);
     }
-
 
 
     private CancellationTokenSource _dataCts;

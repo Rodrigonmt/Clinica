@@ -5,7 +5,7 @@ namespace Clinica.Models
 {
     public class Usuario
     {
-        public string UserId { get; set; }   // localId
+        public string UserId { get; set; }   // userId
         public string Email { get; set; }    // email do Firebase
         public string UsuarioLogin => Email; // usado para associação das consultas
         public string Nome { get; set; }

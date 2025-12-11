@@ -78,7 +78,6 @@ public partial class LoginPage : ContentPage
         {
             SecureStorage.Remove("lembrar");
             SecureStorage.Remove("refresh_token");
-            SecureStorage.Remove("user_id");
         }
 
 
