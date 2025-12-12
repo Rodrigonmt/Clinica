@@ -85,7 +85,7 @@ namespace Clinica.View
                 if (sucesso)
                 {
                     await DisplayAlert("Cancelada", "A consulta foi cancelada.", "OK");
-                    await Shell.Current.GoToAsync("/ConsultasAgendaPage");
+                    await Shell.Current.GoToAsync("/HistoricoConsultasAgendadasPage");
                 }
                 else
                 {
