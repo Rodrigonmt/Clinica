@@ -48,11 +48,16 @@ namespace Clinica.View
 
                 // 🔹 Carrega TODAS as consultas do usuário logado
                 var historico = consultasDict
-                    .Values
-                    .Where(c => c.Usuario == usuarioLogado)
+                    .Where(kv => kv.Value.Usuario == usuarioLogado)
+                    .Select(kv =>
+                    {
+                        kv.Value.Id = kv.Key;   // <-- ESTA LINHA É A CURA DO PROBLEMA
+                        return kv.Value;
+                    })
                     .OrderByDescending(c => c.Data)
                     .ThenByDescending(c => c.Hora)
                     .ToList();
+
 
                 Consultas.Clear();
                 foreach (var consulta in historico)

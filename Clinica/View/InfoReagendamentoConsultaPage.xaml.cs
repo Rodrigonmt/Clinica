@@ -367,6 +367,7 @@ namespace Clinica.View
                 _consulta.Servico = servicos;
                 _consulta.Observacoes = txtObservacoes.Text;
                 _consulta.ValorTotal = CalcularValorServicos();
+                _consulta.ValorTotal = CalcularValorServicos();
 
                 await Shell.Current.GoToAsync(nameof(InfoConsultasAgendadaPage), true,
                     new Dictionary<string, object> { { "Consulta", _consulta } });
