@@ -1,12 +1,13 @@
 ﻿    using Clinica.Models; // Importa o modelo Consulta
     using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Shapes;
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using System.Globalization;
 
     namespace Clinica.View
     {
@@ -17,9 +18,11 @@
 
             private readonly HttpClient _httpClient;
             private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/consultas.json";
-            // OBS: o .json no final é OBRIGATÓRIO no Firebase Realtime Database
+        // OBS: o .json no final é OBRIGATÓRIO no Firebase Realtime Database
+            private const string FirebaseProfissionaisUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/profissionais.json";
 
-            public AgendarConsultaPage()
+
+        public AgendarConsultaPage()
             {
                 InitializeComponent();
                 _httpClient = new HttpClient();
@@ -32,6 +35,7 @@
                 // Força idioma português
                 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
                 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
+                Loaded += async (_, __) => await CarregarProfissionaisAsync();
 
                 datePicker.MinimumDate = DateTime.Today; // opcional
             }
@@ -46,6 +50,93 @@
             if (chkColoracao.IsChecked) total += 80;
 
             return total;
+        }
+
+        private ImageSource Base64ToImage(string base64)
+        {
+            if (string.IsNullOrWhiteSpace(base64))
+                return "user_placeholder.png"; // imagem padrão
+
+            var base64Data = base64.Contains(",")
+                ? base64.Substring(base64.IndexOf(",") + 1)
+                : base64;
+
+            byte[] bytes = Convert.FromBase64String(base64Data);
+
+            return ImageSource.FromStream(() => new MemoryStream(bytes));
+        }
+
+        private async Task CarregarProfissionaisAsync()
+        {
+            try
+            {
+                var json = await _httpClient.GetStringAsync(FirebaseProfissionaisUrl);
+
+                if (string.IsNullOrWhiteSpace(json) || json == "null")
+                    return;
+
+                var dict = JsonSerializer.Deserialize<Dictionary<string, Profissional>>(json);
+
+                medicosStack.Children.Clear();
+
+                foreach (var item in dict)
+                {
+                    var profissional = item.Value;
+                    profissional.ProfissionalId = item.Key;
+
+                    medicosStack.Children.Add(CriarCardProfissional(profissional));
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", "Erro ao carregar profissionais: " + ex.Message, "OK");
+            }
+        }
+
+        private Microsoft.Maui.Controls.View CriarCardProfissional(Profissional prof)
+        {
+            var border = new Border
+            {
+                StrokeThickness = 4,
+                Stroke = Colors.Transparent,
+                StrokeShape = new RoundRectangle { CornerRadius = 40 },
+                BackgroundColor = Color.FromArgb(prof.Cor ?? "#D0E8FF"),
+                HeightRequest = 80,
+                WidthRequest = 80
+            };
+
+            var tap = new TapGestureRecognizer
+            {
+                CommandParameter = prof.Nome
+            };
+            tap.Tapped += OnMedicoTapped;
+
+            border.GestureRecognizers.Add(tap);
+
+            border.Content = new Image
+            {
+                Source = Base64ToImage(prof.FotoPerfil),
+                Aspect = Aspect.AspectFill
+            };
+
+            return new VerticalStackLayout
+            {
+                WidthRequest = 80,
+                Spacing = 5,
+                HorizontalOptions = LayoutOptions.Center,
+                Children =
+        {
+            border,
+            new Label
+            {
+                Text = prof.Nome,
+                FontSize = 14,
+                TextColor = Color.FromArgb("#007AFF"),
+                HorizontalOptions = LayoutOptions.Center,
+                LineBreakMode = LineBreakMode.TailTruncation
+            }
+        }
+            };
         }
 
         private void AtualizarValorTotal()

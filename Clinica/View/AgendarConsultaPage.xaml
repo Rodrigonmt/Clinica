@@ -73,87 +73,12 @@
         <!-- Médicos -->
         <Label Text="Escolha o Profissional:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
         <ScrollView Orientation="Horizontal" HeightRequest="120">
-            <HorizontalStackLayout Spacing="15" x:Name="medicosStack">
-
-                <!-- Médico 1 -->
-                <VerticalStackLayout WidthRequest="80" HorizontalOptions="Center" Spacing="5">
-                    <Border x:Name="borderRodrigo"
-                    StrokeThickness="4"
-                    Stroke="Transparent"
-                    StrokeShape="RoundRectangle 40"
-                    BackgroundColor="#D0E8FF"
-                    HeightRequest="80"
-                    WidthRequest="80">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMedicoTapped" CommandParameter="Rodrigo"/>
-                        </Border.GestureRecognizers>
-                        <Image Source="rodrigo.jpg"
-                       Aspect="AspectFill"
-                       HorizontalOptions="Fill"
-                       VerticalOptions="Fill"/>
-                    </Border>
-                    <Label Text="Rodrigo" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-                <!-- Médico 2 -->
-                <VerticalStackLayout WidthRequest="80" HorizontalOptions="Center" Spacing="5">
-                    <Border x:Name="borderDienifer"
-                    StrokeThickness="4"
-                    Stroke="Transparent"
-                    StrokeShape="RoundRectangle 40"
-                    BackgroundColor="#D0E8FF"
-                    HeightRequest="80"
-                    WidthRequest="80">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMedicoTapped" CommandParameter="Dienifer"/>
-                        </Border.GestureRecognizers>
-                        <Image Source="dienifer.jpg"
-                       Aspect="AspectFill"
-                       HorizontalOptions="Fill"
-                       VerticalOptions="Fill"/>
-                    </Border>
-                    <Label Text="Dienifer" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-                <!-- Médico 3 -->
-                <VerticalStackLayout WidthRequest="80" HorizontalOptions="Center" Spacing="5">
-                    <Border x:Name="borderFernanda"
-                    StrokeThickness="4"
-                    Stroke="Transparent"
-                    StrokeShape="RoundRectangle 40"
-                    BackgroundColor="#D0E8FF"
-                    HeightRequest="80"
-                    WidthRequest="80">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMedicoTapped" CommandParameter="Fernanda"/>
-                        </Border.GestureRecognizers>
-                        <Image Source="fernanda.jpg"
-                       Aspect="AspectFill"
-                       HorizontalOptions="Fill"
-                       VerticalOptions="Fill"/>
-                    </Border>
-                    <Label Text="Fernanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-
-                <!-- Médico 4 -->
-                <VerticalStackLayout WidthRequest="80" HorizontalOptions="Center" Spacing="5">
-                    <Border x:Name="borderAmanda"
-                    StrokeThickness="4"
-                    Stroke="Transparent"
-                    StrokeShape="RoundRectangle 40"
-                    BackgroundColor="#D0E8FF"
-                    HeightRequest="80"
-                    WidthRequest="80">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnMedicoTapped" CommandParameter="Amanda"/>
-                        </Border.GestureRecognizers>
-                        <Image Source="amanda.jpg"
-                       Aspect="AspectFill"
-                       HorizontalOptions="Fill"
-                       VerticalOptions="Fill"/>
-                    </Border>
-                    <Label Text="Amanda" FontSize="14" TextColor="#007AFF" HorizontalOptions="Center"/>
-                </VerticalStackLayout>
+            <HorizontalStackLayout Spacing="15">
+                <ScrollView Orientation="Horizontal" HeightRequest="120">
+                    <HorizontalStackLayout
+                        x:Name="medicosStack"
+                        Spacing="15" />
+                </ScrollView>
 
             </HorizontalStackLayout>
         </ScrollView>
