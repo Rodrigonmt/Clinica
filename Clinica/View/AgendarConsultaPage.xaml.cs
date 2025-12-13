@@ -17,15 +17,14 @@ namespace Clinica.View
     {
         private Border _medicoSelecionado;
         private string _medicoNome;
-
         private readonly HttpClient _httpClient;
         private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/consultas.json";
         // OBS: o .json no final é OBRIGATÓRIO no Firebase Realtime Database
         private const string FirebaseProfissionaisUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/profissionais.json";
-
         private const string FirebaseServicosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/servicos.json";
-
         private readonly ObservableCollection<Servico> _servicos = new();
+        private const string FirebaseCalendariosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/calendarios.json";
+        private string _medicoId;
 
         public AgendarConsultaPage()
         {
@@ -142,7 +141,7 @@ namespace Clinica.View
 
             var tap = new TapGestureRecognizer
             {
-                CommandParameter = prof.Nome
+                CommandParameter = prof
             };
             tap.Tapped += OnMedicoTapped;
 
@@ -202,9 +201,11 @@ namespace Clinica.View
             borderClicado.BackgroundColor = Color.FromArgb("#ADD8FF");
             _medicoSelecionado = borderClicado;
 
-            if (borderClicado.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tapGesture)
+            if (borderClicado.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap)
             {
-                _medicoNome = tapGesture.CommandParameter?.ToString();
+                var prof = tap.CommandParameter as Profissional;
+                _medicoId = prof?.ProfissionalId;
+                _medicoNome = prof?.Nome;
             }
 
             // 🔥 Limpa o horário SEMPRE que trocar o médico
@@ -316,42 +317,87 @@ namespace Clinica.View
 
             try
             {
-                var response = await _httpClient.GetStringAsync(FirebaseUrl);
-
-                if (string.IsNullOrWhiteSpace(response) || response == "null")
+                // 🔹 Descobre o dia da semana em PT-BR
+                var diaSemana = datePicker.Date.DayOfWeek switch
                 {
-                    timePicker.ItemsSource = _horariosBase;
-                    timePicker.SelectedItem = null;
-                    timePicker.Title = "Escolha um horário";
+                    DayOfWeek.Monday => "Segunda",
+                    DayOfWeek.Tuesday => "Terca",
+                    DayOfWeek.Wednesday => "Quarta",
+                    DayOfWeek.Thursday => "Quinta",
+                    DayOfWeek.Friday => "Sexta",
+                    DayOfWeek.Saturday => "Sabado",
+                    DayOfWeek.Sunday => "Domingo",
+                    _ => ""
+                };
+
+
+                // 🔹 Busca calendários
+                var jsonCalendarios = await _httpClient.GetStringAsync(FirebaseCalendariosUrl);
+                if (string.IsNullOrWhiteSpace(jsonCalendarios) || jsonCalendarios == "null")
+                    return;
+
+                var calendarios = JsonSerializer.Deserialize<
+                    Dictionary<string, CalendarioProfissional>>(jsonCalendarios);
+
+                // 🔹 Calendário do profissional selecionado
+                var calendario = calendarios.Values
+                    .FirstOrDefault(c => c.ProfissionalId == _medicoId);
+
+                if (calendario == null)
+                {
+                    timePicker.ItemsSource = null;
+                    timePicker.Title = "Profissional sem agenda";
                     return;
                 }
 
-                var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(response);
+                // 🔹 Verifica se trabalha neste dia
+                if (!calendario.DiasSemana.ContainsKey(diaSemana) ||
+                    !calendario.DiasSemana[diaSemana])
+                {
+                    timePicker.ItemsSource = null;
+                    timePicker.Title = "Não atende neste dia";
+                    return;
+                }
+
+                // 🔹 Slots do dia
+                if (!calendario.Horarios.ContainsKey(diaSemana))
+                    return;
+
+                var slotsDoDia = calendario.Horarios[diaSemana].Slots;
+
+                // 🔹 Buscar consultas já agendadas
+                var jsonConsultas = await _httpClient.GetStringAsync(FirebaseUrl);
+                var consultasDict = JsonSerializer.Deserialize<
+                    Dictionary<string, Consulta>>(jsonConsultas ?? "");
+
                 var dataSelecionada = datePicker.Date.Date;
 
-                var horariosOcupados = consultasDict
-                    .Where(c => c.Value.Medico == _medicoNome &&
-                                c.Value.Data.Date == dataSelecionada &&
-                                c.Value.Status != StatusConsulta.CanceladaEmpresa &&
-                                c.Value.Status != StatusConsulta.CanceladaCliente)
+                var horariosOcupados = consultasDict?
+                    .Where(c =>
+                        c.Value.Medico == _medicoNome &&
+                        c.Value.Data.Date == dataSelecionada &&
+                        c.Value.Status != StatusConsulta.CanceladaCliente &&
+                        c.Value.Status != StatusConsulta.CanceladaEmpresa)
                     .Select(c => c.Value.Hora)
-                    .ToList();
+                    .ToList() ?? new List<string>();
 
-                var horariosDisponiveis = _horariosBase
+                // 🔹 Horários finais disponíveis
+                var horariosDisponiveis = slotsDoDia
                     .Where(h => !horariosOcupados.Contains(h))
                     .ToList();
 
                 timePicker.ItemsSource = horariosDisponiveis;
-
-                // ❌ NÃO SELECIONAR AUTOMATICAMENTE MESMO QUE EXISTA
                 timePicker.SelectedItem = null;
                 timePicker.Title = "Escolha um horário";
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", "Não foi possível carregar horários: " + ex.Message, "OK");
+                await DisplayAlert("Erro",
+                    "Erro ao carregar horários: " + ex.Message,
+                    "OK");
             }
         }
+
 
         private async void OnDataSelecionada(object sender, DateChangedEventArgs e)
         {

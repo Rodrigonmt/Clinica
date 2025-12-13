@@ -110,26 +110,10 @@
         <!-- Horário -->
         <Label Text="Escolha um horário disponível:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
         <Picker x:Name="timePicker"
-                Title="Selecione o horário"
-                HorizontalOptions="FillAndExpand"
-                BackgroundColor="#D0E8FF"
-                TextColor="Black">
-            <Picker.Items>
-                <x:String>08:00</x:String>
-                <x:String>08:30</x:String>
-                <x:String>09:00</x:String>
-                <x:String>09:30</x:String>
-                <x:String>10:00</x:String>
-                <x:String>10:30</x:String>
-                <x:String>11:00</x:String>
-                <x:String>11:30</x:String>
-                <x:String>14:00</x:String>
-                <x:String>14:30</x:String>
-                <x:String>15:00</x:String>
-                <x:String>15:30</x:String>
-                <x:String>16:00</x:String>
-            </Picker.Items>
-        </Picker>
+        Title="Selecione o horário"
+        HorizontalOptions="FillAndExpand"
+        BackgroundColor="#D0E8FF"
+        TextColor="Black" />
 
         <!-- Botão -->
         <Border x:Name="btnAgendar"
