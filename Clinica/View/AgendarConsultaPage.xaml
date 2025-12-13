@@ -37,38 +37,62 @@
        FontAttributes="Bold"
        TextColor="Black"/>
 
-        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="20" RowSpacing="15" Padding="5">
+        <Grid>
 
-            <!-- Cabelo -->
-            <HorizontalStackLayout Grid.Row="0" Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkCabelo"
-                          CheckedChanged="OnServicoChanged"/>
-                <Label Text="Cabelo" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
-            </HorizontalStackLayout>
+            <!-- Serviços (2 linhas com scroll horizontal) -->
+            <CollectionView x:Name="servicosCollection"
+                    SelectionMode="None"
+                    HeightRequest="130"
+                    Margin="0,5,0,10">
 
-            <!-- Barba -->
-            <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkBarba"
-                          CheckedChanged="OnServicoChanged"/>
-                <Label Text="Barba" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
-            </HorizontalStackLayout>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Horizontal"
+                             Span="2"
+                             HorizontalItemSpacing="12"
+                             VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
 
-            <!-- Sobrancelha -->
-            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkSobrancelha"
-                          CheckedChanged="OnServicoChanged"/>
-                <Label Text="Sobrancelha" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
-            </HorizontalStackLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border WidthRequest="170"
+                        Padding="10"
+                        Stroke="#E0E0E0"
+                        StrokeThickness="1"
+                        BackgroundColor="#F9F9F9"
+                        StrokeShape="RoundRectangle 12">
 
-            <!-- Coloração -->
-            <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                <CheckBox x:Name="chkColoracao"
-                          CheckedChanged="OnServicoChanged"/>
-                <Label Text="Coloração" FontSize="16" VerticalTextAlignment="Center" TextColor="Black"/>
-            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="10">
 
+                                <CheckBox IsChecked="{Binding Selecionado}"
+                                  CheckedChanged="OnServicoChanged"/>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding Nome}"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="Black"/>
+
+                                    <Label Text="{Binding Preco, StringFormat='R$ {0:0.00}'}"
+                                   FontSize="13"
+                                   TextColor="#007AFF"/>
+                                </VerticalStackLayout>
+
+                            </HorizontalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <!-- Seta indicativa -->
+            <Label Text="›"
+           FontSize="36"
+           TextColor="#AAAAAA"
+           VerticalOptions="Center"
+           HorizontalOptions="End"
+           Margin="0,0,5,0"
+           Opacity="0.6"/>
         </Grid>
-
 
         <!-- Médicos -->
         <Label Text="Escolha o Profissional:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>

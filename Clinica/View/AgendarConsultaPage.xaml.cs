@@ -1,55 +1,55 @@
-﻿    using Clinica.Models; // Importa o modelo Consulta
-    using Microsoft.Maui.Controls;
+﻿using Clinica.Models; // Importa o modelo Consulta
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using System.Net.Http;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-    namespace Clinica.View
+namespace Clinica.View
+{
+    public partial class AgendarConsultaPage : ContentPage
     {
-        public partial class AgendarConsultaPage : ContentPage
-        {
-            private Border _medicoSelecionado;
-            private string _medicoNome;
+        private Border _medicoSelecionado;
+        private string _medicoNome;
 
-            private readonly HttpClient _httpClient;
-            private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/consultas.json";
+        private readonly HttpClient _httpClient;
+        private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/consultas.json";
         // OBS: o .json no final é OBRIGATÓRIO no Firebase Realtime Database
-            private const string FirebaseProfissionaisUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/profissionais.json";
+        private const string FirebaseProfissionaisUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/profissionais.json";
 
+        private const string FirebaseServicosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/servicos.json";
+
+        private readonly ObservableCollection<Servico> _servicos = new();
 
         public AgendarConsultaPage()
-            {
-                InitializeComponent();
-                _httpClient = new HttpClient();
-                timePicker.IsEnabled = false;
-                timePicker.Focused += OnTimePickerFocused;
-                datePicker.DateSelected += OnDataSelecionada;
-                datePicker.MinimumDate = DateTime.Today;
-                datePicker.DateSelected += (s, e) => AtualizarHorariosDisponiveis();
+        {
+            InitializeComponent();
+            _httpClient = new HttpClient();
+            timePicker.IsEnabled = false;
+            timePicker.Focused += OnTimePickerFocused;
+            datePicker.DateSelected += OnDataSelecionada;
+            datePicker.MinimumDate = DateTime.Today;
+            datePicker.DateSelected += (s, e) => AtualizarHorariosDisponiveis();
 
-                // Força idioma português
-                CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
-                CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
-                Loaded += async (_, __) => await CarregarProfissionaisAsync();
+            // Força idioma português
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pt-BR");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("pt-BR");
+            Loaded += async (_, __) => await CarregarProfissionaisAsync();
 
-                datePicker.MinimumDate = DateTime.Today; // opcional
-            }
+            datePicker.MinimumDate = DateTime.Today; // opcional
+        }
 
         private decimal CalcularValorServicos()
         {
-            decimal total = 0;
-
-            if (chkCabelo.IsChecked) total += 40;
-            if (chkBarba.IsChecked) total += 40;
-            if (chkSobrancelha.IsChecked) total += 30;
-            if (chkColoracao.IsChecked) total += 80;
-
-            return total;
+            return _servicos
+                .Where(s => s.Selecionado)
+                .Sum(s => s.Preco);
         }
 
         private ImageSource Base64ToImage(string base64)
@@ -93,6 +93,41 @@ using Microsoft.Maui.Controls.Shapes;
             }
         }
 
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await CarregarServicosAsync();
+        }
+
+        private async Task CarregarServicosAsync()
+        {
+            try
+            {
+                var json = await _httpClient.GetStringAsync(FirebaseServicosUrl);
+
+                if (string.IsNullOrWhiteSpace(json) || json == "null")
+                    return;
+
+                var dict = JsonSerializer.Deserialize<Dictionary<string, Servico>>(json);
+
+                _servicos.Clear();
+
+                foreach (var item in dict)
+                {
+                    item.Value.ServicoId = item.Key;
+                    _servicos.Add(item.Value);
+                }
+
+                servicosCollection.ItemsSource = _servicos;
+
+                AtualizarValorTotal();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", "Erro ao carregar serviços: " + ex.Message, "OK");
+            }
+        }
+
         private Microsoft.Maui.Controls.View CriarCardProfissional(Profissional prof)
         {
             var border = new Border
@@ -125,17 +160,17 @@ using Microsoft.Maui.Controls.Shapes;
                 Spacing = 5,
                 HorizontalOptions = LayoutOptions.Center,
                 Children =
-        {
-            border,
-            new Label
-            {
-                Text = prof.Nome,
-                FontSize = 14,
-                TextColor = Color.FromArgb("#007AFF"),
-                HorizontalOptions = LayoutOptions.Center,
-                LineBreakMode = LineBreakMode.TailTruncation
-            }
-        }
+                {
+                    border,
+                    new Label
+                    {
+                        Text = prof.Nome,
+                        FontSize = 14,
+                        TextColor = Color.FromArgb("#007AFF"),
+                        HorizontalOptions = LayoutOptions.Center,
+                        LineBreakMode = LineBreakMode.TailTruncation
+                    }
+                }
             };
         }
 
@@ -185,30 +220,30 @@ using Microsoft.Maui.Controls.Shapes;
 
         // 👉 Evento do botão "Agendar Consulta"
         private async void OnAgendarConsultaClicked(object sender, EventArgs e)
+        {
+            await ClickEffect((VisualElement)sender);
+
+            if (string.IsNullOrEmpty(_medicoNome))
             {
-                await ClickEffect((VisualElement)sender);
+                await DisplayAlert("Aviso", "Selecione um médico.", "OK");
+                return;
+            }
 
-                if (string.IsNullOrEmpty(_medicoNome))
-                {
-                    await DisplayAlert("Aviso", "Selecione um médico.", "OK");
-                    return;
-                }
+            // 👉 Primeiro capturamos os serviços selecionados
+            var servicos = ObterServicosSelecionados();
 
-                // 👉 Primeiro capturamos os serviços selecionados
-                var servicos = ObterServicosSelecionados();
+            // 👉 Depois validamos
+            if (string.IsNullOrWhiteSpace(servicos))
+            {
+                await DisplayAlert("Aviso", "Selecione pelo menos um serviço.", "OK");
+                return;
+            }
 
-                // 👉 Depois validamos
-                if (string.IsNullOrWhiteSpace(servicos))
-                {
-                    await DisplayAlert("Aviso", "Selecione pelo menos um serviço.", "OK");
-                    return;
-                }
-
-                if (timePicker.SelectedItem == null)
-                {
-                    await DisplayAlert("Aviso", "Selecione um horário.", "OK");
-                    return;
-                }
+            if (timePicker.SelectedItem == null)
+            {
+                await DisplayAlert("Aviso", "Selecione um horário.", "OK");
+                return;
+            }
 
             // 👉 Criar consulta com serviços incluídos
             var consulta = new Consulta
@@ -221,60 +256,58 @@ using Microsoft.Maui.Controls.Shapes;
                 Usuario = SessaoUsuario.UsuarioLogado?.UserId,
                 Status = StatusConsulta.Agendada,
                 Observacoes = txtObservacoes.Text,
-                ValorTotal = CalcularValorServicos()   // ✔ ADICIONADO
+                ValorTotal = CalcularValorServicos()  // ✔ ADICIONADO
             };
-
 
             try
             {
-                    // Serializa para JSON
-                    var json = JsonSerializer.Serialize(consulta);
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                // Serializa para JSON
+                var json = JsonSerializer.Serialize(consulta);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    // Envia para o Firebase (POST → cria ID automático)
-                    var response = await _httpClient.PostAsync(FirebaseUrl, content);
+                // Envia para o Firebase (POST → cria ID automático)
+                var response = await _httpClient.PostAsync(FirebaseUrl, content);
 
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        await DisplayAlert("Erro", "Não foi possível salvar a consulta.", "OK");
-                        return;
-                    }
-
-                    await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
-
-                    // Voltar para a página principal
-                    await Shell.Current.GoToAsync("/MainPage");
-                }
-                catch (Exception ex)
+                if (!response.IsSuccessStatusCode)
                 {
-                    await DisplayAlert("Erro", "Falha ao salvar: " + ex.Message, "OK");
+                    await DisplayAlert("Erro", "Não foi possível salvar a consulta.", "OK");
+                    return;
                 }
+
+                await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
+
+                // Voltar para a página principal
+                await Shell.Current.GoToAsync("/MainPage");
             }
-
-
-            protected override bool OnBackButtonPressed()
+            catch (Exception ex)
             {
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await Shell.Current.GoToAsync("/MainPage"); // volta para a principal
-                });
-
-                return true;
+                await DisplayAlert("Erro", "Falha ao salvar: " + ex.Message, "OK");
             }
+        }
 
-            private async Task ClickEffect(VisualElement element)
+        protected override bool OnBackButtonPressed()
+        {
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                await element.ScaleTo(0.92, 80);
-                await element.FadeTo(0.7, 70);
-                await element.FadeTo(1, 70);
-                await element.ScaleTo(1, 80);
-            }
+                await Shell.Current.GoToAsync("/MainPage"); // volta para a principal
+            });
 
-            private readonly List<string> _horariosBase = new()
-            {
-                "08:00","08:30","09:00","09:30","10:00","10:30",
-                "11:00","11:30","14:00","14:30","15:00","15:30","16:00"
-            };
+            return true;
+        }
+
+        private async Task ClickEffect(VisualElement element)
+        {
+            await element.ScaleTo(0.92, 80);
+            await element.FadeTo(0.7, 70);
+            await element.FadeTo(1, 70);
+            await element.ScaleTo(1, 80);
+        }
+
+        private readonly List<string> _horariosBase = new()
+        {
+            "08:00","08:30","09:00","09:30","10:00","10:30",
+            "11:00","11:30","14:00","14:30","15:00","15:30","16:00"
+        };
 
         private async void AtualizarHorariosDisponiveis()
         {
@@ -313,7 +346,6 @@ using Microsoft.Maui.Controls.Shapes;
                 // ❌ NÃO SELECIONAR AUTOMATICAMENTE MESMO QUE EXISTA
                 timePicker.SelectedItem = null;
                 timePicker.Title = "Escolha um horário";
-
             }
             catch (Exception ex)
             {
@@ -342,30 +374,24 @@ using Microsoft.Maui.Controls.Shapes;
             AtualizarHorariosDisponiveis();
         }
 
-
         private async void OnTimePickerFocused(object sender, FocusEventArgs e)
+        {
+            // Se não existe médico selecionado → bloqueia
+            if (string.IsNullOrEmpty(_medicoNome))
             {
-                // Se não existe médico selecionado → bloqueia
-                if (string.IsNullOrEmpty(_medicoNome))
-                {
-                    timePicker.Unfocus(); // fecha o picker
-                    await DisplayAlert("Aviso", "Selecione um médico antes de escolher o horário.", "OK");
-                }
+                timePicker.Unfocus(); // fecha o picker
+                await DisplayAlert("Aviso", "Selecione um médico antes de escolher o horário.", "OK");
             }
-
-            private string ObterServicosSelecionados()
-            {
-                var lista = new List<string>();
-
-                if (chkCabelo.IsChecked) lista.Add("Cabelo");
-                if (chkBarba.IsChecked) lista.Add("Barba");
-                if (chkSobrancelha.IsChecked) lista.Add("Sobrancelha");
-                if (chkColoracao.IsChecked) lista.Add("Coloração de Cabelo");
-
-                return string.Join(" + ", lista);
-            }
-
-
         }
 
+        private string ObterServicosSelecionados()
+        {
+            var selecionados = _servicos
+                .Where(s => s.Selecionado)
+                .Select(s => s.Nome)
+                .ToList();
+
+            return string.Join(" + ", selecionados);
+        }
     }
+}
