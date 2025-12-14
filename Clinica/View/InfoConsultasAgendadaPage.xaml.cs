@@ -82,11 +82,13 @@ namespace Clinica.View
                 return;
             }
 
-            // Envia o objeto completo para a tela de reagendamento
-            await Shell.Current.GoToAsync($"{nameof(InfoReagendamentoConsultaPage)}", true, new Dictionary<string, object>
-        {
-        { "Consulta", Consulta }
-            });
+            await Shell.Current.GoToAsync(
+                nameof(AgendarConsultaPage),
+                true,
+                new Dictionary<string, object>
+                {
+            { "Consulta", Consulta }
+                });
         }
 
 

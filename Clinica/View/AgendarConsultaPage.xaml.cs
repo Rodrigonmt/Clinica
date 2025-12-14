@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace Clinica.View
 {
+    [QueryProperty(nameof(ConsultaEdicao), "Consulta")]
+    
     public partial class AgendarConsultaPage : ContentPage
     {
         private Border _medicoSelecionado;
@@ -25,6 +27,9 @@ namespace Clinica.View
         private readonly ObservableCollection<Servico> _servicos = new();
         private const string FirebaseCalendariosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/calendarios.json";
         private string _medicoId;
+        private Consulta _consultaEdicao;
+        private bool _modoReagendamento => _consultaEdicao != null;
+
 
         public AgendarConsultaPage()
         {
@@ -63,6 +68,68 @@ namespace Clinica.View
             byte[] bytes = Convert.FromBase64String(base64Data);
 
             return ImageSource.FromStream(() => new MemoryStream(bytes));
+        }
+
+        private async Task SalvarNovoAgendamentoAsync(string servicos)
+        {
+            var consulta = new Consulta
+            {
+                Data = datePicker.Date,
+                Hora = timePicker.SelectedItem.ToString(),
+                Medico = _medicoNome,
+                Servico = servicos,
+                CriadoEm = DateTime.UtcNow,
+                Usuario = SessaoUsuario.UsuarioLogado?.UserId,
+                Status = StatusConsulta.Agendada,
+                Observacoes = txtObservacoes.Text,
+                ValorTotal = CalcularValorServicos()
+            };
+
+            var json = JsonSerializer.Serialize(consulta);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            await _httpClient.PostAsync(FirebaseUrl, content);
+
+            await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
+            await Shell.Current.GoToAsync("/MainPage");
+        }
+
+        public Consulta ConsultaEdicao
+        {
+            get => _consultaEdicao;
+            set
+            {
+                _consultaEdicao = value;
+                if (_consultaEdicao != null)
+                    PreencherDadosReagendamento();
+            }
+        }
+
+        private async void PreencherDadosReagendamento()
+        {
+            Title = "Reagendar Consulta";
+
+            datePicker.Date = _consultaEdicao.Data;
+            txtObservacoes.Text = _consultaEdicao.Observacoes;
+
+            // Médico
+            _medicoNome = _consultaEdicao.Medico;
+
+            // Serviços
+            var servicosSelecionados = _consultaEdicao.Servico.Split(" + ");
+
+            foreach (var servico in _servicos)
+                servico.Selecionado = servicosSelecionados.Contains(servico.Nome);
+
+            AtualizarValorTotal();
+
+            await Task.Delay(200);
+            AtualizarHorariosDisponiveis();
+
+            timePicker.SelectedItem = _consultaEdicao.Hora;
+
+            // Texto do botão
+            ((Label)((Border)btnAgendar).Content).Text = "Confirmar Reagendamento";
         }
 
         private async Task CarregarProfissionaisAsync()
@@ -230,10 +297,7 @@ namespace Clinica.View
                 return;
             }
 
-            // 👉 Primeiro capturamos os serviços selecionados
             var servicos = ObterServicosSelecionados();
-
-            // 👉 Depois validamos
             if (string.IsNullOrWhiteSpace(servicos))
             {
                 await DisplayAlert("Aviso", "Selecione pelo menos um serviço.", "OK");
@@ -246,43 +310,46 @@ namespace Clinica.View
                 return;
             }
 
-            // 👉 Criar consulta com serviços incluídos
-            var consulta = new Consulta
-            {
-                Data = datePicker.Date,
-                Hora = timePicker.SelectedItem.ToString(),
-                Medico = _medicoNome,
-                Servico = servicos,
-                CriadoEm = DateTime.UtcNow,
-                Usuario = SessaoUsuario.UsuarioLogado?.UserId,
-                Status = StatusConsulta.Agendada,
-                Observacoes = txtObservacoes.Text,
-                ValorTotal = CalcularValorServicos()  // ✔ ADICIONADO
-            };
+            if (_modoReagendamento)
+                await SalvarReagendamentoAsync(servicos);
+            else
+                await SalvarNovoAgendamentoAsync(servicos);
+        }
 
+        private async Task SalvarReagendamentoAsync(string servicos)
+        {
             try
             {
-                // Serializa para JSON
-                var json = JsonSerializer.Serialize(consulta);
+                var update = new
+                {
+                    data = datePicker.Date,
+                    hora = timePicker.SelectedItem.ToString(),
+                    medico = _medicoNome,
+                    servico = servicos,
+                    observacoes = txtObservacoes.Text,
+                    valorTotal = CalcularValorServicos(),
+                    status = StatusConsulta.Reagendada
+                };
+
+                var json = JsonSerializer.Serialize(update);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                // Envia para o Firebase (POST → cria ID automático)
-                var response = await _httpClient.PostAsync(FirebaseUrl, content);
+                var url = $"https://clinica-e248d-default-rtdb.firebaseio.com/consultas/{_consultaEdicao.Id}.json";
+
+                var response = await _httpClient.PatchAsync(url, content);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    await DisplayAlert("Erro", "Não foi possível salvar a consulta.", "OK");
+                    await DisplayAlert("Erro", "Falha ao reagendar.", "OK");
                     return;
                 }
 
-                await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
-
-                // Voltar para a página principal
-                await Shell.Current.GoToAsync("/MainPage");
+                await DisplayAlert("Sucesso", "Consulta reagendada com sucesso!", "OK");
+                await Shell.Current.GoToAsync("/HistoricoConsultasAgendadasPage");
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", "Falha ao salvar: " + ex.Message, "OK");
+                await DisplayAlert("Erro", ex.Message, "OK");
             }
         }
 
