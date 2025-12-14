@@ -95,17 +95,33 @@
         </Grid>
 
         <!-- Médicos -->
-        <Label Text="Escolha o Profissional:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
-        <ScrollView Orientation="Horizontal" HeightRequest="120">
-            <HorizontalStackLayout Spacing="15">
-                <ScrollView Orientation="Horizontal" HeightRequest="120">
-                    <HorizontalStackLayout
-                        x:Name="medicosStack"
-                        Spacing="15" />
-                </ScrollView>
+        <Label Text="Escolha o Profissional:"
+       FontSize="18"
+       FontAttributes="Bold"
+       TextColor="Black"/>
 
-            </HorizontalStackLayout>
-        </ScrollView>
+        <Grid>
+
+            <!-- Lista de profissionais -->
+            <ScrollView Orientation="Horizontal"
+                HeightRequest="120">
+
+                <HorizontalStackLayout
+            x:Name="medicosStack"
+            Spacing="15"
+            Padding="5,0"/>
+            </ScrollView>
+
+            <!-- Seta indicativa -->
+            <Label Text="›"
+           FontSize="36"
+           TextColor="#AAAAAA"
+           VerticalOptions="Center"
+           HorizontalOptions="End"
+           Margin="0,0,5,0"
+           Opacity="0.6"/>
+        </Grid>
+
 
         <!-- Horário -->
         <Label Text="Escolha um horário disponível:" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
