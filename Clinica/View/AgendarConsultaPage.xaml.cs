@@ -72,10 +72,17 @@ namespace Clinica.View
 
         private async Task SalvarNovoAgendamentoAsync(string servicos)
         {
+            int duracaoTotal = CalcularDuracaoTotal();
+
+            var horaInicio = TimeSpan.Parse(timePicker.SelectedItem.ToString());
+            var horaFim = horaInicio.Add(TimeSpan.FromMinutes(duracaoTotal));
+
             var consulta = new Consulta
             {
                 Data = datePicker.Date,
-                Hora = timePicker.SelectedItem.ToString(),
+                HoraInicio = horaInicio.ToString(@"hh\:mm"),
+                HoraFim = horaFim.ToString(@"hh\:mm"),
+                Duracao = duracaoTotal,
                 Medico = _medicoNome,
                 Servico = servicos,
                 CriadoEm = DateTime.UtcNow,
@@ -93,6 +100,7 @@ namespace Clinica.View
             await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
             await Shell.Current.GoToAsync("/MainPage");
         }
+
 
         public Consulta ConsultaEdicao
         {
@@ -122,6 +130,7 @@ namespace Clinica.View
                 servico.Selecionado = servicosSelecionados.Contains(servico.Nome);
 
             AtualizarValorTotal();
+            AtualizarTempoTotal();
 
             await Task.Delay(200);
             AtualizarHorariosDisponiveis();
@@ -187,6 +196,7 @@ namespace Clinica.View
                 servicosCollection.ItemsSource = _servicos;
 
                 AtualizarValorTotal();
+                AtualizarTempoTotal();
             }
             catch (Exception ex)
             {
@@ -240,16 +250,50 @@ namespace Clinica.View
             };
         }
 
+        private int CalcularDuracaoTotal()
+        {
+            return _servicos
+                .Where(s => s.Selecionado)
+                .Sum(s => s.Duracao);
+        }
+
+        private int CalcularQuantidadeDeSlots(int duracaoTotal, int intervaloSlot)
+        {
+            return (int)Math.Ceiling((double)duracaoTotal / intervaloSlot);
+        }
+
+
         private void AtualizarValorTotal()
         {
             decimal total = CalcularValorServicos();
             lblValorTotal.Text = $"R$ {total:0.00}";
         }
 
+        private void AtualizarTempoTotal()
+        {
+            int duracaoTotal = CalcularDuracaoTotal();
+            lblTempoTotal.Text = FormatarDuracao(duracaoTotal);
+        }
+
+
         private void OnServicoChanged(object sender, CheckedChangedEventArgs e)
         {
+            // 🔹 Atualiza valor e tempo
             AtualizarValorTotal();
+            AtualizarTempoTotal();
+
+            // 🔹 Sempre limpar horário ao alterar serviços
+            timePicker.SelectedItem = null;
+            timePicker.ItemsSource = null;
+            timePicker.Title = "Escolha um horário";
+
+            // 🔹 Só recalcula horários se médico já estiver selecionado
+            if (!string.IsNullOrEmpty(_medicoNome))
+            {
+                AtualizarHorariosDisponiveis();
+            }
         }
+
 
         // 👉 Evento ao clicar em um médico
         private void OnMedicoTapped(object sender, EventArgs e)
@@ -363,6 +407,24 @@ namespace Clinica.View
             return true;
         }
 
+        private string FormatarDuracao(int minutos)
+        {
+            if (minutos <= 0)
+                return "0 min";
+
+            int horas = minutos / 60;
+            int restoMin = minutos % 60;
+
+            if (horas > 0 && restoMin > 0)
+                return $"{horas} hora{(horas > 1 ? "s" : "")} e {restoMin} min";
+
+            if (horas > 0)
+                return $"{horas} hora{(horas > 1 ? "s" : "")}";
+
+            return $"{restoMin} min";
+        }
+
+
         private async Task ClickEffect(VisualElement element)
         {
             await element.ScaleTo(0.92, 80);
@@ -396,7 +458,6 @@ namespace Clinica.View
                     DayOfWeek.Sunday => "Domingo",
                     _ => ""
                 };
-
 
                 // 🔹 Busca calendários
                 var jsonCalendarios = await _httpClient.GetStringAsync(FirebaseCalendariosUrl);
@@ -439,23 +500,87 @@ namespace Clinica.View
 
                 var dataSelecionada = datePicker.Date.Date;
 
-                var horariosOcupados = consultasDict?
-                    .Where(c =>
-                        c.Value.Medico == _medicoNome &&
-                        c.Value.Data.Date == dataSelecionada &&
-                        c.Value.Status != StatusConsulta.CanceladaCliente &&
-                        c.Value.Status != StatusConsulta.CanceladaEmpresa)
-                    .Select(c => c.Value.Hora)
-                    .ToList() ?? new List<string>();
+                // 🔥 BLOQUEIA TODOS OS SLOTS DO INTERVALO
+                var horariosOcupados = new List<TimeSpan>();
 
-                // 🔹 Horários finais disponíveis
-                var horariosDisponiveis = slotsDoDia
-                    .Where(h => !horariosOcupados.Contains(h))
+                if (consultasDict != null)
+                {
+                    foreach (var consulta in consultasDict.Values.Where(c =>
+                        c.Medico == _medicoNome &&
+                        c.Data.Date == dataSelecionada &&
+                        c.Status != StatusConsulta.CanceladaCliente &&
+                        c.Status != StatusConsulta.CanceladaEmpresa))
+                    {
+                        var inicio = !string.IsNullOrEmpty(consulta.HoraInicio)
+                            ? TimeSpan.Parse(consulta.HoraInicio)
+                            : TimeSpan.Parse(consulta.Hora);
+
+                        var fim = !string.IsNullOrEmpty(consulta.HoraFim)
+                            ? TimeSpan.Parse(consulta.HoraFim)
+                            : inicio.Add(TimeSpan.FromMinutes(30)); // fallback seguro
+
+                        for (var t = inicio; t < fim; t = t.Add(
+                                 TimeSpan.FromMinutes(calendario.Horarios[diaSemana].IntervaloDivisao)))
+                        {
+                            horariosOcupados.Add(t);
+                        }
+                    }
+                }
+
+                // 🔹 DURAÇÃO TOTAL DOS SERVIÇOS
+                int duracaoTotal = _servicos
+                    .Where(s => s.Selecionado)
+                    .Sum(s => s.Duracao);
+
+                if (duracaoTotal == 0)
+                {
+                    timePicker.ItemsSource = null;
+                    timePicker.Title = "Selecione os serviços";
+                    return;
+                }
+
+                // 🔹 Intervalo do slot
+                int intervaloSlot = calendario.Horarios[diaSemana].IntervaloDivisao;
+
+                // 🔹 Quantidade de slots necessários
+                int slotsNecessarios = (int)Math.Ceiling(
+                    (double)duracaoTotal / intervaloSlot);
+
+                // 🔹 Slots livres reais
+                var slotsLivres = slotsDoDia
+                    .Select(h => TimeSpan.Parse(h))
+                    .Where(h => !horariosOcupados.Contains(h)) // ✅ CORRETO
+                    .OrderBy(h => h)
                     .ToList();
 
-                timePicker.ItemsSource = horariosDisponiveis;
+
+                // 🔹 Horários válidos (com continuidade)
+                var horariosValidos = new List<string>();
+
+                for (int i = 0; i <= slotsLivres.Count - slotsNecessarios; i++)
+                {
+                    bool sequenciaValida = true;
+
+                    for (int j = 0; j < slotsNecessarios - 1; j++)
+                    {
+                        if (slotsLivres[i + j + 1] - slotsLivres[i + j]
+                            != TimeSpan.FromMinutes(intervaloSlot))
+                        {
+                            sequenciaValida = false;
+                            break;
+                        }
+                    }
+
+                    if (sequenciaValida)
+                        horariosValidos.Add(slotsLivres[i].ToString(@"hh\:mm"));
+                }
+
+                // 🔹 Atualiza picker
+                timePicker.ItemsSource = horariosValidos;
                 timePicker.SelectedItem = null;
-                timePicker.Title = "Escolha um horário";
+                timePicker.Title = horariosValidos.Any()
+                    ? "Escolha um horário"
+                    : "Sem horário contínuo disponível";
             }
             catch (Exception ex)
             {

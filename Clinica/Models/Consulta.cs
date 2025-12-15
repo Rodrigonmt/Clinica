@@ -13,10 +13,26 @@ namespace Clinica.Models
         [JsonPropertyName("data")]
         public DateTime Data { get; set; }
 
+        // 🔹 Hora inicial (mantida para compatibilidade)
         [Required]
         [JsonPropertyName("hora")]
         public string Hora { get; set; }
 
+        // 🔥 NOVOS CAMPOS (NÃO quebram nada existente)
+
+        // Hora real de início do atendimento
+        [JsonPropertyName("horaInicio")]
+        public string HoraInicio { get; set; }
+
+        // Hora real de término do atendimento
+        [JsonPropertyName("horaFim")]
+        public string HoraFim { get; set; }
+
+        // Duração total em minutos
+        [JsonPropertyName("duracao")]
+        public int Duracao { get; set; }
+
+        // 🔹 Demais campos inalterados
         [JsonPropertyName("usuario")]
         public string Usuario { get; set; }
 
@@ -27,16 +43,11 @@ namespace Clinica.Models
         [JsonPropertyName("criadoEm")]
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 
-        // 🔹 Novo campo de status
         [JsonPropertyName("status")]
         public StatusConsulta Status { get; set; } = StatusConsulta.Agendada;
 
-        //Observações
         [JsonPropertyName("observacoes")]
         public string Observacoes { get; set; }
-
-        public override string ToString() =>
-            $"{Data:yyyy-MM-dd} {Hora} - {Medico} ({Status})";
 
         [JsonPropertyName("servico")]
         public string Servico { get; set; }
@@ -44,6 +55,8 @@ namespace Clinica.Models
         [JsonPropertyName("valorTotal")]
         public decimal ValorTotal { get; set; }
 
+        public override string ToString() =>
+            $"{Data:yyyy-MM-dd} {Hora} - {Medico} ({Status})";
     }
 
     public enum StatusConsulta
