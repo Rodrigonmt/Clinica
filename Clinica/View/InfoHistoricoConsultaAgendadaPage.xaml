@@ -108,6 +108,21 @@
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
+                    <!-- ⏱ TEMPO DE DURAÇÃO -->
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="Tempo de Duração"
+                           FontSize="14"
+                           TextColor="#888"
+                           FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="10">
+                            <Image Source="time_icon.png" WidthRequest="24" HeightRequest="24"/>
+                            <Label x:Name="lblDuracao"
+                           FontSize="16"
+                           TextColor="Black"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+
 
                 </VerticalStackLayout>
             </Frame>

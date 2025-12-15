@@ -58,6 +58,25 @@ namespace Clinica.Models
         public override string ToString() =>
             $"{Data:yyyy-MM-dd} {HoraInicio} - {Medico} ({Status})";
 
+        [JsonIgnore]
+        public string DuracaoFormatada
+        {
+            get
+            {
+                int horas = Duracao / 60;
+                int minutos = Duracao % 60;
+
+                if (horas > 0 && minutos > 0)
+                    return $"{horas} hora{(horas > 1 ? "s" : "")} e {minutos} minutos";
+
+                if (horas > 0)
+                    return $"{horas} hora{(horas > 1 ? "s" : "")}";
+
+                return $"{minutos} minutos";
+            }
+        }
+
+
     }
 
     public enum StatusConsulta

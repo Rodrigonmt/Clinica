@@ -36,11 +36,12 @@ namespace Clinica.View
                 return;
 
             lblData.Text = Consulta.Data.ToString("dd/MM/yyyy");
-            lblHora.Text = Consulta.Hora;
+            lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
             lblStatus.Text = Consulta.Status.ToString();
             lblServico.Text = Consulta.Servico; // <-- ADICIONADO
             lblValorTotal.Text = $"R$ {Consulta.ValorTotal:0.00}";
+            lblDuracao.Text = Consulta.DuracaoFormatada;
 
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."
@@ -89,6 +90,23 @@ namespace Clinica.View
                 {
             { "Consulta", Consulta }
                 });
+        }
+
+        private string FormatarDuracao(int minutos)
+        {
+            if (minutos <= 0)
+                return "Não informado";
+
+            int horas = minutos / 60;
+            int minutosRestantes = minutos % 60;
+
+            if (horas > 0 && minutosRestantes > 0)
+                return $"{horas} hora{(horas > 1 ? "s" : "")} e {minutosRestantes} minutos";
+
+            if (horas > 0)
+                return $"{horas} hora{(horas > 1 ? "s" : "")}";
+
+            return $"{minutosRestantes} minutos";
         }
 
 

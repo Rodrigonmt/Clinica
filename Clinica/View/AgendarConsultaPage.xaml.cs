@@ -389,7 +389,7 @@ namespace Clinica.View
                 }
 
                 await DisplayAlert("Sucesso", "Consulta reagendada com sucesso!", "OK");
-                await Shell.Current.GoToAsync("/HistoricoConsultasAgendadasPage");
+                await Shell.Current.GoToAsync("/ConsultasAgendaPage");
             }
             catch (Exception ex)
             {

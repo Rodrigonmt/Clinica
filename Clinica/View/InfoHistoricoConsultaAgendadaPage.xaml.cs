@@ -41,11 +41,14 @@ namespace Clinica.View
                 return;
 
             lblData.Text = Consulta.Data.ToString("dd/MM/yyyy");
-            lblHora.Text = Consulta.Hora;
+            // ? HORA CORRETA DO FIREBASE
+            lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
             lblStatus.Text = Consulta.Status.ToString();
             lblServico.Text = Consulta.Servico; // <-- ADICIONADO
             lblValorTotal.Text = $"R$ {Consulta.ValorTotal:0.00}";
+            // ? BOA PRÁTICA – USANDO O MODEL
+            lblDuracao.Text = Consulta.DuracaoFormatada;
 
 
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
