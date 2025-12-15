@@ -73,8 +73,9 @@ namespace Clinica.View
                 }
 
                 Consultas = new ObservableCollection<Consulta>(
-                    Consultas.OrderBy(c => c.Data).ThenBy(c => c.Hora)
-                );
+                            Consultas.OrderBy(c => c.Data).ThenBy(c => c.HoraInicio)
+                        );
+
 
 
                 lblSemConsultas.IsVisible = !Consultas.Any();

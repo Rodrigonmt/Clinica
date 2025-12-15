@@ -56,7 +56,8 @@ namespace Clinica.Models
         public decimal ValorTotal { get; set; }
 
         public override string ToString() =>
-            $"{Data:yyyy-MM-dd} {Hora} - {Medico} ({Status})";
+            $"{Data:yyyy-MM-dd} {HoraInicio} - {Medico} ({Status})";
+
     }
 
     public enum StatusConsulta

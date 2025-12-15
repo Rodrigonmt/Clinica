@@ -55,7 +55,7 @@ namespace Clinica.View
                         return kv.Value;
                     })
                     .OrderByDescending(c => c.Data)
-                    .ThenByDescending(c => c.Hora)
+                    .ThenByDescending(c => c.HoraInicio)
                     .ToList();
 
 

@@ -54,9 +54,11 @@
                             <Label Text="{Binding Data, StringFormat='{0:dd/MM/yyyy}'}"
                                Grid.Row="0" Grid.Column="1"/>
 
-                            <Label Text="{Binding Hora}"
-                               Grid.Row="1" Grid.Column="1"
+                            <Label Text="{Binding HoraInicio}"
+                               Grid.Row="1"
+                               Grid.Column="1"
                                TextColor="Gray"/>
+
 
                             <Label Text="{Binding Medico}"
                                Grid.Row="2" Grid.Column="1"
