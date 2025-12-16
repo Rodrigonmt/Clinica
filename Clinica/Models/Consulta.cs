@@ -58,6 +58,11 @@ namespace Clinica.Models
         public override string ToString() =>
             $"{Data:yyyy-MM-dd} {HoraInicio} - {Medico} ({Status})";
 
+
+        [JsonPropertyName("formaPagamento")]
+        public string FormaPagamento { get; set; }
+
+
         [JsonIgnore]
         public string DuracaoFormatada
         {

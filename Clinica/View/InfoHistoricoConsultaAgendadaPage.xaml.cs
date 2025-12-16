@@ -51,11 +51,29 @@ namespace Clinica.View
             lblDuracao.Text = Consulta.DuracaoFormatada;
 
 
+            // ? FORMA DE PAGAMENTO (PADRONIZADA)
+            lblFormaPagamento.Text = Consulta.FormaPagamento switch
+            {
+                "pix" => "PIX",
+                "credito" => "Cartão de Crédito",
+                "debito" => "Cartão de Débito",
+                "carteirasDigitais" => "Carteiras Digitais",
+                _ => string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
+                        ? "Não informado"
+                        : Consulta.FormaPagamento
+            };
+
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."
                 : Consulta.Observacoes;
             AtualizarEstadoDosBotoes();
+
+            //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
+            //    ? "Não informado"
+            //    : Consulta.FormaPagamento.ToUpper();
+
         }
+
 
         private void AtualizarEstadoDosBotoes()
         {

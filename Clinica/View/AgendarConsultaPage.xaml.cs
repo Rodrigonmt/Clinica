@@ -29,6 +29,10 @@ namespace Clinica.View
         private string _medicoId;
         private Consulta _consultaEdicao;
         private bool _modoReagendamento => _consultaEdicao != null;
+        private const string FirebasePagamentosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/pagamento";
+        private ObservableCollection<MetodoPagamentoItem> _pagamentos = new();
+        private MetodoPagamentoItem _pagamentoSelecionado;
+
 
 
         public AgendarConsultaPage()
@@ -47,6 +51,13 @@ namespace Clinica.View
             Loaded += async (_, __) => await CarregarProfissionaisAsync();
 
             datePicker.MinimumDate = DateTime.Today; // opcional
+
+            pagamentosCollection.SelectionChanged += (s, e) =>
+            {
+                _pagamentoSelecionado = e.CurrentSelection.FirstOrDefault() as MetodoPagamentoItem;
+            };
+
+
         }
 
         private decimal CalcularValorServicos()
@@ -89,7 +100,9 @@ namespace Clinica.View
                 Usuario = SessaoUsuario.UsuarioLogado?.UserId,
                 Status = StatusConsulta.Agendada,
                 Observacoes = txtObservacoes.Text,
-                ValorTotal = CalcularValorServicos()
+                ValorTotal = CalcularValorServicos(),
+                FormaPagamento = _pagamentoSelecionado.Key
+
             };
 
             var json = JsonSerializer.Serialize(consulta);
@@ -132,6 +145,17 @@ namespace Clinica.View
             AtualizarValorTotal();
             AtualizarTempoTotal();
 
+            await CarregarPagamentosDoProfissionalAsync();
+
+            _pagamentoSelecionado = _pagamentos
+                .FirstOrDefault(p => p.Key == _consultaEdicao.FormaPagamento);
+
+            if (_pagamentoSelecionado != null)
+            {
+                pagamentosCollection.SelectedItem = _pagamentoSelecionado;
+            }
+
+
             await Task.Delay(200);
             AtualizarHorariosDisponiveis();
 
@@ -172,6 +196,7 @@ namespace Clinica.View
         {
             base.OnAppearing();
             await CarregarServicosAsync();
+
         }
 
         private async Task CarregarServicosAsync()
@@ -257,6 +282,54 @@ namespace Clinica.View
                 .Sum(s => s.Duracao);
         }
 
+        private async Task CarregarPagamentosDoProfissionalAsync()
+        {
+            pagamentosCollection.ItemsSource = null;
+            _pagamentos.Clear();
+            _pagamentoSelecionado = null;
+
+            if (string.IsNullOrEmpty(_medicoId))
+                return;
+
+            var url = $"{FirebasePagamentosUrl}/{_medicoId}.json";
+            var json = await _httpClient.GetStringAsync(url);
+
+            if (string.IsNullOrWhiteSpace(json) || json == "null")
+                return;
+
+            var dados = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json);
+
+            foreach (var item in dados)
+            {
+                if (!item.Value.TryGetProperty("ativo", out var ativo) || !ativo.GetBoolean())
+                    continue;
+
+                _pagamentos.Add(new MetodoPagamentoItem
+                {
+                    Key = item.Key,
+                    Nome = FormatarNomePagamento(item.Key)
+                });
+            }
+
+            pagamentosCollection.ItemsSource = _pagamentos;
+        }
+
+
+        private string FormatarNomePagamento(string key) => key switch
+        {
+            "pix" => "PIX",
+            "cartaoCredito" => "Cartão de Crédito",
+            "cartaoDebito" => "Cartão de Débito",
+            "dinheiro" => "Dinheiro",
+            "boleto" => "Boleto",
+            "nfc" => "Pagamento por Aproximação",
+            "carteirasDigitais" => "Carteiras Digitais",
+            "planosPacotes" => "Planos / Pacotes",
+            _ => key
+        };
+
+
+
         private int CalcularQuantidadeDeSlots(int duracaoTotal, int intervaloSlot)
         {
             return (int)Math.Ceiling((double)duracaoTotal / intervaloSlot);
@@ -319,6 +392,14 @@ namespace Clinica.View
                 _medicoNome = prof?.Nome;
             }
 
+            // 🔥 Limpa pagamento ao trocar profissional
+            _pagamentoSelecionado = null;
+            _pagamentos.Clear();
+            pagamentosCollection.ItemsSource = null;
+
+            // 🔹 Recarrega formas de pagamento
+            _ = CarregarPagamentosDoProfissionalAsync();
+
             // 🔥 Limpa o horário SEMPRE que trocar o médico
             timePicker.SelectedItem = null;
             timePicker.ItemsSource = null;
@@ -354,6 +435,13 @@ namespace Clinica.View
                 return;
             }
 
+            if (_pagamentoSelecionado == null)
+            {
+                await DisplayAlert("Aviso", "Selecione uma forma de pagamento.", "OK");
+                return;
+            }
+
+
             if (_modoReagendamento)
                 await SalvarReagendamentoAsync(servicos);
             else
@@ -372,7 +460,9 @@ namespace Clinica.View
                     servico = servicos,
                     observacoes = txtObservacoes.Text,
                     valorTotal = CalcularValorServicos(),
-                    status = StatusConsulta.Reagendada
+                    status = StatusConsulta.Reagendada,
+                    formaPagamento = _pagamentoSelecionado.Key
+
                 };
 
                 var json = JsonSerializer.Serialize(update);

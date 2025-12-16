@@ -46,6 +46,23 @@ namespace Clinica.View
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."
                 : Consulta.Observacoes;
+
+            // ? FORMA DE PAGAMENTO (PADRONIZADA)
+            lblFormaPagamento.Text = Consulta.FormaPagamento switch
+            {
+                "pix" => "PIX",
+                "credito" => "Cartão de Crédito",
+                "debito" => "Cartão de Débito",
+                "carteirasDigitais" => "Carteiras Digitais",
+                _ => string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
+                        ? "Não informado"
+                        : Consulta.FormaPagamento
+            };
+
+            //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
+            //    ? "Não informado"
+            //    : Consulta.FormaPagamento.ToUpper();
+
         }
 
 
