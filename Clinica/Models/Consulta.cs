@@ -40,6 +40,10 @@ namespace Clinica.Models
         [JsonPropertyName("medico")]
         public string Medico { get; set; }
 
+        // 🔥 ID REAL DO PROFISSIONAL (novo campo)
+        [JsonPropertyName("medicoId")]
+        public string MedicoId { get; set; }
+
         [JsonPropertyName("criadoEm")]
         public DateTime CriadoEm { get; set; } = DateTime.UtcNow;
 

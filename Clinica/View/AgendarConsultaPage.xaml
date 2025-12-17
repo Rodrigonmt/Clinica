@@ -77,31 +77,34 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border WidthRequest="170"
-                                    Padding="10"
-                                    Stroke="#E0E0E0"
-                                    StrokeThickness="1"
-                                    BackgroundColor="#F9F9F9"
-                                    StrokeShape="RoundRectangle 12">
+                                Padding="10"
+                                Stroke="#E0E0E0"
+                                StrokeThickness="1"
+                                BackgroundColor="#F9F9F9"
+                                StrokeShape="RoundRectangle 12"
+                                Opacity="{Binding Opacidade}">
 
                                 <HorizontalStackLayout Spacing="10">
                                     <CheckBox IsChecked="{Binding Selecionado}"
-                                              CheckedChanged="OnServicoChanged"/>
+                                      IsEnabled="{Binding Habilitado}"
+                                      CheckedChanged="OnServicoChanged"/>
 
                                     <VerticalStackLayout Spacing="2">
                                         <Label Text="{Binding Nome}"
-                                               FontSize="15"
-                                               FontAttributes="Bold"
-                                               TextColor="Black"/>
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="Black"/>
 
                                         <Label Text="{Binding Preco, StringFormat='R$ {0:0.00}'}"
-                                               FontSize="13"
-                                               TextColor="#007AFF"/>
+                                       FontSize="13"
+                                       TextColor="#007AFF"/>
                                     </VerticalStackLayout>
                                 </HorizontalStackLayout>
 
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
+
 
                 </CollectionView>
 

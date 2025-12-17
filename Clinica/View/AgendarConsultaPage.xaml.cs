@@ -32,6 +32,7 @@ namespace Clinica.View
         private const string FirebasePagamentosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/pagamento";
         private ObservableCollection<MetodoPagamentoItem> _pagamentos = new();
         private MetodoPagamentoItem _pagamentoSelecionado;
+        private const string FirebaseProfissionaisServicosUrl = "https://clinica-e248d-default-rtdb.firebaseio.com/profissionaisServicos.json";
 
 
 
@@ -95,6 +96,7 @@ namespace Clinica.View
                 HoraFim = horaFim.ToString(@"hh\:mm"),
                 Duracao = duracaoTotal,
                 Medico = _medicoNome,
+                MedicoId = _medicoId, // 🔥 ESSENCIAL
                 Servico = servicos,
                 CriadoEm = DateTime.UtcNow,
                 Usuario = SessaoUsuario.UsuarioLogado?.UserId,
@@ -139,8 +141,16 @@ namespace Clinica.View
             // Serviços
             var servicosSelecionados = _consultaEdicao.Servico.Split(" + ");
 
+            _medicoId = _consultaEdicao.MedicoId;
+            await LiberarServicosDoProfissionalAsync(_medicoId);
+
+            // depois disso
             foreach (var servico in _servicos)
-                servico.Selecionado = servicosSelecionados.Contains(servico.Nome);
+            {
+                servico.Selecionado =
+                    servicosSelecionados.Contains(servico.Nome) && servico.Habilitado;
+            }
+
 
             AtualizarValorTotal();
             AtualizarTempoTotal();
@@ -215,6 +225,9 @@ namespace Clinica.View
                 foreach (var item in dict)
                 {
                     item.Value.ServicoId = item.Key;
+                    item.Value.Habilitado = false; // 🔒 começa bloqueado
+                    item.Value.Selecionado = false;
+
                     _servicos.Add(item.Value);
                 }
 
@@ -351,6 +364,17 @@ namespace Clinica.View
 
         private void OnServicoChanged(object sender, CheckedChangedEventArgs e)
         {
+
+            var checkbox = sender as CheckBox;
+            if (checkbox?.BindingContext is Servico servico)
+            {
+                if (!servico.Habilitado)
+                {
+                    servico.Selecionado = false;
+                    return;
+                }
+            }
+
             // 🔹 Atualiza valor e tempo
             AtualizarValorTotal();
             AtualizarTempoTotal();
@@ -391,6 +415,16 @@ namespace Clinica.View
                 _medicoId = prof?.ProfissionalId;
                 _medicoNome = prof?.Nome;
             }
+
+            // 🔥 Reset geral
+            foreach (var s in _servicos)
+            {
+                s.Selecionado = false;
+                s.Habilitado = false;
+            }
+
+            _ = LiberarServicosDoProfissionalAsync(_medicoId);
+
 
             // 🔥 Limpa pagamento ao trocar profissional
             _pagamentoSelecionado = null;
@@ -447,6 +481,35 @@ namespace Clinica.View
             else
                 await SalvarNovoAgendamentoAsync(servicos);
         }
+
+        private async Task LiberarServicosDoProfissionalAsync(string profissionalId)
+        {
+            var json = await _httpClient.GetStringAsync(FirebaseProfissionaisServicosUrl);
+
+            if (string.IsNullOrWhiteSpace(json) || json == "null")
+                return;
+
+            var dict = JsonSerializer.Deserialize<
+                Dictionary<string, ProfissionalServico>>(json);
+
+            var vinculo = dict?
+                .Values
+                .FirstOrDefault(v => v.ProfissionalId == profissionalId);
+
+            if (vinculo?.ServicosIds == null)
+                return;
+
+            foreach (var servico in _servicos)
+            {
+                servico.Habilitado = vinculo.ServicosIds.Contains(servico.ServicoId);
+                servico.Selecionado = false;
+            }
+
+            AtualizarValorTotal();
+            AtualizarTempoTotal();
+        }
+
+
 
         private async Task SalvarReagendamentoAsync(string servicos)
         {
