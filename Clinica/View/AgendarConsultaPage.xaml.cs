@@ -96,7 +96,7 @@ namespace Clinica.View
                 HoraFim = horaFim.ToString(@"hh\:mm"),
                 Duracao = duracaoTotal,
                 Medico = _medicoNome,
-                MedicoId = _medicoId, // 🔥 ESSENCIAL
+                MedicoId = _medicoId,
                 Servico = servicos,
                 CriadoEm = DateTime.UtcNow,
                 Usuario = SessaoUsuario.UsuarioLogado?.UserId,
@@ -104,17 +104,38 @@ namespace Clinica.View
                 Observacoes = txtObservacoes.Text,
                 ValorTotal = CalcularValorServicos(),
                 FormaPagamento = _pagamentoSelecionado.Key
-
             };
 
             var json = JsonSerializer.Serialize(consulta);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            await _httpClient.PostAsync(FirebaseUrl, content);
+            var response = await _httpClient.PostAsync(FirebaseUrl, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                await DisplayAlert("Erro", "Erro ao salvar agendamento.", "OK");
+                return;
+            }
 
             await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
-            await Shell.Current.GoToAsync("/MainPage");
+
+            // 🔥 NOVA REGRA DE NAVEGAÇÃO
+            if (consulta.FormaPagamento == "pix")
+            {
+                await Shell.Current.GoToAsync(
+                    nameof(PagamentoPixPage),
+                    true,
+                    new Dictionary<string, object>
+                    {
+                { "Consulta", consulta }
+                    });
+            }
+            else
+            {
+                await Shell.Current.GoToAsync("/MainPage");
+            }
         }
+
 
 
         public Consulta ConsultaEdicao

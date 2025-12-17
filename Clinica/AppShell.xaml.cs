@@ -15,6 +15,7 @@ namespace Clinica
             Routing.RegisterRoute(nameof(View.InfoConsultasAgendadaPage), typeof(View.InfoConsultasAgendadaPage));
             Routing.RegisterRoute(nameof(View.HistoricoConsultasAgendadasPage), typeof(View.HistoricoConsultasAgendadasPage));
             Routing.RegisterRoute(nameof(View.InfoHistoricoConsultaAgendadaPage), typeof(View.InfoHistoricoConsultaAgendadaPage));
+            Routing.RegisterRoute(nameof(View.PagamentoPixPage), typeof(View.PagamentoPixPage));
             Routing.RegisterRoute(nameof(View.LoadingPage), typeof(View.LoadingPage));
             Routing.RegisterRoute(nameof(View.RecuperarSenhaPage), typeof(View.RecuperarSenhaPage));
             Routing.RegisterRoute(nameof(View.PerfilPage), typeof(View.PerfilPage));

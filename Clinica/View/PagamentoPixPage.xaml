@@ -1,0 +1,46 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Clinica.View.PagamentoPixPage"
+             Title="Pagamento PIX">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="Pagamento via PIX"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+
+            <!-- Resumo -->
+            <Frame CornerRadius="16" Padding="15" BackgroundColor="White">
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="lblServico"/>
+                    <Label x:Name="lblValor"
+                           FontAttributes="Bold"
+                           TextColor="#007AFF"/>
+                    <Label x:Name="lblDataHora"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- PIX Simples -->
+            <Frame CornerRadius="16" Padding="15" BackgroundColor="#F4F7FB">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Dados para pagamento PIX"
+                           FontAttributes="Bold"/>
+
+                    <Label Text="Chave PIX"/>
+                    <Label x:Name="lblChavePix"
+                           FontAttributes="Bold"/>
+
+                    <Button Text="Copiar chave PIX"
+                            Clicked="OnCopiarPixClicked"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Ações -->
+            <Button Text="Pagar depois"
+                    Clicked="OnPagarDepoisClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
