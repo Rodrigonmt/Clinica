@@ -166,6 +166,17 @@
                        LineBreakMode="WordWrap"/>
             </Frame>
 
+            <!-- Botão PAGAR COM PIX -->
+            <Button x:Name="BtnPagarPix"
+                    Text="Pagar com PIX"
+                    BackgroundColor="#00B37E"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    IsVisible="False"
+                    Clicked="OnPagarPixClicked" />
+
+
             <!-- Botão Cancelar -->
             <Button Text="Cancelar"
                     BackgroundColor="#D32F2F"

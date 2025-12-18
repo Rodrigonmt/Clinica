@@ -59,12 +59,35 @@ namespace Clinica.View
                         : Consulta.FormaPagamento
             };
 
+
+            // ?? Mostrar botão de pagamento PIX somente se a forma de pagamento for PIX
+            BtnPagarPix.IsVisible = Consulta.FormaPagamento == "pix";
+
+
             //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
             //    ? "Não informado"
             //    : Consulta.FormaPagamento.ToUpper();
 
         }
 
+
+
+        private async void OnPagarPixClicked(object sender, EventArgs e)
+        {
+            if (Consulta == null)
+            {
+                await DisplayAlert("Erro", "Consulta inválida.", "OK");
+                return;
+            }
+
+            await Shell.Current.GoToAsync(
+                nameof(PagamentoPixPage),
+                true,
+                new Dictionary<string, object>
+                {
+            { "Consulta", Consulta }
+                });
+        }
 
 
         private async void OnCancelarClicked(object sender, EventArgs e)

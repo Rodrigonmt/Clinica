@@ -77,7 +77,7 @@ namespace Clinica.View
 
         private void AtualizarEstadoDosBotoes()
         {
-            // Status permitidos
+            // Status permitidos para ações
             bool podeEditar =
                 Consulta.Status == StatusConsulta.Agendada ||
                 Consulta.Status == StatusConsulta.Confirmada ||
@@ -85,12 +85,41 @@ namespace Clinica.View
 
             // Cancelar
             BtnCancelar.IsEnabled = podeEditar;
-            BtnCancelar.BackgroundColor = podeEditar ? Color.FromArgb("#D32F2F") : Colors.LightGray;
+            BtnCancelar.BackgroundColor = podeEditar
+                ? Color.FromArgb("#D32F2F")
+                : Colors.LightGray;
 
             // Reagendar
             BtnReagendar.IsEnabled = podeEditar;
-            BtnReagendar.BackgroundColor = podeEditar ? Color.FromArgb("#1976D2") : Colors.LightGray;
+            BtnReagendar.BackgroundColor = podeEditar
+                ? Color.FromArgb("#1976D2")
+                : Colors.LightGray;
+
+            // ?? PAGAMENTO PIX (apenas visualização + navegação)
+            BtnPagarPix.IsVisible =
+                podeEditar &&
+                Consulta.FormaPagamento == "pix";
         }
+
+
+        private async void OnPagarPixClicked(object sender, EventArgs e)
+        {
+            if (Consulta == null)
+            {
+                await DisplayAlert("Erro", "Consulta inválida.", "OK");
+                return;
+            }
+
+            await Shell.Current.GoToAsync(
+                nameof(PagamentoPixPage),
+                true,
+                new Dictionary<string, object>
+                {
+            { "Consulta", Consulta }
+                });
+        }
+
+
 
 
         private async void OnCancelarClicked(object sender, EventArgs e)

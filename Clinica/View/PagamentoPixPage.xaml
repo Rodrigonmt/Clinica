@@ -23,24 +23,50 @@
             </Frame>
 
             <!-- PIX -->
-            <Frame CornerRadius="16" Padding="15" BackgroundColor="#F4F7FB">
-                <VerticalStackLayout Spacing="10">
+            <Frame CornerRadius="16"
+                   Padding="15"
+                   BackgroundColor="#F4F7FB">
+
+                <VerticalStackLayout Spacing="12">
 
                     <Label Text="Dados para pagamento PIX"
                FontAttributes="Bold"/>
 
-                    <Label Text="Chave PIX"/>
-                    <Label x:Name="lblChavePix"
-               FontAttributes="Bold"/>
+                    <!-- PIX SIMPLES -->
+                    <VerticalStackLayout x:Name="layoutPixSimples"
+                             IsVisible="False"
+                             Spacing="8">
 
+                        <Label Text="Chave PIX"/>
+                        <Label x:Name="lblChavePix"
+                   FontAttributes="Bold"/>
+
+                        <Button Text="Copiar chave PIX"
+                    Clicked="OnCopiarPixClicked"/>
+                    </VerticalStackLayout>
+
+                    <!-- PIX AUTOMATIZADO -->
+                    <VerticalStackLayout x:Name="layoutPixAutomatizado"
+                             IsVisible="False"
+                             Spacing="10">
+
+                        <Image Source="pix_qr_placeholder.png"
+                   HeightRequest="180"
+                   HorizontalOptions="Center"/>
+
+                        <Button Text="Pagar agora"
+                    BackgroundColor="#00B37E"
+                    TextColor="White"
+                    Clicked="OnPagarAgoraClicked"/>
+                    </VerticalStackLayout>
+
+                    <!-- Dados comuns -->
                     <Label Text="Destinatário"/>
                     <Label x:Name="lblDestinatario"/>
 
                     <Label Text="Instituição Financeira"/>
                     <Label x:Name="lblInstituicaoFinanceira"/>
 
-                    <Button Text="Copiar chave PIX"
-                Clicked="OnCopiarPixClicked"/>
                 </VerticalStackLayout>
             </Frame>
 

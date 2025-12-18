@@ -35,7 +35,6 @@ public partial class PagamentoPixPage : ContentPage
     {
         try
         {
-            // pagamento/{profissionalId}/pix
             string url = $"{FirebaseUrl}/pagamento/{Consulta.MedicoId}/pix.json";
 
             var pix = await _httpClient.GetFromJsonAsync<PixConfig>(url);
@@ -46,15 +45,29 @@ public partial class PagamentoPixPage : ContentPage
                 return;
             }
 
-            lblChavePix.Text = pix.ChaveMascara;
             lblDestinatario.Text = pix.Destinatario;
             lblInstituicaoFinanceira.Text = pix.InstituicaoFinanceira;
+
+            // ?? CONTROLE POR TIPO
+            if (pix.Tipo == "SIMPLES")
+            {
+                layoutPixSimples.IsVisible = true;
+                layoutPixAutomatizado.IsVisible = false;
+
+                lblChavePix.Text = pix.ChaveMascara;
+            }
+            else if (pix.Tipo == "AUTOMATIZADO")
+            {
+                layoutPixSimples.IsVisible = false;
+                layoutPixAutomatizado.IsVisible = true;
+            }
         }
         catch (Exception ex)
         {
             await DisplayAlert("Erro", $"Erro ao carregar PIX: {ex.Message}", "OK");
         }
     }
+
 
     private async void OnCopiarPixClicked(object sender, EventArgs e)
     {
@@ -64,6 +77,16 @@ public partial class PagamentoPixPage : ContentPage
             await DisplayAlert("PIX", "Chave PIX copiada!", "OK");
         }
     }
+
+    private async void OnPagarAgoraClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert(
+            "Pagamento PIX",
+            "Pagamento automático será integrado em breve.",
+            "OK"
+        );
+    }
+
 
     private async void OnPagarDepoisClicked(object sender, EventArgs e)
     {
