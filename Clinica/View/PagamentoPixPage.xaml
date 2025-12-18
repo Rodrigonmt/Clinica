@@ -22,20 +22,28 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- PIX Simples -->
+            <!-- PIX -->
             <Frame CornerRadius="16" Padding="15" BackgroundColor="#F4F7FB">
                 <VerticalStackLayout Spacing="10">
+
                     <Label Text="Dados para pagamento PIX"
-                           FontAttributes="Bold"/>
+               FontAttributes="Bold"/>
 
                     <Label Text="Chave PIX"/>
                     <Label x:Name="lblChavePix"
-                           FontAttributes="Bold"/>
+               FontAttributes="Bold"/>
+
+                    <Label Text="Destinatário"/>
+                    <Label x:Name="lblDestinatario"/>
+
+                    <Label Text="Instituição Financeira"/>
+                    <Label x:Name="lblInstituicaoFinanceira"/>
 
                     <Button Text="Copiar chave PIX"
-                            Clicked="OnCopiarPixClicked"/>
+                Clicked="OnCopiarPixClicked"/>
                 </VerticalStackLayout>
             </Frame>
+
 
             <!-- Ações -->
             <Button Text="Pagar depois"

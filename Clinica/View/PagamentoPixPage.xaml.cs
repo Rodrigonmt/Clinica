@@ -1,35 +1,68 @@
 using Clinica.Models;
-using Microsoft.Maui.Controls;
+using System.Net.Http.Json;
 
 namespace Clinica.View;
 
 [QueryProperty(nameof(Consulta), "Consulta")]
 public partial class PagamentoPixPage : ContentPage
 {
-    public Consulta Consulta { get; set; }
-    public PagamentoPixPage()
-	{
-		InitializeComponent();
-	}
+    private readonly HttpClient _httpClient = new();
+    private const string FirebaseUrl = "https://clinica-e248d-default-rtdb.firebaseio.com";
 
-    protected override void OnAppearing()
+    public Consulta Consulta { get; set; }
+
+    public PagamentoPixPage()
+    {
+        InitializeComponent();
+    }
+
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        if (Consulta == null) return;
+        if (Consulta == null || string.IsNullOrEmpty(Consulta.MedicoId))
+            return;
 
+        // ?? Resumo da consulta
         lblServico.Text = $"Serviço: {Consulta.Servico}";
         lblValor.Text = $"Valor: R$ {Consulta.ValorTotal:0.00}";
         lblDataHora.Text = $"{Consulta.Data:dd/MM/yyyy} às {Consulta.HoraInicio}";
 
-        // ?? PIX simples (por enquanto)
-        lblChavePix.Text = "pix@clinica.com.br";
+        await CarregarPixAsync();
+    }
+
+    private async Task CarregarPixAsync()
+    {
+        try
+        {
+            // pagamento/{profissionalId}/pix
+            string url = $"{FirebaseUrl}/pagamento/{Consulta.MedicoId}/pix.json";
+
+            var pix = await _httpClient.GetFromJsonAsync<PixConfig>(url);
+
+            if (pix == null || !pix.Ativo)
+            {
+                await DisplayAlert("PIX", "PIX indisponível para este profissional.", "OK");
+                return;
+            }
+
+            lblChavePix.Text = pix.ChaveMascara;
+            lblDestinatario.Text = pix.Destinatario;
+            lblInstituicaoFinanceira.Text = pix.InstituicaoFinanceira;
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Erro", $"Erro ao carregar PIX: {ex.Message}", "OK");
+        }
     }
 
     private async void OnCopiarPixClicked(object sender, EventArgs e)
     {
-        await Clipboard.SetTextAsync(lblChavePix.Text);
-        await DisplayAlert("PIX", "Chave PIX copiada!", "OK");
+        if (!string.IsNullOrWhiteSpace(lblChavePix.Text))
+        {
+            await Clipboard.SetTextAsync(lblChavePix.Text);
+            await DisplayAlert("PIX", "Chave PIX copiada!", "OK");
+        }
     }
 
     private async void OnPagarDepoisClicked(object sender, EventArgs e)
