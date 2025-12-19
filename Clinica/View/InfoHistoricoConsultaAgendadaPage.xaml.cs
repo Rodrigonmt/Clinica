@@ -68,12 +68,47 @@ namespace Clinica.View
                 : Consulta.Observacoes;
             AtualizarEstadoDosBotoes();
 
+            AplicarCorStatus(Consulta.Status.ToString());
+
+
             //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
             //    ? "Não informado"
             //    : Consulta.FormaPagamento.ToUpper();
 
         }
 
+
+        private void AplicarCorStatus(string status)
+        {
+            lblStatus.Text = status;
+
+            switch (status.ToLower())
+            {
+                case "confirmada":
+                    lblStatus.TextColor = Colors.Green;
+                    break;
+
+                case "pendente":
+                    lblStatus.TextColor = Colors.Orange;
+                    break;
+
+                case "agendada":
+                    lblStatus.TextColor = Colors.Blue;
+                    break;
+
+                case "cancelada":
+                    lblStatus.TextColor = Colors.Red;
+                    break;
+
+                case "reagendada":
+                    lblStatus.TextColor = Colors.BlueViolet;
+                    break;
+
+                default:
+                    lblStatus.TextColor = Colors.Gray;
+                    break;
+            }
+        }
 
         private void AtualizarEstadoDosBotoes()
         {

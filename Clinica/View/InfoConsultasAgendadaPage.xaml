@@ -15,138 +15,64 @@
                    TextColor="#007AFF"
                    HorizontalOptions="Center"/>
 
-            <!-- Card principal -->
             <Frame CornerRadius="20"
                    BackgroundColor="White"
                    HasShadow="True"
                    Padding="20">
 
-                <VerticalStackLayout Spacing="15">
+                <Grid ColumnDefinitions="30,Auto,*"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                      RowSpacing="14">
 
-                    <!-- Data -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Data"
-                               FontSize="14"
-                               TextColor="#888"
-                               FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="calendar_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblData"
-                                   FontSize="18"
-                                   TextColor="Black"
-                                   FontAttributes="Bold"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- DATA -->
+                    <Image Grid.Row="0" Grid.Column="0" Source="calendar_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="0" Grid.Column="1" Text="Data:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="0" Grid.Column="2" x:Name="lblData" FontSize="16" FontAttributes="Bold"/>
 
-                    <!-- Hora -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Hora"
-                               FontSize="14"
-                               TextColor="#888"
-                               FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="clock_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblHora"
-                                   FontSize="18"
-                                   TextColor="Black"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- HORA -->
+                    <Image Grid.Row="1" Grid.Column="0" Source="clock_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="1" Grid.Column="1" Text="Hora:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="1" Grid.Column="2" x:Name="lblHora" FontSize="16"/>
 
-                    <!-- Médico -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Médico"
-                               FontSize="14"
-                               TextColor="#888"
-                               FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="doctor_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblMedico"
-                                   FontSize="18"
-                                   TextColor="#007AFF"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- MÉDICO -->
+                    <Image Grid.Row="2" Grid.Column="0" Source="doctor_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Médico:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="2" Grid.Column="2" x:Name="lblMedico" FontSize="16"/>
 
-                    <!-- Status -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Status"
-                               FontSize="14"
-                               TextColor="#888"
-                               FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="status_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblStatus"
-                                   FontSize="18"
-                                   FontAttributes="Italic"
-                                   TextColor="DarkGreen"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- STATUS -->
+                    <Image Grid.Row="3" Grid.Column="0" Source="status_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="3" Grid.Column="1" Text="Status:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="3" Grid.Column="2"
+                       x:Name="lblStatus"
+                       FontSize="16"
+                       FontAttributes="Bold"/>
 
-                    <!-- Serviço -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Serviço"
-                           FontSize="14"
-                           TextColor="#888"
-                           FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="servico_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblServico"
-                           FontSize="18"
-                           TextColor="Black"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- SERVIÇO -->
+                    <Image Grid.Row="4" Grid.Column="0" Source="servico_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="4" Grid.Column="1" Text="Serviço:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="4" Grid.Column="2" x:Name="lblServico" FontSize="16"/>
 
-                    <!-- 💳 FORMA DE PAGAMENTO -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Forma de Pagamento"
-                           FontSize="14"
-                           TextColor="#888"
-                           FontAttributes="Bold"/>
+                    <!-- PAGAMENTO -->
+                    <Image Grid.Row="5" Grid.Column="0" Source="payment_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="5" Grid.Column="1" Text="Pagamento:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="5" Grid.Column="2" x:Name="lblFormaPagamento" FontSize="16"/>
 
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="payment_icon.png"
-                               WidthRequest="24"
-                               HeightRequest="24"/>
+                    <!-- VALOR -->
+                    <Image Grid.Row="6" Grid.Column="0" Source="money_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="6" Grid.Column="1" Text="Valor:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="6" Grid.Column="2"
+                       x:Name="lblValorTotal"
+                       FontSize="16"
+                       FontAttributes="Bold"/>
 
-                            <Label x:Name="lblFormaPagamento"
-                               FontSize="16"
-                               TextColor="Black"
-                               FontAttributes="Bold"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
+                    <!-- DURAÇÃO -->
+                    <Image Grid.Row="7" Grid.Column="0" Source="time_icon.png" WidthRequest="22"/>
+                    <Label Grid.Row="7" Grid.Column="1" Text="Duração:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="7" Grid.Column="2" x:Name="lblDuracao" FontSize="16"/>
 
-
-                    <!-- 💰 VALOR DO SERVIÇO -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Valor do Serviço"
-                               FontSize="14"
-                               TextColor="#888"
-                               FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="money_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblValorTotal"
-                                   FontSize="18"
-                                   TextColor="#007AFF"
-                                   FontAttributes="Bold"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-
-                    <!-- ⏱ TEMPO DE DURAÇÃO -->
-                    <VerticalStackLayout Spacing="3">
-                        <Label Text="Tempo de Duração"
-                           FontSize="14"
-                           TextColor="#888"
-                           FontAttributes="Bold"/>
-                        <HorizontalStackLayout Spacing="10">
-                            <Image Source="time_icon.png" WidthRequest="24" HeightRequest="24"/>
-                            <Label x:Name="lblDuracao"
-                           FontSize="16"
-                           TextColor="Black"/>
-                        </HorizontalStackLayout>
-                    </VerticalStackLayout>
-
-
-                </VerticalStackLayout>
+                </Grid>
             </Frame>
+
 
             <!-- Observações -->
             <Label Text="Observações"

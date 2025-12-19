@@ -42,7 +42,6 @@ namespace Clinica.View
             lblServico.Text = Consulta.Servico; // <-- ADICIONADO
             lblValorTotal.Text = $"R$ {Consulta.ValorTotal:0.00}";
             lblDuracao.Text = Consulta.DuracaoFormatada;
-
             lblObservacoes.Text = string.IsNullOrWhiteSpace(Consulta.Observacoes)
                 ? "Nenhuma observação registrada."
                 : Consulta.Observacoes;
@@ -63,7 +62,7 @@ namespace Clinica.View
             // ?? Mostrar botão de pagamento PIX somente se a forma de pagamento for PIX
             BtnPagarPix.IsVisible = Consulta.FormaPagamento == "pix";
 
-
+            AplicarCorStatus(Consulta.Status.ToString());
             //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
             //    ? "Não informado"
             //    : Consulta.FormaPagamento.ToUpper();
@@ -131,6 +130,39 @@ namespace Clinica.View
             { "Consulta", Consulta }
                 });
         }
+
+        private void AplicarCorStatus(string status)
+        {
+            lblStatus.Text = status;
+
+            switch (status.ToLower())
+            {
+                case "confirmada":
+                    lblStatus.TextColor = Colors.Green;
+                    break;
+
+                case "pendente":
+                    lblStatus.TextColor = Colors.Orange;
+                    break;
+
+                case "agendada":
+                    lblStatus.TextColor = Colors.Blue;
+                    break;
+
+                case "cancelada":
+                    lblStatus.TextColor = Colors.Red;
+                    break;
+
+                case "reagendada":
+                    lblStatus.TextColor = Colors.BlueViolet;
+                    break;
+
+                default:
+                    lblStatus.TextColor = Colors.Gray;
+                    break;
+            }
+        }
+
 
         private string FormatarDuracao(int minutos)
         {
