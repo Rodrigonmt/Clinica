@@ -85,6 +85,12 @@ public partial class LoginPage : ContentPage
 
     }
 
+    private async void OnLoginTelefoneClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(LoginTelefonePage));
+    }
+
+
 
     private async void OnCadastrarClicked(object sender, EventArgs e)
     {

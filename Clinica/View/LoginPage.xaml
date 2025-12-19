@@ -176,6 +176,15 @@
                 </Label.GestureRecognizers>
             </Label>
 
+            <Label Text="Entrar com telefone"
+                   TextColor="{DynamicResource PrimaryColor}"
+                   HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLoginTelefoneClicked"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+
 
         </VerticalStackLayout>
     </ScrollView>

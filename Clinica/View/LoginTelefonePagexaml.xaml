@@ -1,0 +1,33 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Clinica.View.LoginTelefonePage"
+    Title="Login por Telefone">
+
+    <VerticalStackLayout Padding="30" Spacing="20">
+
+        <Label Text="Entrar com telefone"
+               FontSize="26"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <!-- 📱 Telefone -->
+        <Entry x:Name="TelefoneEntry"
+               Placeholder="+55 11 99999-9999"
+               Keyboard="Telephone" />
+
+        <Button Text="Enviar Código"
+                Clicked="OnEnviarSmsClicked" />
+
+        <!-- 🔢 Código SMS -->
+        <Entry x:Name="CodigoEntry"
+               Placeholder="Código SMS"
+               Keyboard="Numeric"
+               IsVisible="False" />
+
+        <Button Text="Confirmar"
+                Clicked="OnConfirmarCodigoClicked"
+                IsVisible="False" />
+
+    </VerticalStackLayout>
+</ContentPage>
