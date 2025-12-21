@@ -54,7 +54,11 @@ namespace Clinica
                     return;
                 }
 
+                // ============================
+                // ?? DADOS JÁ EXISTENTES (NÃO ALTERADOS)
+                // ============================
                 lblEnderecoEmpresa.Text = empresa.Endereco ?? "Endereço não informado";
+
                 lblTelefoneEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Telefone)
                     ? string.Empty
                     : $" {empresa.Telefone}";
@@ -62,15 +66,32 @@ namespace Clinica
                 lblEmailEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Email)
                     ? string.Empty
                     : $" {empresa.Email}";
+
+                // ============================
+                // ??? NOVO: IMAGEM DE FUNDO (BASE64)
+                // ============================
+                if (!string.IsNullOrWhiteSpace(empresa.ImagemFundoMobile))
+                {
+                    string base64 = empresa.ImagemFundoMobile;
+
+                    // Remove prefixo: data:image/jpeg;base64,
+                    if (base64.Contains(","))
+                        base64 = base64.Split(',')[1];
+
+                    byte[] imageBytes = Convert.FromBase64String(base64);
+
+                    imgFundo.Source = ImageSource.FromStream(() =>
+                        new MemoryStream(imageBytes));
+                }
             }
             catch
             {
+                // ?? Mantém comportamento atual em caso de erro
                 lblEnderecoEmpresa.Text = "Erro ao carregar dados da empresa";
                 lblTelefoneEmpresa.Text = string.Empty;
                 lblEmailEmpresa.Text = string.Empty;
             }
         }
-
 
     }
 }

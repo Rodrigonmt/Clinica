@@ -15,12 +15,13 @@
     <Grid RowDefinitions="*,Auto,Auto">
 
         <!-- IMAGEM DE FUNDO -->
-        <Image Source="fundo04.jpg"
-               Aspect="AspectFill"
-               Opacity="1"
-               Grid.RowSpan="3"
-               VerticalOptions="FillAndExpand"
-               HorizontalOptions="FillAndExpand" />
+        <Image x:Name="imgFundo"
+           Aspect="AspectFill"
+           Opacity="1"
+           Grid.RowSpan="3"
+           VerticalOptions="FillAndExpand"
+           HorizontalOptions="FillAndExpand" />
+
 
 
         <!-- (2) CARDS PRINCIPAIS -->
