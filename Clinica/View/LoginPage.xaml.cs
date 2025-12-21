@@ -59,17 +59,6 @@ public partial class LoginPage : ContentPage
         if (chkLembrar.IsChecked)
         {
             await SecureStorage.SetAsync("lembrar", "true");
-        }
-        else
-        {
-            SecureStorage.Remove("lembrar");
-        }
-
-        // Salvar refreshToken + userId SE o usuário marcou "lembrar-me"
-        // Salvar refreshToken + userId SOMENTE se marcou "lembrar-me"
-        if (chkLembrar.IsChecked)
-        {
-            await SecureStorage.SetAsync("lembrar", "true");
             await SecureStorage.SetAsync("refresh_token", auth.refreshToken);
             await SecureStorage.SetAsync("user_id", auth.localId);
         }
@@ -78,7 +67,6 @@ public partial class LoginPage : ContentPage
             SecureStorage.Remove("lembrar");
             SecureStorage.Remove("refresh_token");
         }
-
 
         await Shell.Current.GoToAsync(nameof(MainPage));
 
@@ -120,8 +108,13 @@ public partial class LoginPage : ContentPage
     {
         base.OnAppearing();
 
+        // 🔥 Sempre começa marcado
+        chkLembrar.IsChecked = true;
+
         if (EmpresaContext.Empresa != null)
             Title = EmpresaContext.Empresa.NomeEmpresa;
+        else
+            Title = " "; // evita título padrão feio
     }
 
 

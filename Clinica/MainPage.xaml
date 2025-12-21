@@ -16,7 +16,6 @@
         <!-- IMAGEM DE FUNDO -->
         <Image x:Name="imgFundo"
            Aspect="AspectFill"
-           Opacity="1"
            Grid.RowSpan="3"
            VerticalOptions="FillAndExpand"
            HorizontalOptions="FillAndExpand" />

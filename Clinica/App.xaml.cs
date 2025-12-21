@@ -15,6 +15,7 @@ namespace Clinica
 
         protected override async void OnStart()
         {
+            await EmpresaBootstrapper.CarregarEmpresaAsync();
             await TryAutoLogin();
         }
 

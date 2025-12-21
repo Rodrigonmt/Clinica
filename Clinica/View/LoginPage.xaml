@@ -140,7 +140,7 @@
 
 
                     <HorizontalStackLayout VerticalOptions="Center" Spacing="8">
-                        <CheckBox x:Name="chkLembrar" IsChecked="False" VerticalOptions="Center"/>
+                        <CheckBox x:Name="chkLembrar" VerticalOptions="Center"/>
                         <Label Text="Lembrar-me" VerticalOptions="Center" TextColor="{DynamicResource TextColorPrimary}" />
                     </HorizontalStackLayout>
 
