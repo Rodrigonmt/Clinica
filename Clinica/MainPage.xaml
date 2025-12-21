@@ -22,26 +22,6 @@
                VerticalOptions="FillAndExpand"
                HorizontalOptions="FillAndExpand" />
 
-        <!-- (1) TÍTULO -->
-        <Grid Grid.Row="0">
-            <Grid Padding="20" RowSpacing="15">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0"
-                       Text="Barbearia Progresso"
-                       FontSize="40"
-                       FontFamily="PoppinsSemiBold"
-                       FontAttributes="Bold,Italic"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       TextColor="White"
-                       Margin="0,250,0,10" />
-            </Grid>
-        </Grid>
 
         <!-- (2) CARDS PRINCIPAIS -->
         <Grid Grid.Row="1"
@@ -141,18 +121,37 @@
 
         <!-- (3) RODAPÉ -->
         <Grid Grid.Row="2"
-              BackgroundColor="#80000000"
-              Padding="15"
-              HeightRequest="55"
-              VerticalOptions="End">
+      BackgroundColor="#80000000"
+      Padding="12"
+      VerticalOptions="End">
 
-            <Label Text="Cidade de Não-Me-Toque • Rua Itaqui, nº 32 • Bairro Simon"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   TextColor="White"
-                   FontSize="14"
-                   FontFamily="PoppinsMedium" />
+            <VerticalStackLayout Spacing="2"
+                         HorizontalOptions="Center">
+
+                <Label x:Name="lblEnderecoEmpresa"
+               Text="Carregando endereço..."
+               TextColor="White"
+               FontSize="13"
+               FontFamily="PoppinsMedium"
+               HorizontalTextAlignment="Center"/>
+
+                <Label x:Name="lblTelefoneEmpresa"
+               Text=""
+               TextColor="White"
+               FontSize="12"
+               FontFamily="PoppinsMedium"
+               HorizontalTextAlignment="Center"/>
+
+                <Label x:Name="lblEmailEmpresa"
+               Text=""
+               TextColor="White"
+               FontSize="12"
+               FontFamily="PoppinsMedium"
+               HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
         </Grid>
+
 
     </Grid>
 

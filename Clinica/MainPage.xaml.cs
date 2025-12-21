@@ -1,12 +1,18 @@
 using Clinica.View;
+using Clinica.Services;
+using Clinica.Models;
 
 namespace Clinica
 {
     public partial class MainPage : ContentPage
     {
+        // ?? DECLARAÇÃO DO SERVICE
+        private readonly FirebaseConfigService _configService;
         public MainPage()
         {
             InitializeComponent();
+            // ?? INICIALIZAÇÃO
+            _configService = new FirebaseConfigService();
         }
 
         private async void OnAgendarConsultaTapped(object sender, TappedEventArgs e)
@@ -29,5 +35,42 @@ namespace Clinica
         {
             await Shell.Current.GoToAsync(nameof(PerfilPage));
         }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await CarregarEnderecoEmpresa();
+        }
+
+        private async Task CarregarEnderecoEmpresa()
+        {
+            try
+            {
+                var empresa = await _configService.ObterEmpresaAsync();
+
+                if (empresa == null)
+                {
+                    lblEnderecoEmpresa.Text = "Dados da empresa indisponíveis";
+                    return;
+                }
+
+                lblEnderecoEmpresa.Text = empresa.Endereco ?? "Endereço não informado";
+                lblTelefoneEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Telefone)
+                    ? string.Empty
+                    : $" {empresa.Telefone}";
+
+                lblEmailEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Email)
+                    ? string.Empty
+                    : $" {empresa.Email}";
+            }
+            catch
+            {
+                lblEnderecoEmpresa.Text = "Erro ao carregar dados da empresa";
+                lblTelefoneEmpresa.Text = string.Empty;
+                lblEmailEmpresa.Text = string.Empty;
+            }
+        }
+
+
     }
 }
