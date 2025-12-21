@@ -36,7 +36,7 @@
 
                     <!-- MÉDICO -->
                     <Image Grid.Row="2" Grid.Column="0" Source="doctor_icon.png" WidthRequest="22"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="Médico:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
+                    <Label Grid.Row="2" Grid.Column="1" Text="Profissional:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
                     <Label Grid.Row="2" Grid.Column="2" x:Name="lblMedico" FontSize="16"/>
 
                     <!-- STATUS -->

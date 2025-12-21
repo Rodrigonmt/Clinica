@@ -71,14 +71,6 @@ namespace Clinica
         }
 
 
-        //protected override Window CreateWindow(IActivationState activationState)
-        //{
-        //    var window = new Window(new LoadingPage()); // <-- SEMPRE DEFINE UMA PAGE
-
-        //    _ = InitializeApp(window); // roda async depois
-
-        //    return window;
-        //}
 
         private async Task InitializeApp(Window window)
         {

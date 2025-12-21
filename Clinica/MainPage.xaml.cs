@@ -40,10 +40,26 @@ namespace Clinica
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await CarregarEnderecoEmpresa();
+
+            // ?? Mostra imagem em cache imediatamente
+            MostrarImagemCache();
+
+            // ?? Carrega dados da empresa
+            await CarregarEmpresaAsync();
+
+            // ?? Atualiza imagem real em background
+            _ = CarregarImagemFundoAsync(); // fire-and-forget
         }
 
-        private async Task CarregarEnderecoEmpresa()
+        private void MostrarImagemCache()
+        {
+            if (ImagemCacheService.ExisteImagemCache())
+            {
+                imgFundo.Source = ImagemCacheService.ObterImagemCache();
+            }
+        }
+
+        private async Task CarregarEmpresaAsync()
         {
             try
             {
@@ -55,46 +71,67 @@ namespace Clinica
                     return;
                 }
 
-                // ?? SALVA GLOBALMENTE
+                // ?? Contexto global
                 EmpresaContext.SetEmpresa(empresa);
 
-
-                // ============================
-                // ?? DADOS JÁ EXISTENTES (NÃO ALTERADOS)
-                // ============================
+                // ?? Dados visuais
                 lblEnderecoEmpresa.Text = empresa.Endereco ?? "Endereço não informado";
 
                 lblTelefoneEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Telefone)
                     ? string.Empty
-                    : $" {empresa.Telefone}";
+                    : empresa.Telefone;
 
                 lblEmailEmpresa.Text = string.IsNullOrWhiteSpace(empresa.Email)
                     ? string.Empty
-                    : $" {empresa.Email}";
-
-                // ============================
-                // ??? NOVO: IMAGEM DE FUNDO (BASE64)
-                // ============================
-                if (!string.IsNullOrWhiteSpace(empresa.ImagemFundoMobile))
-                {
-                    string base64 = empresa.ImagemFundoMobile;
-
-                    // Remove prefixo: data:image/jpeg;base64,
-                    if (base64.Contains(","))
-                        base64 = base64.Split(',')[1];
-
-                    byte[] imageBytes = Convert.FromBase64String(base64);
-
-                    imgFundo.Source = ImageSource.FromStream(() =>
-                        new MemoryStream(imageBytes));
-                }
+                    : empresa.Email;
             }
             catch
             {
-                // ?? Mantém comportamento atual em caso de erro
                 lblEnderecoEmpresa.Text = "Erro ao carregar dados da empresa";
                 lblTelefoneEmpresa.Text = string.Empty;
                 lblEmailEmpresa.Text = string.Empty;
+            }
+        }
+
+
+        private async Task CarregarImagemFundoAsync()
+        {
+            try
+            {
+                var empresa = EmpresaContext.Empresa;
+
+                // fallback: se ainda não existe no contexto
+                if (empresa == null)
+                    empresa = await _configService.ObterEmpresaAsync();
+
+                if (empresa == null || string.IsNullOrWhiteSpace(empresa.ImagemFundoMobile))
+                    return;
+
+                string base64 = empresa.ImagemFundoMobile;
+
+                if (base64.Contains(","))
+                    base64 = base64.Split(',')[1];
+
+                byte[] imageBytes = Convert.FromBase64String(base64);
+
+                // ?? Atualiza somente se mudou
+                if (!ImagemCacheService.ImagemMudou(imageBytes))
+                    return;
+
+                await ImagemCacheService.SalvarImagemAsync(imageBytes);
+
+                // ?? Atualiza UI suavemente
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await imgFundo.FadeTo(0, 120);
+                    imgFundo.Source = ImageSource.FromStream(() =>
+                        new MemoryStream(imageBytes));
+                    await imgFundo.FadeTo(1, 180);
+                });
+            }
+            catch
+            {
+                // silencioso — imagem não pode quebrar a tela
             }
         }
 
