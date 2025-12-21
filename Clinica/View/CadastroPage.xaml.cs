@@ -76,4 +76,13 @@ public partial class CadastroPage : ContentPage
         btnMostrarRepetir.Text = RepetirEntry.IsPassword ? "visibility" : "visibility_off";
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (EmpresaContext.Empresa != null)
+            Title = EmpresaContext.Empresa.NomeEmpresa;
+    }
+
+
 }

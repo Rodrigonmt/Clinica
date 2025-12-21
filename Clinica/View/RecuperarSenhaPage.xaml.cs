@@ -33,5 +33,14 @@ namespace Clinica.View
                 await DisplayAlert("Erro", "Falha ao enviar o e-mail.", "OK");
             }
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (EmpresaContext.Empresa != null)
+                Title = EmpresaContext.Empresa.NomeEmpresa;
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using Clinica.Models;
 using Clinica.Services;
 using System.Text;
 using System.Text.Json;
+using Clinica.Services;
 
 public partial class PerfilPage : ContentPage
 {
@@ -139,6 +140,9 @@ public partial class PerfilPage : ContentPage
 
         if (FotoPerfil.Source == null)
             FotoPerfil.Source = "perfil_inicial.jpg";
+
+        if (EmpresaContext.Empresa != null)
+            Title = EmpresaContext.Empresa.NomeEmpresa;
     }
 
 

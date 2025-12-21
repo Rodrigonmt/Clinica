@@ -1,6 +1,6 @@
 using Clinica.Models;
 using System.Net.Http.Json;
-
+using Clinica.Services;
 namespace Clinica.View;
 
 [QueryProperty(nameof(Consulta), "Consulta")]
@@ -29,6 +29,9 @@ public partial class PagamentoPixPage : ContentPage
         lblDataHora.Text = $"{Consulta.Data:dd/MM/yyyy} às {Consulta.HoraInicio}";
 
         await CarregarPixAsync();
+
+        if (EmpresaContext.Empresa != null)
+            Title = EmpresaContext.Empresa.NomeEmpresa;
     }
 
     private async Task CarregarPixAsync()

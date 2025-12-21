@@ -1,6 +1,5 @@
 ﻿using Clinica.Models;
 using Clinica.Services;
-
 namespace Clinica.View;
 
 public partial class LoginPage : ContentPage
@@ -116,5 +115,14 @@ public partial class LoginPage : ContentPage
             Color = Colors.Gray
         };
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (EmpresaContext.Empresa != null)
+            Title = EmpresaContext.Empresa.NomeEmpresa;
+    }
+
 
 }

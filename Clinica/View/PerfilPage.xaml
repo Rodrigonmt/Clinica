@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.PerfilPage"
              BackgroundColor="#F4F7FB"
-             Title="Meu Perfil">
+             Shell.NavBarIsVisible="True">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="25">

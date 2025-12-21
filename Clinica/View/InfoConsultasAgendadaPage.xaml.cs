@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using Clinica.Services;
 
 
 namespace Clinica.View
@@ -191,6 +192,15 @@ namespace Clinica.View
 
             return true;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (EmpresaContext.Empresa != null)
+                Title = EmpresaContext.Empresa.NomeEmpresa;
+        }
+
 
         private async Task<bool> CancelarConsultaAsync()
         {

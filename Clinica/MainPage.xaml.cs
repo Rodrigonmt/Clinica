@@ -2,6 +2,7 @@ using Clinica.View;
 using Clinica.Services;
 using Clinica.Models;
 
+
 namespace Clinica
 {
     public partial class MainPage : ContentPage
@@ -53,6 +54,10 @@ namespace Clinica
                     lblEnderecoEmpresa.Text = "Dados da empresa indisponíveis";
                     return;
                 }
+
+                // ?? SALVA GLOBALMENTE
+                EmpresaContext.SetEmpresa(empresa);
+
 
                 // ============================
                 // ?? DADOS JÁ EXISTENTES (NÃO ALTERADOS)

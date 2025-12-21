@@ -2,7 +2,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Clinica.View.CadastroPage"
-    Shell.NavBarIsVisible="False"
+    Shell.NavBarIsVisible="True"
     BackgroundColor="{DynamicResource PageBackgroundColor}">
 
     <!-- Recursos de Tema (mesmos da LoginPage) -->

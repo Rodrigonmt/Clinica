@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.ConsultasAgendaPage"
-             Title="Meus Horários Agendados"
+             Shell.NavBarIsVisible="True"
              BackgroundColor="White">
 
     <Grid Padding="20"

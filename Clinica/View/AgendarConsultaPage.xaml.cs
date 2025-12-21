@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using Clinica.Services;
 using System.Threading.Tasks;
 
 namespace Clinica.View
@@ -227,6 +228,9 @@ namespace Clinica.View
         {
             base.OnAppearing();
             await CarregarServicosAsync();
+
+            if (EmpresaContext.Empresa != null)
+                Title = EmpresaContext.Empresa.NomeEmpresa;
 
         }
 
@@ -805,5 +809,7 @@ namespace Clinica.View
 
             return string.Join(" + ", selecionados);
         }
+
+
     }
 }

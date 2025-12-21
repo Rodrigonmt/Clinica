@@ -1,6 +1,8 @@
 ﻿using Clinica.Models;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using Clinica.Services;
+
 
 namespace Clinica.View
 {
@@ -20,6 +22,8 @@ namespace Clinica.View
         {
             base.OnAppearing();
             await CarregarConsultas();
+            if (EmpresaContext.Empresa != null)
+                Title = EmpresaContext.Empresa.NomeEmpresa;
         }
 
         private async Task CarregarConsultas()

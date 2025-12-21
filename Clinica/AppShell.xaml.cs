@@ -1,4 +1,5 @@
-﻿using Clinica.View;
+﻿using Clinica.Services;
+using Clinica.View;
 
 namespace Clinica
 {
@@ -7,7 +8,14 @@ namespace Clinica
         public AppShell()
         {
             InitializeComponent();
+            RegistrarRotas();
 
+            // escuta a atualização da empresa
+            EmpresaContext.EmpresaAtualizada += AtualizarTitulo;
+        }
+
+        private void RegistrarRotas()
+        {
             Routing.RegisterRoute(nameof(View.LoginPage), typeof(View.LoginPage));
             Routing.RegisterRoute(nameof(View.CadastroPage), typeof(View.CadastroPage));
             Routing.RegisterRoute(nameof(View.AgendarConsultaPage), typeof(View.AgendarConsultaPage));
@@ -21,6 +29,22 @@ namespace Clinica
             Routing.RegisterRoute(nameof(View.PerfilPage), typeof(View.PerfilPage));
             Routing.RegisterRoute(nameof(MainPage), typeof(MainPage));
         }
-    }
 
+        private void AtualizarTitulo()
+        {
+            if (EmpresaContext.Empresa == null)
+                return;
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var page = Shell.Current?.CurrentPage;
+
+                if (page != null)
+                {
+                    page.Title = EmpresaContext.Empresa.NomeEmpresa;
+                }
+            });
+        }
+
+    }
 }

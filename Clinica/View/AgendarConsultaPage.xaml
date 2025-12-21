@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.AgendarConsultaPage"
              BackgroundColor="White"
-             Title="Agendar Horário">
+             Shell.NavBarIsVisible="True">
 
     <!-- 🔥 Scroll principal da página -->
     <ScrollView Orientation="Vertical"

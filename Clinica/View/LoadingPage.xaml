@@ -1,6 +1,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Clinica.View.LoadingPage"
+             Shell.NavBarIsVisible="True"
              BackgroundColor="#FFFFFF">
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
         <ActivityIndicator IsRunning="True" Color="#5A7DFE" />
