@@ -65,25 +65,30 @@
 
                     <!-- Campo Email -->
                     <Grid ColumnDefinitions="40,*,40"
-                          BackgroundColor="#F0F2F5"
-                          HeightRequest="55"
-                          Padding="5"
-                          ColumnSpacing="10">
+      BackgroundColor="#F0F2F5"
+      HeightRequest="55"
+      Padding="5"
+      ColumnSpacing="10">
 
-                        <Label Text="email"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               VerticalOptions="Center" />
+                        <Image VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="&#xe0be;"
+                Size="24"
+                Color="#555"/>
+                            </Image.Source>
+                        </Image>
 
                         <Entry x:Name="EmailEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite seu email"
-                               TextColor="{DynamicResource TextColorPrimary}"
-                               PlaceholderColor="{DynamicResource PlaceholderColor}"
-                               FontSize="16"
-                               BackgroundColor="Transparent" />
-
+           Grid.Column="1"
+           Placeholder="Digite seu email"
+           TextColor="{DynamicResource TextColorPrimary}"
+           PlaceholderColor="{DynamicResource PlaceholderColor}"
+           FontSize="16"
+           BackgroundColor="Transparent"/>
                     </Grid>
+
 
                     <!-- Label Senha -->
                     <Label Text="Senha"
@@ -92,40 +97,47 @@
 
                     <!-- Campo Senha -->
                     <Grid ColumnDefinitions="40,*,40"
-                          BackgroundColor="#F0F2F5"
-                          HeightRequest="55"
-                          Padding="5"
-                          ColumnSpacing="10">
+      BackgroundColor="#F0F2F5"
+      HeightRequest="55"
+      Padding="5"
+      ColumnSpacing="10">
 
-                        <Label Text="lock"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               VerticalOptions="Center" />
+                        <Image VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="&#xe897;"
+                Size="24"
+                Color="#555"/>
+                            </Image.Source>
+                        </Image>
 
                         <Entry x:Name="SenhaEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite sua senha"
-                               IsPassword="True"
-                               FontSize="16"
-                               TextColor="{DynamicResource TextColorPrimary}"
-                               PlaceholderColor="{DynamicResource PlaceholderColor}"
-                               BackgroundColor="Transparent" />
+           Grid.Column="1"
+           Placeholder="Digite sua senha"
+           IsPassword="True"
+           FontSize="16"
+           TextColor="{DynamicResource TextColorPrimary}"
+           PlaceholderColor="{DynamicResource PlaceholderColor}"
+           BackgroundColor="Transparent"/>
 
-                        <Label x:Name="lblMostrarSenha"
-                               Grid.Column="2"
-                               Text="visibility"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped" />
-                            </Label.GestureRecognizers>
-                        </Label>
-
-                        
-
+                        <Image x:Name="imgMostrarSenha"
+           Grid.Column="2"
+           VerticalOptions="Center"
+           HorizontalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource
+                FontFamily="MaterialIcons"
+                Glyph="&#xe8f4;"
+                Size="24"
+                Color="#555"/>
+                            </Image.Source>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped"/>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
+
 
                     <HorizontalStackLayout VerticalOptions="Center" Spacing="8">
                         <CheckBox x:Name="chkLembrar" IsChecked="False" VerticalOptions="Center"/>

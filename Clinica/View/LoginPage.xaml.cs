@@ -107,6 +107,14 @@ public partial class LoginPage : ContentPage
     private void OnMostrarSenhaTapped(object sender, EventArgs e)
     {
         SenhaEntry.IsPassword = !SenhaEntry.IsPassword;
-        lblMostrarSenha.Text = SenhaEntry.IsPassword ? "visibility" : "visibility_off";
+
+        imgMostrarSenha.Source = new FontImageSource
+        {
+            FontFamily = "MaterialIcons",
+            Glyph = SenhaEntry.IsPassword ? "\ue8f4" : "\ue8f5",
+            Size = 24,
+            Color = Colors.Gray
+        };
     }
+
 }
