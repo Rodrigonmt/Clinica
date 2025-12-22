@@ -2,55 +2,35 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Clinica.View.LoginPage"
-    Shell.NavBarIsVisible="True"
-    BackgroundColor="{DynamicResource PageBackgroundColor}"
+    Shell.NavBarIsVisible="False"
+    BackgroundColor="{AppThemeBinding Light=#F4F7FB, Dark=#1E1E1E}"
     Appearing="OnPageAppearing">
 
     <ContentPage.Resources>
-
-        <!-- Light Mode -->
-        <Color x:Key="LightBackground">#F4F7FB</Color>
-        <Color x:Key="LightCard">#FFFFFF</Color>
-        <Color x:Key="LightText">#222222</Color>
-        <Color x:Key="LightPlaceholder">#777</Color>
         <Color x:Key="LightPrimary">#5A7DFE</Color>
-
-        <!-- Dark Mode -->
-        <Color x:Key="DarkBackground">#1E1E1E</Color>
-        <Color x:Key="DarkCard">#2B2B2B</Color>
-        <Color x:Key="DarkText">#FFFFFF</Color>
-        <Color x:Key="DarkPlaceholder">#BBBBBB</Color>
         <Color x:Key="DarkPrimary">#8BA2FF</Color>
-
-        <!-- Auto Theme -->
-        <AppThemeBinding x:Key="PageBackgroundColor" Light="{StaticResource LightBackground}" Dark="{StaticResource DarkBackground}" />
-        <AppThemeBinding x:Key="CardColor" Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-        <AppThemeBinding x:Key="TextColorPrimary" Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
-        <AppThemeBinding x:Key="PlaceholderColor" Light="{StaticResource LightPlaceholder}" Dark="{StaticResource DarkPlaceholder}" />
-        <AppThemeBinding x:Key="PrimaryColor" Light="{StaticResource LightPrimary}" Dark="{StaticResource DarkPrimary}" />
-
+        <Color x:Key="LightText">#222222</Color>
+        <Color x:Key="DarkText">#FFFFFF</Color>
     </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="25">
 
-            <!-- Títulos -->
             <Label x:Name="lblTitulo"
                    Text="Bem-vindo"
                    FontSize="36"
-                   TextColor="{DynamicResource TextColorPrimary}"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                    FontAttributes="Bold"
                    Opacity="0" />
 
             <Label x:Name="lblSubTitulo"
                    Text="Faça login para continuar"
                    FontSize="18"
-                   TextColor="{DynamicResource TextColorPrimary}"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                    Opacity="0" />
 
-            <!-- Container -->
             <Frame x:Name="frmContainer"
-                   BackgroundColor="{DynamicResource CardColor}"
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2B2B2B}"
                    CornerRadius="25"
                    Padding="25"
                    HasShadow="True"
@@ -58,111 +38,91 @@
 
                 <VerticalStackLayout Spacing="22">
 
-                    <!-- Label Email -->
                     <Label Text="Email"
                            FontSize="16"
-                           TextColor="{DynamicResource TextColorPrimary}" />
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
-                    <!-- Campo Email -->
                     <Grid ColumnDefinitions="40,*,40"
-      BackgroundColor="#F0F2F5"
-      HeightRequest="55"
-      Padding="5"
-      ColumnSpacing="10">
+                          BackgroundColor="{AppThemeBinding Light=#F0F2F5, Dark=#3E3E3E}"
+                          HeightRequest="55"
+                          Padding="5"
+                          ColumnSpacing="10">
 
-                        <Image VerticalOptions="Center">
-                            <Image.Source>
-                                <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="&#xe0be;"
-                Size="24"
-                Color="#555"/>
-                            </Image.Source>
-                        </Image>
+                        <Label Text="email"
+                               FontFamily="MaterialIcons"
+                               FontSize="24"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               VerticalOptions="Center" />
 
                         <Entry x:Name="EmailEntry"
-           Grid.Column="1"
-           Placeholder="Digite seu email"
-           TextColor="{DynamicResource TextColorPrimary}"
-           PlaceholderColor="{DynamicResource PlaceholderColor}"
-           FontSize="16"
-           BackgroundColor="Transparent"/>
+                               Grid.Column="1"
+                               Placeholder="Digite seu email"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               PlaceholderColor="{AppThemeBinding Light=#777, Dark=#BBB}"
+                               FontSize="16"
+                               BackgroundColor="Transparent" />
                     </Grid>
 
-
-                    <!-- Label Senha -->
                     <Label Text="Senha"
                            FontSize="16"
-                           TextColor="{DynamicResource TextColorPrimary}" />
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
-                    <!-- Campo Senha -->
                     <Grid ColumnDefinitions="40,*,40"
-      BackgroundColor="#F0F2F5"
-      HeightRequest="55"
-      Padding="5"
-      ColumnSpacing="10">
+                          BackgroundColor="{AppThemeBinding Light=#F0F2F5, Dark=#3E3E3E}"
+                          HeightRequest="55"
+                          Padding="5"
+                          ColumnSpacing="10">
 
-                        <Image VerticalOptions="Center">
-                            <Image.Source>
-                                <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="&#xe897;"
-                Size="24"
-                Color="#555"/>
-                            </Image.Source>
-                        </Image>
+                        <Label Text="lock"
+                               FontFamily="MaterialIcons"
+                               FontSize="24"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               VerticalOptions="Center" />
 
                         <Entry x:Name="SenhaEntry"
-           Grid.Column="1"
-           Placeholder="Digite sua senha"
-           IsPassword="True"
-           FontSize="16"
-           TextColor="{DynamicResource TextColorPrimary}"
-           PlaceholderColor="{DynamicResource PlaceholderColor}"
-           BackgroundColor="Transparent"/>
+                               Grid.Column="1"
+                               Placeholder="Digite sua senha"
+                               IsPassword="True"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               PlaceholderColor="{AppThemeBinding Light=#777, Dark=#BBB}"
+                               BackgroundColor="Transparent" />
 
-                        <Image x:Name="imgMostrarSenha"
-           Grid.Column="2"
-           VerticalOptions="Center"
-           HorizontalOptions="Center">
-                            <Image.Source>
-                                <FontImageSource
-                FontFamily="MaterialIcons"
-                Glyph="&#xe8f4;"
-                Size="24"
-                Color="#555"/>
-                            </Image.Source>
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped"/>
-                            </Image.GestureRecognizers>
-                        </Image>
+                        <Label x:Name="imgMostrarSenha" 
+                               Grid.Column="2"
+                               Text="visibility"
+                               FontFamily="MaterialIcons"
+                               FontSize="24"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
                     </Grid>
 
-
                     <HorizontalStackLayout VerticalOptions="Center" Spacing="8">
-                        <CheckBox x:Name="chkLembrar" VerticalOptions="Center"/>
-                        <Label Text="Lembrar-me" VerticalOptions="Center" TextColor="{DynamicResource TextColorPrimary}" />
+                        <CheckBox x:Name="chkLembrar" IsChecked="False" VerticalOptions="Center"/>
+                        <Label Text="Lembrar-me" VerticalOptions="Center" 
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
                     </HorizontalStackLayout>
 
-
-                    <!-- Botão Login -->
                     <Button x:Name="btnEntrar"
                             Text="Entrar"
                             Clicked="OnLoginClicked"
                             HeightRequest="55"
                             CornerRadius="15"
-                            BackgroundColor="{DynamicResource PrimaryColor}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}"
                             TextColor="White"
                             FontSize="20"
                             FontAttributes="Bold" />
 
-                    <!-- Criar Conta -->
                     <HorizontalStackLayout HorizontalOptions="Center">
                         <Label Text="Não tem conta?"
-                               TextColor="{DynamicResource TextColorPrimary}" />
-
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
                         <Label Text=" Cadastre-se"
-                               TextColor="{DynamicResource PrimaryColor}"
+                               TextColor="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}"
                                FontAttributes="Bold">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnCadastrarClicked" />
@@ -173,21 +133,18 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Esqueci Minha Senha -->
-            <Label
-                x:Name="btnEsqueci"
-                Text="Esqueci minha senha"
-                TextColor="{DynamicResource PrimaryColor}"
-                FontSize="16"
-                FontAttributes="Bold"
-                TextDecorations="Underline"
-                HorizontalOptions="Center"
-                Margin="0,10,0,10">
+            <Label x:Name="btnEsqueci"
+                   Text="Esqueci minha senha"
+                   TextColor="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextDecorations="Underline"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,10">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnRecuperarClicked"/>
                 </Label.GestureRecognizers>
             </Label>
-
 
         </VerticalStackLayout>
     </ScrollView>

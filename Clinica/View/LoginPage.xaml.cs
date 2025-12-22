@@ -95,13 +95,8 @@ public partial class LoginPage : ContentPage
     {
         SenhaEntry.IsPassword = !SenhaEntry.IsPassword;
 
-        imgMostrarSenha.Source = new FontImageSource
-        {
-            FontFamily = "MaterialIcons",
-            Glyph = SenhaEntry.IsPassword ? "\ue8f4" : "\ue8f5",
-            Size = 24,
-            Color = Colors.Gray
-        };
+        // O nome correto de acordo com o seu XAML atual é imgMostrarSenha
+        imgMostrarSenha.Text = SenhaEntry.IsPassword ? "visibility" : "visibility_off";
     }
 
     protected override void OnAppearing()
