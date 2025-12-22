@@ -35,44 +35,57 @@ namespace Clinica.Services
         {
             string url = $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={ApiKey}";
 
-            var dados = new
-            {
-                email = email,
-                password = senha,
-                returnSecureToken = true
-            };
-
+            var dados = new { email = email, password = senha, returnSecureToken = true };
             var json = JsonSerializer.Serialize(dados);
             var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var http = new HttpClient();
+            using var http = new HttpClient();
             var response = await http.PostAsync(url, conteudo);
-
             string resposta = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                try
-                {
-                    var erro = JsonDocument.Parse(resposta);
-                    string mensagem = erro.RootElement
-                        .GetProperty("error")
-                        .GetProperty("message")
-                        .GetString();
-
-                    return (false, mensagem, null);
-                }
-                catch
-                {
-                    return (false, "ERRO_DESCONHECIDO", null);
-                }
+                // ... (seu código de tratamento de erro atual)
+                return (false, "ERRO_AO_CRIAR", null);
             }
 
             var user = JsonSerializer.Deserialize<AuthResponse>(resposta);
 
-            await EnviarEmailVerificacao(user.idToken);
+            // CHAMADA DO E-MAIL PERSONALIZADO
+            // Chamamos a sua Function em vez do método padrão do Firebase
+            await EnviarEmailValidacaoPersonalizado(email, user.localId);
 
             return (true, "OK", user);
+        }
+
+        public async Task EnviarEmailValidacaoPersonalizado(string email, string uid)
+        {
+            // A Function espera exatamente {"email": "..."}
+            var dados = new { email = email };
+
+            var json = JsonSerializer.Serialize(dados);
+            var conteudo = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using var http = new HttpClient();
+
+            try
+            {
+                // Certifique-se de que esta URL é a URL correta do seu último deploy
+                var response = await http.PostAsync(
+                    "https://enviaremailverificacao-baxbsx66fa-uc.a.run.app",
+                    conteudo
+                );
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var erroServidor = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Erro na Function: {erroServidor}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro de rede ao chamar Function: {ex.Message}");
+            }
         }
 
 

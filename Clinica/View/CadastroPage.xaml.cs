@@ -11,11 +11,19 @@ public partial class CadastroPage : ContentPage
         InitializeComponent();
     }
 
+
+
     private async void OnCriarClicked(object sender, EventArgs e)
     {
-        string email = EmailEntry.Text;
+        string email = EmailEntry.Text?.Trim();
         string senha = SenhaEntry.Text;
         string repetir = RepetirEntry.Text;
+
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
+        {
+            await DisplayAlert("Erro", "Preencha todos os campos.", "OK");
+            return;
+        }
 
         if (senha != repetir)
         {
@@ -23,19 +31,26 @@ public partial class CadastroPage : ContentPage
             return;
         }
 
-        var auth = await _authService.CriarUsuario(email, senha);
+        // Exibir um loading opcional aqui
+        var resultado = await _authService.CriarUsuario(email, senha);
 
-
-        if (!auth.sucesso)
+        if (!resultado.sucesso)
         {
-            await DisplayAlert("Erro ao criar conta", TraduzErroFirebase(auth.mensagem), "OK");
+            await DisplayAlert("Erro ao criar conta", TraduzErroFirebase(resultado.mensagem), "OK");
             return;
         }
 
+        // Se chegou aqui, o usuário foi criado E a function de e-mail foi chamada
+        await DisplayAlert(
+            "Verifique seu E-mail",
+            $"Enviamos um link de confirmação para {email}. Por favor, valide sua conta antes de fazer o login.",
+            "Entendi"
+        );
 
-        await DisplayAlert("Sucesso", "Conta criada com sucesso!", "OK");
+        // Redireciona para o Login
         await Shell.Current.GoToAsync("//LoginPage");
     }
+
 
     private string TraduzErroFirebase(string codigo)
     {
