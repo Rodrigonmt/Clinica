@@ -1,31 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="Clinica.View.RecuperarSenhaPage"
     Shell.NavBarIsVisible="True"
-    BackgroundColor="{DynamicResource PageBackgroundColor}">
+    BackgroundColor="{AppThemeBinding Light=#F4F7FB, Dark=#1E1E1E}">
 
-    <!-- Recursos de Tema -->
     <ContentPage.Resources>
-
-        <Color x:Key="LightBackground">#F4F7FB</Color>
-        <Color x:Key="LightCard">#FFFFFF</Color>
         <Color x:Key="LightText">#222222</Color>
         <Color x:Key="LightPlaceholder">#777</Color>
         <Color x:Key="LightPrimary">#5A7DFE</Color>
+        <Color x:Key="LightCard">#FFFFFF</Color>
 
-        <Color x:Key="DarkBackground">#1E1E1E</Color>
-        <Color x:Key="DarkCard">#2B2B2B</Color>
         <Color x:Key="DarkText">#FFFFFF</Color>
         <Color x:Key="DarkPlaceholder">#BBBBBB</Color>
         <Color x:Key="DarkPrimary">#8BA2FF</Color>
-
-        <AppThemeBinding x:Key="PageBackgroundColor" Light="{StaticResource LightBackground}" Dark="{StaticResource DarkBackground}" />
-        <AppThemeBinding x:Key="CardColor" Light="{StaticResource LightCard}" Dark="{StaticResource DarkCard}" />
-        <AppThemeBinding x:Key="TextColorPrimary" Light="{StaticResource LightText}" Dark="{StaticResource DarkText}" />
-        <AppThemeBinding x:Key="PlaceholderColor" Light="{StaticResource LightPlaceholder}" Dark="{StaticResource DarkPlaceholder}" />
-        <AppThemeBinding x:Key="PrimaryColor" Light="{StaticResource LightPrimary}" Dark="{StaticResource DarkPrimary}" />
-
+        <Color x:Key="DarkCard">#2B2B2B</Color>
     </ContentPage.Resources>
 
     <ScrollView>
@@ -33,15 +23,14 @@
 
             <Label Text="Recuperar Senha"
                    FontSize="36"
-                   TextColor="{DynamicResource TextColorPrimary}"
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
                    FontAttributes="Bold" />
 
             <Label Text="Digite seu e-mail para redefinir sua senha"
                    FontSize="18"
-                   TextColor="{DynamicResource TextColorPrimary}" />
+                   TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
-            <!-- Card -->
-            <Frame BackgroundColor="{DynamicResource CardColor}"
+            <Frame BackgroundColor="{AppThemeBinding Light={StaticResource LightCard}, Dark={StaticResource DarkCard}}"
                    CornerRadius="25"
                    Padding="25"
                    HasShadow="True">
@@ -50,7 +39,7 @@
 
                     <Label Text="Email"
                            FontSize="16"
-                           TextColor="{DynamicResource TextColorPrimary}" />
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
                     <Grid ColumnDefinitions="40,*"
                           BackgroundColor="#F0F2F5"
@@ -58,21 +47,22 @@
                           Padding="5"
                           ColumnSpacing="10">
 
-                        <Label Text="email" FontFamily="MaterialIcons" FontSize="24" VerticalOptions="Center" />
+                        <Label Text="email" FontFamily="MaterialIcons" FontSize="24" VerticalOptions="Center" 
+                               TextColor="#555" />
 
                         <Entry x:Name="EmailEntry"
                                Grid.Column="1"
                                Placeholder="Digite seu email"
                                Keyboard="Email"
-                               TextColor="{DynamicResource TextColorPrimary}"
-                               PlaceholderColor="{DynamicResource PlaceholderColor}"
+                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
                                BackgroundColor="Transparent" />
                     </Grid>
 
                     <Button Text="Enviar"
                             HeightRequest="55"
                             CornerRadius="15"
-                            BackgroundColor="{DynamicResource PrimaryColor}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimary}, Dark={StaticResource DarkPrimary}}"
                             TextColor="White"
                             FontSize="20"
                             FontAttributes="Bold"
@@ -80,7 +70,6 @@
 
                 </VerticalStackLayout>
             </Frame>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
