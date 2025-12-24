@@ -68,6 +68,19 @@ namespace Clinica.View
                 .Where(s => s.Selecionado)
                 .Sum(s => s.Preco);
         }
+        public static class DataHelperBR
+        {
+            public static string ParaDataAgenda(DateTime date)
+            {
+                return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+
+            public static string AgoraIsoUtc()
+            {
+                return DateTime.UtcNow.ToString("o");
+            }
+        }
+
 
         private ImageSource Base64ToImage(string base64)
         {
@@ -92,7 +105,7 @@ namespace Clinica.View
 
             var consulta = new Consulta
             {
-                Data = datePicker.Date,
+                Data = DataHelperBR.ParaDataAgenda(datePicker.Date),
                 HoraInicio = horaInicio.ToString(@"hh\:mm"),
                 HoraFim = horaFim.ToString(@"hh\:mm"),
                 Duracao = duracaoTotal,
@@ -154,7 +167,12 @@ namespace Clinica.View
         {
             Title = "Reagendar Consulta";
 
-            datePicker.Date = _consultaEdicao.Data;
+            datePicker.Date = DateTime.ParseExact(
+                _consultaEdicao.Data,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            );
+
             txtObservacoes.Text = _consultaEdicao.Observacoes;
 
             // Médico
@@ -400,14 +418,17 @@ namespace Clinica.View
                 }
             }
 
-            // 🔹 Atualiza valor e tempo
-            AtualizarValorTotal();
-            AtualizarTempoTotal();
-
-            // 🔹 Sempre limpar horário ao alterar serviços
+            // 🔹 Sempre limpar horário e pagamento ao alterar serviços (muda a duração total)
             timePicker.SelectedItem = null;
             timePicker.ItemsSource = null;
             timePicker.Title = "Escolha um horário";
+
+            _pagamentoSelecionado = null;
+            pagamentosCollection.SelectedItem = null;
+
+            // 🔹 Atualiza valor e tempo
+            AtualizarValorTotal();
+            AtualizarTempoTotal();
 
             // 🔹 Só recalcula horários se médico já estiver selecionado
             if (!string.IsNullOrEmpty(_medicoNome))
@@ -440,6 +461,14 @@ namespace Clinica.View
                 _medicoId = prof?.ProfissionalId;
                 _medicoNome = prof?.Nome;
             }
+
+            // 🔥 APLICAÇÃO DA REGRA: Limpa tudo para forçar nova seleção
+            ResetarSelecoesIntermediarias(resetarServicos: true);
+
+            // Reativa o fluxo
+            timePicker.IsEnabled = true;
+            _ = LiberarServicosDoProfissionalAsync(_medicoId);
+            _ = CarregarPagamentosDoProfissionalAsync();
 
             // 🔥 Reset geral
             foreach (var s in _servicos)
@@ -542,7 +571,7 @@ namespace Clinica.View
             {
                 var update = new
                 {
-                    data = datePicker.Date,
+                    data = DataHelperBR.ParaDataAgenda(datePicker.Date),
                     hora = timePicker.SelectedItem.ToString(),
                     medico = _medicoNome,
                     servico = servicos,
@@ -684,10 +713,23 @@ namespace Clinica.View
                 if (consultasDict != null)
                 {
                     foreach (var consulta in consultasDict.Values.Where(c =>
-                        c.Medico == _medicoNome &&
-                        c.Data.Date == dataSelecionada &&
-                        c.Status != StatusConsulta.CanceladaCliente &&
-                        c.Status != StatusConsulta.CanceladaEmpresa))
+                    {
+                        if (string.IsNullOrEmpty(c.Data))
+                            return false;
+
+                        var dataConsulta = DateTime.ParseExact(
+                            c.Data,
+                            "yyyy-MM-dd",
+                            CultureInfo.InvariantCulture
+                        );
+
+                        return
+                            c.Medico == _medicoNome &&
+                            dataConsulta.Date == dataSelecionada &&
+                            c.Status != StatusConsulta.CanceladaCliente &&
+                            c.Status != StatusConsulta.CanceladaEmpresa;
+                    }))
+
                     {
                         var inicio = !string.IsNullOrEmpty(consulta.HoraInicio)
                             ? TimeSpan.Parse(consulta.HoraInicio)
@@ -768,6 +810,35 @@ namespace Clinica.View
             }
         }
 
+        private void ResetarSelecoesIntermediarias(bool resetarServicos = true)
+        {
+            // 1. Resetar Serviços
+            if (resetarServicos)
+            {
+                foreach (var s in _servicos)
+                {
+                    s.Selecionado = false;
+                    // Se for troca de médico, os serviços também devem ser desabilitados
+                    s.Habilitado = false;
+                }
+            }
+
+            // 2. Resetar Horário
+            timePicker.ItemsSource = null;
+            timePicker.SelectedItem = null;
+            timePicker.Title = "Escolha um horário";
+
+            // 3. Resetar Pagamento
+            _pagamentoSelecionado = null;
+            pagamentosCollection.SelectedItem = null;
+            _pagamentos.Clear();
+            pagamentosCollection.ItemsSource = null;
+
+            // 4. Atualizar UI de Totais
+            AtualizarValorTotal();
+            AtualizarTempoTotal();
+        }
+
 
         private async void OnDataSelecionada(object sender, DateChangedEventArgs e)
         {
@@ -785,6 +856,10 @@ namespace Clinica.View
             timePicker.SelectedItem = null;
             timePicker.ItemsSource = null;
             timePicker.Title = "Escolha um horário";
+
+            // 🔥 APLICAÇÃO DA REGRA: Limpa horário e pagamentos. 
+            // Se quiser obrigar a escolher o serviço de novo, passe true.
+            ResetarSelecoesIntermediarias(resetarServicos: true);
 
             await Task.Delay(100);
             AtualizarHorariosDisponiveis();

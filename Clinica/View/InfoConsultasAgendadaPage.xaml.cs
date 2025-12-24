@@ -1,9 +1,11 @@
 using Clinica.Models;
-using System.Text.Json;
+using Clinica.Services;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
-using Clinica.Services;
+using System.Text.Json;
+using System.Globalization;
 
 
 namespace Clinica.View
@@ -36,7 +38,12 @@ namespace Clinica.View
             if (Consulta == null)
                 return;
 
-            lblData.Text = Consulta.Data.ToString("dd/MM/yyyy");
+            lblData.Text = DateTime.ParseExact(
+                Consulta.Data,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            ).ToString("dd/MM/yyyy");
+
             lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
             lblStatus.Text = Consulta.Status.ToString();

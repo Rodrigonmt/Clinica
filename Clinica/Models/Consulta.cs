@@ -11,7 +11,8 @@ namespace Clinica.Models
 
         [Required]
         [JsonPropertyName("data")]
-        public DateTime Data { get; set; }
+        public string Data { get; set; }
+
 
         // 🔹 Hora inicial (mantida para compatibilidade)
         [Required]

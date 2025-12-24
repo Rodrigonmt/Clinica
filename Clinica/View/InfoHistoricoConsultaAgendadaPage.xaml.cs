@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using Clinica.Services;
+using System.Globalization;
 
 
 
@@ -41,7 +42,11 @@ namespace Clinica.View
             if (Consulta == null)
                 return;
 
-            lblData.Text = Consulta.Data.ToString("dd/MM/yyyy");
+            lblData.Text = DateTime.ParseExact(
+                Consulta.Data,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture
+            ).ToString("dd/MM/yyyy");
             // ? HORA CORRETA DO FIREBASE
             lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
