@@ -60,28 +60,27 @@ namespace Clinica.View
 
                 Consultas.Clear();
 
+                // 1. Primeiro, garantimos que todos os objetos no dicionário recebam seus IDs do Firebase
                 foreach (var item in consultasDict)
                 {
-                    var id = item.Key;
-                    var consulta = item.Value;
-
-                    // 🔹 Inserimos o ID no objeto recebido
-                    consulta.Id = id;
-
-                    // 🔹 Filtro de usuário e status
-                    if (consulta.Usuario == usuarioLogado &&
-                        statusPermitidos.Contains(consulta.Status))
-                    {
-                        Consultas.Add(consulta);
-                    }
+                    item.Value.Id = item.Key;
                 }
 
-                Consultas = new ObservableCollection<Consulta>(
-                            Consultas.OrderBy(c => c.Data).ThenBy(c => c.HoraInicio)
-                        );
+                // 2. Criamos a lista filtrada e ordenada (O código que você enviou)
+                var listaFiltradaEOrdenada = consultasDict.Values
+                    .Where(c => c.Usuario == usuarioLogado && statusPermitidos.Contains(c.Status))
+                    .OrderBy(c => c.Data)
+                    .ThenBy(c => c.HoraInicio)
+                    .ToList();
 
+                // 3. Limpamos a coleção que a tela está observando e adicionamos os novos itens
+                Consultas.Clear();
+                foreach (var consulta in listaFiltradaEOrdenada)
+                {
+                    Consultas.Add(consulta);
+                }
 
-
+                // 4. Atualiza o aviso de lista vazia
                 lblSemConsultas.IsVisible = !Consultas.Any();
             }
             catch (Exception ex)

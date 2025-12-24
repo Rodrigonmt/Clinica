@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using Clinica.Services;
 
-
 namespace Clinica.View
 {
     public partial class HistoricoConsultasAgendadasPage : ContentPage
@@ -24,7 +23,6 @@ namespace Clinica.View
             await CarregarConsultas();
             if (EmpresaContext.Empresa != null)
                 Title = EmpresaContext.Empresa.NomeEmpresa;
-
         }
 
         private async Task CarregarConsultas()
@@ -41,9 +39,7 @@ namespace Clinica.View
                 }
 
                 var consultasDict = JsonSerializer.Deserialize<Dictionary<string, Consulta>>(json);
-
                 var usuarioLogado = SessaoUsuario.UsuarioLogado?.UserId;
-
 
                 if (string.IsNullOrEmpty(usuarioLogado))
                 {
@@ -51,23 +47,27 @@ namespace Clinica.View
                     return;
                 }
 
-                // 🔹 Carrega TODAS as consultas do usuário logado
-                var historico = consultasDict
-                    .Where(kv => kv.Value.Usuario == usuarioLogado)
-                    .Select(kv =>
-                    {
-                        kv.Value.Id = kv.Key;   // <-- ESTA LINHA É A CURA DO PROBLEMA
-                        return kv.Value;
-                    })
-                    .OrderByDescending(c => c.Data)
-                    .ThenByDescending(c => c.HoraInicio)
+                // 1. Garante os IDs primeiro (Chave do Firebase para o objeto)
+                foreach (var item in consultasDict)
+                {
+                    item.Value.Id = item.Key;
+                }
+
+                // 2. Filtra e Ordena (Descendente para Histórico: mais recente primeiro)
+                var historico = consultasDict.Values
+                    .Where(c => c.Usuario == usuarioLogado)
+                    .OrderBy(c => c.Data)
+                    .ThenBy(c => c.HoraInicio)
                     .ToList();
 
-
+                // 3. Atualiza a coleção observada pela UI
                 Consultas.Clear();
                 foreach (var consulta in historico)
+                {
                     Consultas.Add(consulta);
+                }
 
+                // 4. Atualiza aviso de lista vazia
                 lblSemConsultas.IsVisible = !Consultas.Any();
             }
             catch (Exception ex)
