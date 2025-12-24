@@ -27,7 +27,7 @@
                     <!-- DATA -->
                     <Image Grid.Row="0" Grid.Column="0" Source="calendar_icon.png" WidthRequest="22"/>
                     <Label Grid.Row="0" Grid.Column="1" Text="Data:" FontSize="16" FontAttributes="Bold" TextColor="#888"/>
-                    <Label Grid.Row="0" Grid.Column="2" x:Name="lblData" FontSize="16" FontAttributes="Bold"/>
+                    <Label Grid.Row="0" Grid.Column="2" Text="{Binding Consulta.DataFormatada}" x:Name="lblData" FontSize="16" FontAttributes="Bold"/>
 
                     <!-- HORA -->
                     <Image Grid.Row="1" Grid.Column="0" Source="clock_icon.png" WidthRequest="22"/>

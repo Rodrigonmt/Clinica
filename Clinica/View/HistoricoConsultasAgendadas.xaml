@@ -45,9 +45,9 @@
 
 
                             <!-- VALORES -->
-                            <Label Text="{Binding Data, StringFormat='{0:dd/MM/yyyy}'}"
-               Grid.Row="0" Grid.Column="1"
-               FontSize="16" TextColor="Black"/>
+                            <Label Text="{Binding DataFormatada}"
+                               Grid.Row="0" Grid.Column="1"
+                               FontSize="16" />
 
                             <Label Text="{Binding HoraInicio}"
                                Grid.Row="1"

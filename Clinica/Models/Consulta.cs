@@ -33,6 +33,20 @@ namespace Clinica.Models
         [JsonPropertyName("duracao")]
         public int Duracao { get; set; }
 
+        //formatação da data
+        [JsonIgnore]
+        public string DataFormatada
+        {
+            get
+            {
+                if (DateTime.TryParse(Data, out DateTime dt))
+                {
+                    return dt.ToString("dd/MM/yyyy");
+                }
+                return Data; // Retorna o original caso a conversão falhe
+            }
+        }
+
         // 🔹 Demais campos inalterados
         [JsonPropertyName("usuario")]
         public string Usuario { get; set; }

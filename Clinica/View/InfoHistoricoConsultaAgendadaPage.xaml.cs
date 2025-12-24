@@ -42,11 +42,8 @@ namespace Clinica.View
             if (Consulta == null)
                 return;
 
-            lblData.Text = DateTime.ParseExact(
-                Consulta.Data,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture
-            ).ToString("dd/MM/yyyy");
+            // ?? Alterado para usar a propriedade do Model já formatada
+            lblData.Text = Consulta.DataFormatada;
             // ? HORA CORRETA DO FIREBASE
             lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
@@ -74,7 +71,7 @@ namespace Clinica.View
                 : Consulta.Observacoes;
             AtualizarEstadoDosBotoes();
 
-            AplicarCorStatus(Consulta.Status.ToString());
+            AplicarCorStatus(Consulta.Status);
 
 
             //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
@@ -84,36 +81,18 @@ namespace Clinica.View
         }
 
 
-        private void AplicarCorStatus(string status)
+        private void AplicarCorStatus(StatusConsulta status)
         {
-            lblStatus.Text = status;
+            lblStatus.Text = status.ToString();
 
-            switch (status.ToLower())
+            lblStatus.TextColor = status switch
             {
-                case "confirmada":
-                    lblStatus.TextColor = Colors.Green;
-                    break;
-
-                case "pendente":
-                    lblStatus.TextColor = Colors.Orange;
-                    break;
-
-                case "agendada":
-                    lblStatus.TextColor = Colors.Blue;
-                    break;
-
-                case "cancelada":
-                    lblStatus.TextColor = Colors.Red;
-                    break;
-
-                case "reagendada":
-                    lblStatus.TextColor = Colors.BlueViolet;
-                    break;
-
-                default:
-                    lblStatus.TextColor = Colors.Gray;
-                    break;
-            }
+                StatusConsulta.Confirmada => Colors.Green,
+                StatusConsulta.Agendada => Colors.Blue,
+                StatusConsulta.Reagendada => Colors.BlueViolet,
+                StatusConsulta.CanceladaCliente or StatusConsulta.CanceladaEmpresa => Colors.Red,
+                _ => Colors.Gray
+            };
         }
 
         private void AtualizarEstadoDosBotoes()

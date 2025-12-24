@@ -38,11 +38,8 @@ namespace Clinica.View
             if (Consulta == null)
                 return;
 
-            lblData.Text = DateTime.ParseExact(
-                Consulta.Data,
-                "yyyy-MM-dd",
-                CultureInfo.InvariantCulture
-            ).ToString("dd/MM/yyyy");
+            // ?? Alterado para usar a propriedade do Model já formatada
+            lblData.Text = Consulta.DataFormatada;
 
             lblHora.Text = Consulta.HoraInicio;
             lblMedico.Text = Consulta.Medico;
@@ -70,10 +67,7 @@ namespace Clinica.View
             // ?? Mostrar botão de pagamento PIX somente se a forma de pagamento for PIX
             BtnPagarPix.IsVisible = Consulta.FormaPagamento == "pix";
 
-            AplicarCorStatus(Consulta.Status.ToString());
-            //lblFormaPagamento.Text = string.IsNullOrWhiteSpace(Consulta.FormaPagamento)
-            //    ? "Não informado"
-            //    : Consulta.FormaPagamento.ToUpper();
+            AplicarCorStatus(Consulta.Status);
 
         }
 
@@ -139,38 +133,21 @@ namespace Clinica.View
                 });
         }
 
-        private void AplicarCorStatus(string status)
+        private void AplicarCorStatus(StatusConsulta status)
         {
-            lblStatus.Text = status;
+            // Aqui usamos ToString() apenas para exibição no Label
+            lblStatus.Text = status.ToString();
 
-            switch (status.ToLower())
+            // Aqui usamos o objeto 'status' (enum) diretamente para a lógica de cores
+            lblStatus.TextColor = status switch
             {
-                case "confirmada":
-                    lblStatus.TextColor = Colors.Green;
-                    break;
-
-                case "pendente":
-                    lblStatus.TextColor = Colors.Orange;
-                    break;
-
-                case "agendada":
-                    lblStatus.TextColor = Colors.Blue;
-                    break;
-
-                case "cancelada":
-                    lblStatus.TextColor = Colors.Red;
-                    break;
-
-                case "reagendada":
-                    lblStatus.TextColor = Colors.BlueViolet;
-                    break;
-
-                default:
-                    lblStatus.TextColor = Colors.Gray;
-                    break;
-            }
+                StatusConsulta.Confirmada => Colors.Green,
+                StatusConsulta.Agendada => Colors.Blue,
+                StatusConsulta.Reagendada => Colors.BlueViolet,
+                StatusConsulta.CanceladaCliente or StatusConsulta.CanceladaEmpresa => Colors.Red,
+                _ => Colors.Gray
+            };
         }
-
 
         private string FormatarDuracao(int minutos)
         {
