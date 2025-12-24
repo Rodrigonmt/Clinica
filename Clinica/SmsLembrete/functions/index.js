@@ -142,7 +142,7 @@ exports.enviarLembretesSms = onSchedule(
         }
 
         const mensagem =
-          `\n\n` +		
+          ` \n\n` +		
           `Olá! 😊 Aqui é do Salão da Lú.\n\n` +		
           `Este é um lembrete do seu agendamento.\n\n` +
           `📅 Data: ${dataHoraConsulta.toLocaleDateString("pt-BR")}\n` +
