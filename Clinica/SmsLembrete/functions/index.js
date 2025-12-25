@@ -15,10 +15,6 @@ const TWILIO_FROM_NUMBER = defineSecret("TWILIO_FROM_NUMBER");
 /* ===============================
    🕒 HELPER PADRÃO DATA BR
 ================================ */
-
-/**
- * Retorna Date no horário do Brasil (America/Sao_Paulo)
- */
 function agoraBrasil() {
   const agora = new Date();
   return new Date(
@@ -26,23 +22,14 @@ function agoraBrasil() {
   );
 }
 
-/**
- * Cria Date da consulta no horário do Brasil
- * @param {string} data yyyy-mm-dd ou yyyy-mm-ddTHH:mm:ss
- * @param {string} hora HH:mm
- */
 function criarDataConsultaBR(data, hora) {
-  const dia = data.split("T")[0]; // yyyy-mm-dd
+  const dia = data.split("T")[0];
   const [ano, mes, diaMes] = dia.split("-").map(Number);
   const [h, m] = hora.split(":").map(Number);
 
-  // ⚠️ month é 0-based
   return new Date(ano, mes - 1, diaMes, h, m, 0, 0);
 }
 
-/**
- * Diferença em horas entre duas datas
- */
 function diffHoras(dataFutura, dataAtual) {
   return (dataFutura.getTime() - dataAtual.getTime()) / (1000 * 60 * 60);
 }
@@ -52,7 +39,7 @@ function diffHoras(dataFutura, dataAtual) {
 ================================ */
 exports.enviarLembretesSms = onSchedule(
   {
-    schedule: "every 5 minutes", // 🔁 depois volte para every 60 minutes
+    schedule: "every 60 minutes",
     timeZone: "America/Sao_Paulo",
     secrets: [
       TWILIO_ACCOUNT_SID,
@@ -63,13 +50,34 @@ exports.enviarLembretesSms = onSchedule(
   async () => {
     console.log("⏰ Início da execução enviarLembretesSms");
 
+    const agora = agoraBrasil();
+    console.log("🕒 Agora (BR):", agora.toString());
+
+    /* ===============================
+       🔔 VERIFICA SE SMS ESTÁ ATIVO
+    ================================ */
+    const notificacoesSnap = await admin
+      .database()
+      .ref("configuracoes/notificacoes")
+      .once("value");
+
+    if (!notificacoesSnap.exists()) {
+      console.log("⚠️ Configurações de notificações não encontradas");
+      return;
+    }
+
+    if (notificacoesSnap.val().NotificacoesSMS !== true) {
+      console.log("🚫 Envio de SMS desativado nas configurações");
+      return;
+    }
+
+    console.log("✅ Envio de SMS ATIVADO");
+
+    // 🔐 Twilio só é instanciado se SMS estiver ativo
     const client = twilio(
       TWILIO_ACCOUNT_SID.value(),
       TWILIO_AUTH_TOKEN.value()
     );
-
-    const agora = agoraBrasil();
-    console.log("🕒 Agora (BR):", agora.toString());
 
     const consultasSnap = await admin
       .database()
@@ -83,6 +91,21 @@ exports.enviarLembretesSms = onSchedule(
 
     const consultas = consultasSnap.val();
 
+    const configSnap = await admin
+      .database()
+      .ref("configuracoes/empresa")
+      .once("value");
+
+    if (!configSnap.exists()) {
+      console.log("⚠️ Configurações da empresa não encontradas");
+      return;
+    }
+
+    const {
+      NomeEmpresa,
+      Telefone: telefoneEmpresa
+    } = configSnap.val();
+
     for (const consultaId in consultas) {
       const consulta = consultas[consultaId];
 
@@ -93,61 +116,32 @@ exports.enviarLembretesSms = onSchedule(
         lembreteSmsEnviado,
       } = consulta;
 
-      if (!data || !horaInicio || !usuarioId) {
-        console.log(`⚠️ Consulta ${consultaId} incompleta`);
-        continue;
-      }
+      if (!data || !horaInicio || !usuarioId) continue;
+      if (lembreteSmsEnviado === true) continue;
 
-      if (lembreteSmsEnviado === true) {
-        console.log(`ℹ️ SMS já enviado para ${consultaId}`);
-        continue;
-      }
-
-      // ✅ DATA DA CONSULTA (BR)
       const dataHoraConsulta = criarDataConsultaBR(data, horaInicio);
-
-      if (isNaN(dataHoraConsulta.getTime())) {
-        console.log(`❌ Data inválida na consulta ${consultaId}`, data, horaInicio);
-        continue;
-      }
+      if (isNaN(dataHoraConsulta.getTime())) continue;
 
       const horas = diffHoras(dataHoraConsulta, agora);
 
-      console.log(
-        `📌 Consulta ${consultaId}
-        🗓️ Consulta: ${dataHoraConsulta.toString()}
-        ⏳ Diferença horas: ${horas.toFixed(2)}`
-      );
-
-      /* ===============================
-         ⏳ JANELA SEGURA DE ENVIO
-         Entre 23h e 24h
-      ================================ */
       if (horas > 23 && horas <= 24) {
         const usuarioSnap = await admin
           .database()
           .ref(`usuarios/${usuarioId}`)
           .once("value");
 
-        if (!usuarioSnap.exists()) {
-          console.log(`⚠️ Usuário ${usuarioId} não encontrado`);
-          continue;
-        }
+        if (!usuarioSnap.exists()) continue;
 
         const telefone = usuarioSnap.val().Telefone;
-
-        if (!telefone) {
-          console.log(`⚠️ Usuário ${usuarioId} sem telefone`);
-          continue;
-        }
+        if (!telefone) continue;
 
         const mensagem =
-          ` \n\n` +		
-          `Olá! 😊 Aqui é do Salão da Lú.\n\n` +		
-          `Este é um lembrete do seu agendamento.\n\n` +
-          `📅 Data: ${dataHoraConsulta.toLocaleDateString("pt-BR")}\n` +
-          `⏰ Horário: ${horaInicio}\n\n` +
-          `Em caso de dúvida, estamos à disposição!`;
+          `Olá!\n\n` +
+          `${NomeEmpresa}.\n\n` +
+          `Lembrete agendamento.\n\n` +
+          `Data: ${dataHoraConsulta.toLocaleDateString("pt-BR")}\n` +
+          `Hora: ${horaInicio}\n\n` +
+          `Contato: ${telefoneEmpresa}!`;
 
         try {
           console.log(`📤 Enviando SMS para ${telefone}`);
