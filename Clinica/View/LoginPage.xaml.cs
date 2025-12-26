@@ -95,8 +95,9 @@ public partial class LoginPage : ContentPage
     {
         SenhaEntry.IsPassword = !SenhaEntry.IsPassword;
 
-        // O nome correto de acordo com o seu XAML atual é imgMostrarSenha
-        imgMostrarSenha.Text = SenhaEntry.IsPassword ? "visibility" : "visibility_off";
+        imgMostrarSenha.Source = SenhaEntry.IsPassword
+            ? "visibility.png"
+            : "visibility_off.png";
     }
 
     protected override void OnAppearing()

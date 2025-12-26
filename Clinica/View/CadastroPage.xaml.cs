@@ -1,5 +1,4 @@
 ﻿using Clinica.Services;
-
 namespace Clinica.View;
 
 public partial class CadastroPage : ContentPage
@@ -78,18 +77,23 @@ public partial class CadastroPage : ContentPage
 
     private void OnMostrarSenhaTapped(object sender, TappedEventArgs e)
     {
-        // Alterna visibilidade da senha
         SenhaEntry.IsPassword = !SenhaEntry.IsPassword;
 
-        // Atualiza ícone
-        btnMostrarSenha.Text = SenhaEntry.IsPassword ? "visibility" : "visibility_off";
+        btnMostrarSenha.Source = SenhaEntry.IsPassword
+            ? "visibility.png"
+            : "visibility_off.png";
     }
+
 
     private void OnMostrarRepetirTapped(object sender, TappedEventArgs e)
     {
         RepetirEntry.IsPassword = !RepetirEntry.IsPassword;
-        btnMostrarRepetir.Text = RepetirEntry.IsPassword ? "visibility" : "visibility_off";
+
+        btnMostrarRepetir.Source = RepetirEntry.IsPassword
+            ? "visibility.png"
+            : "visibility_off.png";
     }
+
 
     protected override void OnAppearing()
     {

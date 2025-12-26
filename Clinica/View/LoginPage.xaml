@@ -48,20 +48,20 @@
                           Padding="5"
                           ColumnSpacing="10">
 
-                        <Label Text="email"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               VerticalOptions="Center" />
+                        <Image Source="email.png"
+                           WidthRequest="24"
+                           HeightRequest="24"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
 
                         <Entry x:Name="EmailEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite seu email"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               PlaceholderColor="{AppThemeBinding Light=#777, Dark=#BBB}"
-                               FontSize="16"
-                               BackgroundColor="Transparent" />
+                           Grid.Column="1"
+                           Placeholder="Digite seu email"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                           BackgroundColor="Transparent"/>
                     </Grid>
+
 
                     <Label Text="Senha"
                            FontSize="16"
@@ -73,34 +73,33 @@
                           Padding="5"
                           ColumnSpacing="10">
 
-                        <Label Text="lock"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               VerticalOptions="Center" />
+                        <Image Source="lock.png"
+                           WidthRequest="24"
+                           HeightRequest="24"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
 
                         <Entry x:Name="SenhaEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite sua senha"
-                               IsPassword="True"
-                               FontSize="16"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               PlaceholderColor="{AppThemeBinding Light=#777, Dark=#BBB}"
-                               BackgroundColor="Transparent" />
+                           Grid.Column="1"
+                           Placeholder="Digite sua senha"
+                           IsPassword="True"
+                           FontSize="16"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                           BackgroundColor="Transparent"/>
 
-                        <Label x:Name="imgMostrarSenha" 
-                               Grid.Column="2"
-                               Text="visibility"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped" />
-                            </Label.GestureRecognizers>
-                        </Label>
+                        <Image x:Name="imgMostrarSenha"
+                           Grid.Column="2"
+                           Source="visibility.png"
+                           WidthRequest="24"
+                           HeightRequest="24"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnMostrarSenhaTapped"/>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
+
 
                     <HorizontalStackLayout VerticalOptions="Center" Spacing="8">
                         <CheckBox x:Name="chkLembrar" IsChecked="False" VerticalOptions="Center"/>

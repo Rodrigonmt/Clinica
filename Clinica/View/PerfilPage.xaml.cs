@@ -4,6 +4,8 @@ using Clinica.Services;
 using System.Text;
 using System.Text.Json;
 using Clinica.Services;
+using Clinica.Helpers;
+using Clinica.Models;
 
 public partial class PerfilPage : ContentPage
 {
@@ -47,7 +49,7 @@ public partial class PerfilPage : ContentPage
             var dados = JsonSerializer.Deserialize<Usuario>(json);
 
             NomeEntry.Text = dados?.Nome;
-            TelefoneEntry.Text = dados?.Telefone;
+            TelefoneEntry.Text = TelefoneHelper.ParaFormatoTela(dados?.Telefone);
             DataNascEntry.Text = dados?.DataNascimento;
 
             // Endereço (novo modelo)
@@ -159,7 +161,7 @@ public partial class PerfilPage : ContentPage
             {
                 UserId = _userId,
                 Nome = NomeEntry.Text,
-                Telefone = TelefoneEntry.Text,
+                Telefone = TelefoneHelper.ParaFormatoFirebase(TelefoneEntry.Text),
                 DataNascimento = DataNascEntry.Text,
                 Endereco = enderecoFormatado,
                 FotoPerfil = _fotoPerfilBase64,

@@ -41,55 +41,65 @@
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
                     <Grid ColumnDefinitions="40,*,40"
-                          BackgroundColor="#F0F2F5"
-                          HeightRequest="55"
-                          Padding="5"
-                          ColumnSpacing="10">
-                        <Label Text="email" FontFamily="MaterialIcons" FontSize="24" VerticalOptions="Center" 
-                               TextColor="#555" />
+                      BackgroundColor="#F0F2F5"
+                      HeightRequest="55"
+                      Padding="5"
+                      ColumnSpacing="10">
+
+                        <Image Source="email.png"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
 
                         <Entry x:Name="EmailEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite seu email"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
-                               BackgroundColor="Transparent"
-                               FontSize="16" />
+                       Grid.Column="1"
+                       Placeholder="Digite seu email"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                       PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
+                       BackgroundColor="Transparent"
+                       FontSize="16" />
                     </Grid>
+
 
                     <Label Text="Senha" FontSize="16" 
                            TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}" />
 
                     <Grid ColumnDefinitions="40,*,40"
-                          BackgroundColor="#F0F2F5"
-                          HeightRequest="55"
-                          Padding="5"
-                          ColumnSpacing="10">
-                        <Label Text="lock" FontFamily="MaterialIcons" FontSize="24" VerticalOptions="Center" 
-                               TextColor="#555" />
+                      BackgroundColor="#F0F2F5"
+                      HeightRequest="55"
+                      Padding="5"
+                      ColumnSpacing="10">
+
+                        <Image Source="lock.png"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
 
                         <Entry x:Name="SenhaEntry"
-                               Grid.Column="1"
-                               Placeholder="Digite sua senha"
-                               IsPassword="True"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
-                               BackgroundColor="Transparent"
-                               FontSize="16" />
+                       Grid.Column="1"
+                       Placeholder="Digite sua senha"
+                       IsPassword="True"
+                       TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                       PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
+                       BackgroundColor="Transparent"
+                       FontSize="16" />
 
-                        <Label x:Name="btnMostrarSenha"
-                               Text="visibility"
-                               FontFamily="MaterialIcons"
-                               Grid.Column="2"
-                               FontSize="24"
-                               TextColor="#555"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <Image x:Name="btnMostrarSenha"
+                       Grid.Column="2"
+                       Source="visibility.png"
+                       WidthRequest="24"
+                       HeightRequest="24"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center">
+                            <Image.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnMostrarSenhaTapped"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
+
+
 
                     <Label Text="Repetir Senha"
                            FontSize="16"
@@ -101,34 +111,34 @@
                           Padding="5"
                           ColumnSpacing="10">
 
-                        <Label Text="lock"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               TextColor="#555"
-                               VerticalOptions="Center" />
+                        <Image Source="lock.png"
+                           WidthRequest="24"
+                           HeightRequest="24"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
 
                         <Entry x:Name="RepetirEntry"
-                               Grid.Column="1"
-                               Placeholder="Repita sua senha"
-                               IsPassword="True"
-                               TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
-                               PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
-                               FontSize="16"
-                               BackgroundColor="Transparent" />
+                           Grid.Column="1"
+                           Placeholder="Repita sua senha"
+                           IsPassword="True"
+                           TextColor="{AppThemeBinding Light={StaticResource LightText}, Dark={StaticResource DarkText}}"
+                           PlaceholderColor="{AppThemeBinding Light={StaticResource LightPlaceholder}, Dark={StaticResource DarkPlaceholder}}"
+                           FontSize="16"
+                           BackgroundColor="Transparent" />
 
-                        <Label x:Name="btnMostrarRepetir"
-                               Grid.Column="2"
-                               Text="visibility"
-                               FontFamily="MaterialIcons"
-                               FontSize="24"
-                               TextColor="#555"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <Image x:Name="btnMostrarRepetir"
+                           Grid.Column="2"
+                           Source="visibility.png"
+                           WidthRequest="24"
+                           HeightRequest="24"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center">
+                            <Image.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnMostrarRepetirTapped"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
+
 
                     <Button Text="Criar Conta"
                             HeightRequest="55"
