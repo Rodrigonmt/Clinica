@@ -842,23 +842,12 @@ namespace Clinica.View
 
         private async void OnDataSelecionada(object sender, DateChangedEventArgs e)
         {
-            if (e.NewDate.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday)
-            {
-                await DisplayAlert("Data inválida",
-                    "A clínica não realiza atendimentos aos finais de semana.",
-                    "OK");
-
-                datePicker.Date = e.OldDate;
-                return;
-            }
-
             // 🔥 Sempre limpar o horário ao trocar a data
             timePicker.SelectedItem = null;
             timePicker.ItemsSource = null;
             timePicker.Title = "Escolha um horário";
 
-            // 🔥 APLICAÇÃO DA REGRA: Limpa horário e pagamentos. 
-            // Se quiser obrigar a escolher o serviço de novo, passe true.
+            // 🔥 Limpa seleções intermediárias
             ResetarSelecoesIntermediarias(resetarServicos: true);
 
             await Task.Delay(100);
