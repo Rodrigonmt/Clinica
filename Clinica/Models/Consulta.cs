@@ -71,6 +71,10 @@ namespace Clinica.Models
         [JsonPropertyName("servico")]
         public string Servico { get; set; }
 
+        [JsonPropertyName("servicos")]
+        public List<string> Servicos { get; set; } = new();
+
+
         [JsonPropertyName("valorTotal")]
         public decimal ValorTotal { get; set; }
 

@@ -112,6 +112,7 @@ namespace Clinica.View
                 Medico = _medicoNome,
                 MedicoId = _medicoId,
                 Servico = servicos,
+                Servicos = ObterServicosIdsSelecionados(),
                 CriadoEm = DateTime.UtcNow,
                 Usuario = SessaoUsuario.UsuarioLogado?.UserId,
                 Status = StatusConsulta.Agendada,
@@ -575,6 +576,7 @@ namespace Clinica.View
                     hora = timePicker.SelectedItem.ToString(),
                     medico = _medicoNome,
                     servico = servicos,
+                    Servicos = ObterServicosIdsSelecionados(),
                     observacoes = txtObservacoes.Text,
                     valorTotal = CalcularValorServicos(),
                     status = StatusConsulta.Reagendada,
@@ -852,6 +854,14 @@ namespace Clinica.View
 
             await Task.Delay(100);
             AtualizarHorariosDisponiveis();
+        }
+
+        private List<string> ObterServicosIdsSelecionados()
+        {
+            return _servicos
+                .Where(s => s.Selecionado)
+                .Select(s => s.ServicoId)
+                .ToList();
         }
 
         private async void OnTimePickerFocused(object sender, FocusEventArgs e)
