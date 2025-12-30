@@ -53,11 +53,11 @@ namespace Clinica
 
         private void MostrarImagemCache()
         {
-            if (ImagemCacheService.ExisteImagemCache())
-            {
-                imgFundo.Source = ImagemCacheService.ObterImagemCache();
-            }
+            var source = ImagemCacheService.ObterImagemCache();
+            if (source != null)
+                imgFundo.Source = source;
         }
+
 
         private async Task CarregarEmpresaAsync()
         {
@@ -120,7 +120,6 @@ namespace Clinica
 
                 await ImagemCacheService.SalvarImagemAsync(imageBytes);
 
-                // ?? Atualiza UI suavemente
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
                     await imgFundo.FadeTo(0, 120);

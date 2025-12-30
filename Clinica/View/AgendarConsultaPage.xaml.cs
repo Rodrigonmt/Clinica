@@ -103,12 +103,21 @@ namespace Clinica.View
             var horaInicio = TimeSpan.Parse(timePicker.SelectedItem.ToString());
             var horaFim = horaInicio.Add(TimeSpan.FromMinutes(duracaoTotal));
 
+            // ✅ VARIÁVEL QUE ESTAVA FALTANDO
+            var horaInicioStr = horaInicio.ToString(@"hh\:mm");
+
             var consulta = new Consulta
             {
                 Data = DataHelperBR.ParaDataAgenda(datePicker.Date),
-                HoraInicio = horaInicio.ToString(@"hh\:mm"),
+
+                // 🔹 Campo legado (compatibilidade)
+                Hora = horaInicioStr,
+
+                // 🔹 Campos novos
+                HoraInicio = horaInicioStr,
                 HoraFim = horaFim.ToString(@"hh\:mm"),
                 Duracao = duracaoTotal,
+
                 Medico = _medicoNome,
                 MedicoId = _medicoId,
                 Servico = servicos,
@@ -134,7 +143,6 @@ namespace Clinica.View
 
             await DisplayAlert("Sucesso", "Consulta agendada com sucesso!", "OK");
 
-            // 🔥 NOVA REGRA DE NAVEGAÇÃO
             if (consulta.FormaPagamento == "pix")
             {
                 await Shell.Current.GoToAsync(
@@ -150,6 +158,7 @@ namespace Clinica.View
                 await Shell.Current.GoToAsync("/MainPage");
             }
         }
+
 
 
 
@@ -570,18 +579,39 @@ namespace Clinica.View
         {
             try
             {
+                // 🔹 Hora selecionada
+                var horaInicio = TimeSpan.Parse(timePicker.SelectedItem.ToString());
+
+                // 🔹 Duração total dos serviços
+                var duracaoTotal = CalcularDuracaoTotal();
+
+                // 🔹 Hora final calculada
+                var horaFim = horaInicio.Add(TimeSpan.FromMinutes(duracaoTotal));
+
                 var update = new
                 {
+                    // 📅 Data do atendimento
                     data = DataHelperBR.ParaDataAgenda(datePicker.Date),
-                    hora = timePicker.SelectedItem.ToString(),
+
+                    // 🔹 Campo legado (compatibilidade)
+                    hora = horaInicio.ToString(@"hh\:mm"),
+
+                    // 🔹 Campos novos (padrão correto)
+                    horaInicio = horaInicio.ToString(@"hh\:mm"),
+                    horaFim = horaFim.ToString(@"hh\:mm"),
+                    duracao = duracaoTotal,
+
                     medico = _medicoNome,
+                    medicoId = _medicoId,
+
                     servico = servicos,
-                    Servicos = ObterServicosIdsSelecionados(),
+                    servicos = ObterServicosIdsSelecionados(),
+
                     observacoes = txtObservacoes.Text,
                     valorTotal = CalcularValorServicos(),
+
                     status = StatusConsulta.Reagendada,
                     formaPagamento = _pagamentoSelecionado.Key
-
                 };
 
                 var json = JsonSerializer.Serialize(update);
@@ -605,6 +635,7 @@ namespace Clinica.View
                 await DisplayAlert("Erro", ex.Message, "OK");
             }
         }
+
 
         protected override bool OnBackButtonPressed()
         {
